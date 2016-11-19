@@ -1,0 +1,19 @@
+{
+  "name": "petbook",
+  "version": "1.0.0",
+  "description": "Our team project for SoftUni's Tech Module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeBusters-softuni/petbook.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codeBusters-softuni/petbook/issues"
+  },
+  "homepage": "https://github.com/codeBusters-softuni/petbook#readme"
+}
