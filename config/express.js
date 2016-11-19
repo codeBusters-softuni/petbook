@@ -17,9 +17,11 @@ module.exports = (app, config) => {
   // cookie storage
   app.use(session({ secret: 's3cr3t5tr1ng', resave: false, saveUninitialized: false }))
 
+  // Uncomment when the User model is finished!
   // app.use(passport.initialize())
   // app.use(passport.session())
 
+  // adds the current user to res.locals for easy access in the HTML files
   app.use((req, res, next) => {
     if (req.user) {
       res.locals.user = req.user
