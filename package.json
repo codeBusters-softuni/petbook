@@ -23,6 +23,7 @@
     "express-session": "1.14.2",
     "handlebars": "4.0.6",
     "mongoose": "4.6.8",
-    "passport": "0.3.2"
+    "passport": "0.3.2",
+    "standard": "8.5.0"
   }
 }
