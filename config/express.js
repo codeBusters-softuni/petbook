@@ -5,9 +5,10 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const passport = require('passport')
 
+
 module.exports = (app, config) => {
   app.set('views', path.join(config.rootFolder, '/views'))
-  app.set('view engine', 'handlebars')
+  app.set('view engine', 'hbs')
 
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))

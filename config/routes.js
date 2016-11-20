@@ -1,5 +1,7 @@
 const controllers = require('./../controllers')
 
 module.exports = (app) => {
-  app.get('/', () => { console.log('Home page accessed!') })
+  app.get('/', (req, res) => {
+    res.render('index')
+  })
 }

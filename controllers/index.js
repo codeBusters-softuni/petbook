@@ -12,5 +12,7 @@
  */
 // example: const userController = require('./user-controller')
 module.exports = {
-  // user: userController for ex
+  index: (req, res) => {
+      res.render('index')
+  }
 }
