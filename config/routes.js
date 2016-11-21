@@ -11,4 +11,11 @@ module.exports = (app) => {
   app.post('/user/profile', (req, res) => {
     //Here is POST request
   })
+
+  app.get('/user/register', (req, res) => {
+    res.render('user/register')
+  })
+  app.post('/user/register', (req, res) => {
+    //Here is POST request
+  })
 }
