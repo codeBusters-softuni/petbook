@@ -13,6 +13,6 @@ let postSchema = mongoose.Schema(
   }
 )
 
-const Post = mongoose.model('Photo', postSchema)
+const Post = mongoose.model('Post', postSchema)
 
 module.exports = Post
