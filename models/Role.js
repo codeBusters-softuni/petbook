@@ -8,10 +8,12 @@ let roleSchema = mongoose.Schema({
 roleSchema.method({
   addUser: function (userId) {
     return new Promise((resolve, reject) => {
-      this.users.push(userId)
-      this.save().then(() => {
-        resolve()
-      })
+      if (this.users.indexOf(userId) === -1) {
+        this.users.push(userId)
+        this.save().then(() => {
+          resolve()
+        })
+      } else { resolve() }
     })
   }
 })
