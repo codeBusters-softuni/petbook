@@ -9,7 +9,7 @@ module.exports = {
 
   registerPost: (req, res) => {
     let candidateUser = req.body
-    console.log(candidateUser)
+
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
       // ERROR - Email is invalid!
@@ -50,7 +50,7 @@ module.exports = {
       }
 
       User.create(newUser).then((newUser) => {
-        req.logIn(newUser, (err, user) => {
+        req.logIn(newUser, (err, newUser) => {
           if (err) {
             // req.session.errorMsg = 'Error while logging in after registration :('
             // ERROR
