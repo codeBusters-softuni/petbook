@@ -70,6 +70,7 @@ module.exports = {
             return res.redirect('/')
           })
         }).catch((err) => {
+          console.log(err.message)
           // Error when saving the user
 
           // req.session.errorMsg = 'Error while logging in after registration :('

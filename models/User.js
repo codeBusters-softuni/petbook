@@ -17,12 +17,14 @@ let userSchema = mongoose.Schema(
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   }
 )
-userSchema.post('save', function (user, next) {
+// Post save hook
+userSchema.pre('save', function (next) {
   let rolePromises = this.roles.map((role) => {
     Role.findById(role).then((role) => {
       if (!role) {
         var err = new Error("Role in User's roles array does not exist")
         next(err)
+        return new Promise((resolve, reject) => { reject() })
       }
       return role.addUser(this._id)
     })
