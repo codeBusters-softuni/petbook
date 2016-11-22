@@ -17,7 +17,7 @@ let userSchema = mongoose.Schema(
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   }
 )
-userSchema.post('save', function (next) {
+userSchema.post('save', function (user, next) {
   let rolePromises = this.roles.map((role) => {
     Role.findById(role).then((role) => {
       if (!role) {
