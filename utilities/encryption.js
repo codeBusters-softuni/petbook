@@ -2,7 +2,7 @@ const encryption = require('crypto')
 
 module.exports = {
   generateSalt: () => {
-    // Generates a random 128-bit salt 
+    // Generates a random 128-bit salt
     return encryption.randomBytes(128).toString('base64')
   },
 
