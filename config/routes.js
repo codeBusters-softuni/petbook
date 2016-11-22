@@ -1,9 +1,7 @@
 const controllers = require('./../controllers')
 
 module.exports = (app) => {
-  app.get('/', (req, res) => {
-    res.render('index')
-  })
+  app.get('/', controllers.homeController.homePageGet)
 
   app.get('/user/profile', controllers.userController.profilePageGet)
 

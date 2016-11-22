@@ -10,7 +10,9 @@
     }
    }
  */
+const  homeController = require('./home-controller')
 const userController = require('./user-controller')
 module.exports = {
-  userController
+  userController,
+  homeController
 }
