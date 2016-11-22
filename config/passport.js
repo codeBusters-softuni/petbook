@@ -4,7 +4,7 @@ const User = require('./../models/User')
 
 const authenticateUser = (username, password, done) => {
   User.findOne({ email: username }).then(user => {
-    if (!user /* ||!user.authenticate(password) */) {
+    if (!user || user.authenticate(password) ) {
       return done(null, false)
     }
 
