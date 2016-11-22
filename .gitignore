@@ -37,3 +37,8 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+.typings
+typings/
+typings.json
+jsconfig.json

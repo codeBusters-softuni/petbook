@@ -127,6 +127,15 @@ module.exports = {
   },
 
   profilePageGet: (req, res) => {
-    res.render('user/profile')
+    let userId = req.params.id
+    User.findOne({ userId: userId }).then(user => {
+      if (!user) {
+        // ERROR - Email is invalid!
+        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+        res.redirect('/')
+      }
+
+      res.render('user/profile', user)
+    })
   }
 }
