@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const Role = mongoose.model('Role')
 const encryption = require('./../utilities/encryption')
 
 let userSchema = mongoose.Schema(
@@ -17,7 +17,20 @@ let userSchema = mongoose.Schema(
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   }
 )
-
+userSchema.post('save', function (next) {
+  let rolePromises = this.roles.map((role) => {
+    Role.findById(role).then((role) => {
+      if (!role) {
+        var err = new Error("Role in User's roles array does not exist")
+        next(err)
+      }
+      return role.addUser(this._id)
+    })
+  })
+  Promise.all(rolePromises).then(() => {
+    next()
+  })
+})
 userSchema.method({
   authenticate: function (password) {
     let inputPasswordHash = encryption.hashPassword(password, this.salt)
