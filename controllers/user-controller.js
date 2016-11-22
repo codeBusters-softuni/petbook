@@ -50,7 +50,7 @@ module.exports = {
       }
 
       User.create(newUser).then((newUser) => {
-        req.logIn(newUser, (err, newUser) => {
+        req.logIn(newUser, function (err, newUser) {
           if (err) {
             // req.session.errorMsg = 'Error while logging in after registration :('
             // ERROR
@@ -59,7 +59,7 @@ module.exports = {
           }
 
           // TODO: Add success message that the user is registered
-          res.redirect('/')
+          return res.redirect('/')
         })
       })
     })

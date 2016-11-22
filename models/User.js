@@ -27,7 +27,8 @@ userSchema.method({
 
   isAdmin: function () {
     // TODO: Implement once Roles are functional!
-    return new Promise(() => {
+    return new Promise((resolve, reject) => {
+      resolve()
       return true
     })
   }
