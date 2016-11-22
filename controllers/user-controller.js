@@ -14,18 +14,22 @@ module.exports = {
     if (!emailValidator.validate(candidateUser.email)) {
       // ERROR - Email is invalid!
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      res.render('user/register', candidateUser)
       return
     } else if (candidateUser.fullName.length < 3 || candidateUser.fullName.length > 20) {
       // ERROR - Full name is of invalid length
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      res.render('user/register', candidateUser)
       return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
       // ERROR - Password is of invalid length
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      res.render('user/register', candidateUser)
       return
     } else if (candidateUser.password !== candidateUser.confirmedPassword) {
       // ERROR - Passwords do not match!
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      res.render('user/register', candidateUser)
       return
     }
     // See if a user with the given email already exists
@@ -45,7 +49,7 @@ module.exports = {
         salt: salt
       }
 
-      User.create(newUser).then(() => {
+      User.create(newUser).then((newUser) => {
         req.logIn(newUser, (err, user) => {
           if (err) {
             // req.session.errorMsg = 'Error while logging in after registration :('
