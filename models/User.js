@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const autoIncrement = require('mongoose-sequence')
 const Role = mongoose.model('Role')
 const encryption = require('./../utilities/encryption')
 
@@ -33,6 +34,8 @@ userSchema.pre('save', function (next) {
     next()
   })
 })
+
+
 userSchema.method({
   authenticate: function (password) {
     let inputPasswordHash = encryption.hashPassword(password, this.salt)
@@ -49,6 +52,8 @@ userSchema.method({
   }
 })
 
+// using the mongoose-sequence module to have a unique integer Id for each user
+userSchema.plugin(autoIncrement, {inc_field: 'userId'})
 
 const User = mongoose.model('User', userSchema)
 
