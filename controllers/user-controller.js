@@ -121,7 +121,13 @@ module.exports = {
           return
         }
 
-        return res.redirect('/')
+        let returnUrl = '/'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+
+        return res.redirect(returnUrl)
       })
     })
   },
