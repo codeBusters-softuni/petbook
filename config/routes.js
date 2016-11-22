@@ -6,4 +6,5 @@ module.exports = (app) => {
 
   app.get('/user/register', controllers.userController.registerGet)
   app.post('/user/register', controllers.userController.registerPost)
+  app.post('/user/login', controllers.userController.loginPost)
 }

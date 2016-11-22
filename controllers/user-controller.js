@@ -65,6 +65,50 @@ module.exports = {
     })
   },
 
+  loginPost: (req, res) => {
+    let candidateUser = req.body
+
+    // Validate credentials
+    if (!emailValidator.validate(candidateUser.email)) {
+      // ERROR - Email is invalid!
+      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      res.render('index', candidateUser)
+      return
+    } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
+      // ERROR - Password is of invalid length
+      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      res.render('index', candidateUser)
+      return
+    }
+
+    User.findOne({ email: candidateUser.email }).then(user => {
+      if (!user) {
+        // ERROR - Such a user does not exist!
+        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+        res.render('index', candidateUser)
+        return
+      }
+
+      if (!user.authenticate(candidateUser.password)) {
+        // Error - Password is invalid!
+        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+        res.render('index', candidateUser)
+        return
+      }
+
+      req.logIn(user, function (err, user) {
+        if (err) {
+          // req.session.errorMsg = 'Error while logging in :('
+          // ERROR
+          // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+          return
+        }
+
+        return res.redirect('/')
+      })
+    })
+  },
+
   profilePageGet: (req, res) => {
     res.render('user/profile')
   }

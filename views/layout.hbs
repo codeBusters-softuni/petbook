@@ -14,23 +14,24 @@
             <a href="#" class="">Petbook</a>
         </div>
     </div>
-
+    {{#unless this.user}}
     <div class="leftAlign">
-        <form class="form-inline">
+        <form class="form-inline" method="POST" action="/user/login">
             <div class="form-group">
                 <label for="">Email:</label>
-                <input type="text" class="" id="" placeholder="">
+                <input type="text" class="" id="" name="email" placeholder="" value={{email}} >
             </div>
             <div class="form-group">
                 <label for="pwd">Password:</label>
-                <input type="password" class="" id="" placeholder="">
+                <input type="password" class="" id="" name="password" placeholder="">
             </div>
             <div class="form-group">
-                <input type="button" class="" id="" value="LogIn">
+                <input type="submit" class="" id="" value="LogIn">
             </div>
 
         </form>
     </div>
+    {{/unless}}
 
 </header>
     <main>
