@@ -5,16 +5,12 @@ module.exports = (app) => {
     res.render('index')
   })
 
-  app.get('/user/profile', (req, res) => {
-    res.render('user/profile')
-  })
+  app.get('/user/profile', controllers.userController.profilePageGet)
   app.post('/user/profile', (req, res) => {
     //Here is POST request
   })
 
-  app.get('/user/register', (req, res) => {
-    res.render('user/register')
-  })
+  app.get('/user/register', controllers.userController.registerGet)
   app.post('/user/register', (req, res) => {
     //Here is POST request
   })

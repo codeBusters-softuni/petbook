@@ -10,9 +10,7 @@
     }
    }
  */
-// example: const userController = require('./user-controller')
+const userController = require('./user-controller')
 module.exports = {
-  index: (req, res) => {
-    res.render('index')
-  }
+  userController
 }

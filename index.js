@@ -5,7 +5,6 @@ const config = require('./config/config')['development']
 require('./config/database')(config)
 require('./config/express')(app, config)
 require('./config/routes')(app)
-// Uncomment when the User model is finished!
-// require('./config/passport')()
+require('./config/passport')()
 
 app.listen(1337)
