@@ -23,6 +23,10 @@ body {
     margin: 0px;
 }
 
+.navbar-header>a:hover, .navbar-header>a:link, .navbar-header>a:visited, .navbar-header>a:active{
+    text-decoration: none;
+}
+
 
 .left-align {
     /*    float: right;*/
@@ -39,16 +43,29 @@ body {
 #main-page-bcgrnd-not-loggedin {
     background-image: url(../background-pics/front_pic.jpg);
     background-size: cover;
-    /*    background-position: center top;*/
+    background-repeat: no-repeat;
+    background-position: center 50%;
     text-align: center;
+    padding-bottom: 20%;
+    width: 100%;
+    min-height: 550px;
 }
 
+#main-page-bcgrnd-not-loggedin>ul{
+    list-style-type: none;
+    overflow: hidden;
+    padding-left: 0;
+    display: inline-block;
+    padding-top: 150px;
+}
 
 #main-page-bcgrnd-not-loggedin>ul>li{
-    margin: 8% 5px 27% 5px;
-    list-style-type: none;
-    display: inline-block;
+    float: left;
     text-align: center;
+    margin-right: 20px;
+}
+#main-page-bcgrnd-not-loggedin>ul>li:last-of-type{
+    margin-right: 0;
 }
 
 
@@ -56,18 +73,21 @@ body {
 .btn-cstm-style {
     display: inline-block;
     border: 1px solid #3b5998;
-    border-radius: 4px;
+    border-radius: 5px;
     padding: 12px;
     width: 140px;
     background-color: #3b5998;
     color: aliceblue;
     font-weight: bold;
     font-size: 20px;
+    transition: background 0.4s ease-in-out;
 }
 
 .btn-cstm-style:hover {
     background-color:#E8E8E8;
     color: #3b5998;
+    /*transition: color 0.7s;*/
+    /*transition: background-color 0.7s;*/
 }
 
 .sign-in-log-out{
@@ -75,25 +95,29 @@ body {
     color: #3b5998;
     font-size: 15px;
     font-weight: bold;
+    transition: background 0.4s ease-in-out;
+    /*transition-duration: 0.7s;*/
 }
 
 .sign-in-log-out:hover{
     background-color:#E8E8E8;
     color: #3b5998;
+    /*transition: background-color 0.7s;*/
 }
 
 a:hover, a:link, a:visited, a:active{
-    text-decoration: none;
-
+    /*text-decoration: none;*/
+    border: 0;
 }
 
 .custom-link-style {
     color: #3b5998;
-
 }
 
-.custom-link-style:hover, .custom-link-style:visited, .custom-link-style:link, .custom-link-style:active {
+.custom-link-style:hover{
+    text-decoration: underline;
     color: #3b5998;
+
 }
 
 
@@ -121,6 +145,11 @@ a:hover, a:link, a:visited, a:active{
         filter: alpha(opacity=60);
     */
 
+}
+
+.box-to-dim-behind > a {
+    float: right;
+    margin: 15px 0;
 }
 
 
@@ -170,6 +199,7 @@ legend {
     width: 100px;
     /*    display: inline-block;*/
     float: right;
+    border: 0;
 }
 
 #cstm-stl-ftr {
