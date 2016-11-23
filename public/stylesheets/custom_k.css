@@ -10,68 +10,98 @@ header {
 
 }
 
-.allNulled {
-    padding: 0;
-    margin: 0;
+body {
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .navbar-header>a{
     font-style: italic;
     color: aliceblue;
     font-weight: bold;
-    font-size: 30px !important;
+    font-size: 45px;
     margin: 0px;
 }
 
 
-header>.leftAlign {
-    float: right;
+.left-align {
+    /*    float: right;*/
+    text-align:right;
     margin-top: 8px;
     color: aliceblue;
     font-weight: bold;
 }
 
-header>.leftAlign div {
-    margin-left: 20px;
-}
-
-header>.leftAlign input {
-    color: black;
-}
 
 /*Header styling up to here*/
 
 /* Style when not logged in*/
-#mainPageBcgrndNotLoggedIn {
+#main-page-bcgrnd-not-loggedin {
     background-image: url(../background-pics/front_pic.jpg);
     background-size: cover;
     /*    background-position: center top;*/
     text-align: center;
 }
 
-#mainPageBcgrndNotLoggedIn>ul>li{
+
+#main-page-bcgrnd-not-loggedin>ul>li{
     margin: 8% 5px 27% 5px;
-    border: 1px solid #3b5998;
-    border-radius: 5px;
     list-style-type: none;
     display: inline-block;
+    text-align: center;
 }
 
-#mainPageBcgrndNotLoggedIn>ul>li>a {
+
+
+.btn-cstm-style {
     display: inline-block;
-    padding: 10px;
-    width: 100px;
+    border: 1px solid #3b5998;
+    border-radius: 4px;
+    padding: 12px;
+    width: 140px;
     background-color: #3b5998;
     color: aliceblue;
     font-weight: bold;
+    font-size: 20px;
+}
+
+.btn-cstm-style:hover {
+    background-color:#E8E8E8;
+    color: #3b5998;
+}
+
+.sign-in-log-out{
+    background-color: aliceblue;
+    color: #3b5998;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.sign-in-log-out:hover{
+    background-color:#E8E8E8;
+    color: #3b5998;
+}
+
+a:hover, a:link, a:visited, a:active{
+    text-decoration: none;
 
 }
+
+.custom-link-style {
+    color: #3b5998;
+
+}
+
+.custom-link-style:hover, .custom-link-style:visited, .custom-link-style:link, .custom-link-style:active {
+    color: #3b5998;
+}
+
 
 /* up to here Style when not logged in*/
 
 /* Style when register*/
 
-#mainPageBcgrndRegister {
+#main-page-bcgrnd-register {
     background-image: url(../background-pics/register_pick.jpg);
     background-size: cover;
     /*    background-position: center top;*/
@@ -79,31 +109,78 @@ header>.leftAlign input {
     overflow: hidden;
 }
 
-#formToFloat {
-    float: right;
-    margin: 4% 5% 8% 5px;
+.box-to-dim-behind{
+    background-color: rgba(255,255,255,0.7);
+    padding: 20px;
+    margin: 10px;
+    border-radius: 25px;
+    /*
+        padding: 10px;
+        background-color: azure;
+        opacity: 0.6;
+        filter: alpha(opacity=60);
+    */
+
 }
 
-#formToFloat label {
-    width: 130px;
+
+.form-to-float {
+    float: right;
+    margin: 1% 1.5% 1% 5px;
+
+}
+
+.form-to-float label {
+    width: 150px;
     text-align: right;
     margin-right: 10px;
+
 }
 
-#formToFloat div {
+.form-to-float div {
     margin-bottom: 10px;
+
 }
 
-.mainPageF {
+input {
+    outline: none;
+    border-color: #E8E8E8;
+}
+
+legend {
+    font-size: 30px;
+    font-weight: bold;
+    color: #3b5998;
+}
+
+
+
+.cstm-input-area-style[type="text"], .cstm-input-area-style[type="password"] {
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.cstm-input-area-style[type="text"]:focus, .cstm-input-area-style[type="password"]:focus {
+    border-radius: 5px;
+    border-color: #3b5998;
+
+}
+
+.rgstr-btn{
+    width: 100px;
+    /*    display: inline-block;*/
+    float: right;
+}
+
+#cstm-stl-ftr {
     background-color: #3b5998;
     padding: 5px;
     width: 100%;
     bottom: 0;
     left: 0;
-    right: 0;
-    position: absolute;
+    position: fixed;
 }
-.mainPageF p{
+#cstm-stl-ftr p{
     text-align: center;
     color: #f7f7f7;
     margin: 0;
