@@ -7440,3 +7440,8 @@ section>ul>#dislike{
 #comment-value{
   margin: 10px;
 }
+
+#photo-gallery>a>img{
+  max-width: 200px;
+  border: 1px solid #233a69;
+}
