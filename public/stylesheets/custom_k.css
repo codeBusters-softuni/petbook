@@ -54,7 +54,7 @@ header {
 .left-align {
     /*    float: right;*/
     text-align:right;
-    margin-top: 10px;
+    margin-top: 11px;
     color: aliceblue;
     font-weight: bold;
 }
@@ -72,33 +72,46 @@ header {
     border: 1px solid rgba(81, 203, 238, 1);
 }
 
+.search-cstm{
+    width: 280px;
+    margin-right: 0;
+    position:relative;
+    left: 6px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
 /*Header styling when logged in*/
 
-nav>ul {
+
+.cstm-menu-header{
     list-style-type: none;
     overflow: hidden;
     text-align: right;
+
 }
 
-nav>ul>li{
-    display: inline;
+.cstm-menu-header>li{
+    display: inline-block;
     /*    float: left;*/
     text-align: center;
     margin-right: 5px;
+    margin-top: 3px;
+
 }
 
-nav>ul>li:last-of-type{
+.cstm-menu-header>li:last-of-type{
     margin-right: 0;
 }
 
 nav>ul>li>a{
     color: aliceblue;
     display: inline-block;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: bold;
-    padding: 10px;
+    padding: 5px 7px 5px 7px;
     border-radius: 5px;
-    transition: background 0.4s ease-in-out;
+    transition: background 0.2s ease-in-out;
 }
 
 nav>ul>li>a:hover{
@@ -168,6 +181,7 @@ nav>ul>li>a:hover{
     padding: 7px;
     background-color: aliceblue;
     border: 1px solid grey;
+    border-radius: 5px;
     color: #3b5998;
     font-size: 15px;
     font-weight: bold;
