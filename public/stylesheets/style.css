@@ -14,28 +14,28 @@
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
 body {
-    padding-top: 70px;
-    padding-bottom: 20px;
+  padding-top: 70px;
+  padding-bottom: 20px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
+/* Override the default bootstrap behavior where horizontal description lists
+   will truncate terms that are too long to fit in the left column
 */
 .dl-horizontal dt {
-    white-space: normal;
+  white-space: normal;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 
@@ -129,8 +129,8 @@ figure {
 }
 hr {
   -webkit-box-sizing: content-box;
-     -moz-box-sizing: content-box;
-          box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
   height: 0;
 }
 pre {
@@ -181,8 +181,8 @@ input {
 input[type="checkbox"],
 input[type="radio"] {
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   padding: 0;
 }
 input[type="number"]::-webkit-inner-spin-button,
@@ -192,8 +192,8 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="search"] {
   -webkit-appearance: textfield;
   -webkit-box-sizing: content-box;
-     -moz-box-sizing: content-box;
-          box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 }
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
@@ -230,7 +230,7 @@ th {
     background: transparent !important;
     color: #000 !important;
     -webkit-box-shadow: none !important;
-            box-shadow: none !important;
+    box-shadow: none !important;
     text-shadow: none !important;
   }
   a,
@@ -1577,14 +1577,14 @@ kbd {
   background-color: #333333;
   border-radius: 3px;
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
-          box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 kbd kbd {
   padding: 0;
   font-size: 100%;
   font-weight: bold;
   -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
 }
 pre {
   display: block;
@@ -3037,7 +3037,7 @@ select[multiple].input-lg {
   text-align: center;
   vertical-align: middle;
   -ms-touch-action: manipulation;
-      touch-action: manipulation;
+  touch-action: manipulation;
   cursor: pointer;
   background-image: none;
   border: 1px solid transparent;
@@ -3521,13 +3521,13 @@ tbody.collapse.in {
   overflow: hidden;
   -webkit-transition-property: height, visibility;
   -o-transition-property: height, visibility;
-     transition-property: height, visibility;
+  transition-property: height, visibility;
   -webkit-transition-duration: 0.35s;
   -o-transition-duration: 0.35s;
-     transition-duration: 0.35s;
+  transition-duration: 0.35s;
   -webkit-transition-timing-function: ease;
   -o-transition-timing-function: ease;
-     transition-timing-function: ease;
+  transition-timing-function: ease;
 }
 .caret {
   display: inline-block;
@@ -3567,7 +3567,7 @@ tbody.collapse.in {
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   -webkit-background-clip: padding-box;
-          background-clip: padding-box;
+  background-clip: padding-box;
 }
 .dropdown-menu.pull-right {
   right: 0;
@@ -4215,7 +4215,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   padding-left: 15px;
   border-top: 1px solid transparent;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   -webkit-overflow-scrolling: touch;
 }
 .navbar-collapse.in {
@@ -4226,7 +4226,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     width: auto;
     border-top: 0;
     -webkit-box-shadow: none;
-            box-shadow: none;
+    box-shadow: none;
   }
   .navbar-collapse.collapse {
     display: block !important;
@@ -4367,7 +4367,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     background-color: transparent;
     border: 0;
     -webkit-box-shadow: none;
-            box-shadow: none;
+    box-shadow: none;
   }
   .navbar-nav .open .dropdown-menu > li > a,
   .navbar-nav .open .dropdown-menu .dropdown-header {
@@ -5183,7 +5183,7 @@ a.thumbnail.active {
   background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   -webkit-background-size: 40px 40px;
-          background-size: 40px 40px;
+  background-size: 40px 40px;
 }
 .progress.active .progress-bar,
 .progress-bar.active {
@@ -5941,7 +5941,7 @@ button.close {
   -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   -webkit-background-clip: padding-box;
-          background-clip: padding-box;
+  background-clip: padding-box;
   outline: 0;
 }
 .modal-backdrop {
@@ -6155,7 +6155,7 @@ button.close {
   font-size: 15px;
   background-color: #ffffff;
   -webkit-background-clip: padding-box;
-          background-clip: padding-box;
+  background-clip: padding-box;
   border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 6px;
@@ -7294,3 +7294,139 @@ section>ul>#dislike{
   padding: 10px;
 }
 
+#comments-form{
+  background: #fafafa;
+  padding: 5px;
+}
+
+#comments-form>section{
+  display: flex;
+}
+
+#comments-form>section>article{
+  background: url("./../images/no-profile-photo-small.jpg");
+  width: 30px;
+  height: 30px;
+}
+
+#comments-form>section>section>article{
+  padding-left: 10px;
+}
+
+#comments-form>section>section>article:first-child{
+  font-weight: bold;
+}
+
+#comments-form>section>section>article:last-child{
+  color: #bababa;
+  font-size: 0.8em;
+  line-height: 5px;
+}
+
+#add-comment{
+  width: 100%;
+  max-width: 100%;
+  padding: 5px;
+  background: #f4f4f4;
+}
+
+#profile-comment {
+  display: inline-block;
+  width: 96%;
+}
+
+
+#comment-btn{
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: url("./../images/small-icon.png") 0 25px;
+}
+
+#comment-btn:hover{
+  opacity: 0.8;
+}
+
+#post-view>footer{
+  background: #fafafa;
+}
+
+#post-view>footer>ul{
+  list-style: none;
+  padding: 0;
+}
+
+#post-view>footer>ul>li{
+  display: inline-block;
+  padding: 5px;
+}
+
+#like-btn:before{
+  background: url("./../images/small-icon.png") 0 100px;
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  content: "";
+}
+
+#love-btn:before{
+  background: url("./../images/small-icon.png") 0 125px;
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  content: "";
+}
+
+#dislike-btn:before{
+  background: url("./../images/small-icon.png") 0 150px;
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  content: "";
+}
+
+
+#post-view{
+  background: #f4f4f4;
+  margin-top: 10px;
+  padding: 5px;
+}
+
+#comment-view{
+  background: #fafafa;
+  padding: 5px;
+}
+
+#comment-view>section{
+  display: flex;
+}
+
+#comment-view>section>article:first-child{
+  background: url("./../images/no-profile-photo-small.jpg");
+  width: 30px;
+  height: 30px;
+}
+
+#comment-view>section>section>article{
+  padding-left: 10px;
+}
+
+#comment-view>section>section>article:first-child{
+  font-weight: bold;
+}
+
+#comment-view>section>section>article:last-child{
+  color: #bababa;
+  font-size: 0.8em;
+  line-height: 5px;
+}
+
+#comment-value{
+  margin: 10px;
+}

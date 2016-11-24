@@ -1,3 +1,9 @@
+<!doctype html>
+<head>
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 <div id="profile-wrapper">
     <section id="profile-info">
         <section id="large-profile-picture">
@@ -6,9 +12,9 @@
         <button id="add-favorites" class="button-with-plus add-favorites">Add to Favorites</button>
         <section>
             <ul>
-                <li id="like">999</li>
-                <li id="love">1K</li>
-                <li id="dislike">2M</li>
+                <li id="like">{{totalLikeCount}}</li>
+                <li id="love">{{totalLoveCount}}</li>
+                <li id="dislike">{{totalDislikeCount}}</li>
             </ul>
         </section>
         <section id="user-info">
@@ -22,14 +28,14 @@
         </header>
         <nav id="user-nav">
             <ul>
-                <li id="user-profile-nav">Profile</li>
-                <li id="user-about-nav">About</li>
-                <li id="user-photos-nav">Photos</li>
-                <li id="user-groups-nav">Groups</li>
+                <li id="user-profile-nav"><a href="/user/{{id}}">Profile</a></li>
+                <li id="user-about-nav"><a href="/user/about">About</a></li>
+                <li id="user-photos-nav"><a href="/user/gallery">Photos</a></li>
+                <li id="user-groups-nav"><a href="/user/groups">Groups</a></li>
             </ul>
         </nav>
         <section id="add-post">
-            <form method="post">
+            <form method="post" action="">
                 <textarea id="profile-post" rows="2" placeholder="How you doing?"></textarea>
                 <article id="bottom-line-post">
                     <input type="button" name="add-photo" id="add-photo-btn" value=" "/>
@@ -38,6 +44,7 @@
             </form>
         </section>
         <main>
+            <!-- Here post view -->
             <section id="post-view">
                 <header>
                     <section>
@@ -49,22 +56,57 @@
                                 {{fullName}}
                             </article>
                             <article>
-                                date
+                                {{postDate}}
                             </article>
                         </section>
                     </section>
                 </header>
                 <article id="post-content">
-                    publication
+                    {{postValue}}
                 </article>
-                <section>
+                <footer>
                     <ul>
-                        <li id="like-btn">999</li>
-                        <li id="love-btn">1K</li>
-                        <li id="dislike-btn">2M</li>
+                        <li id="like-btn">{{likeCount}}</li>
+                        <li id="love-btn">{{loveCount}}</li>
+                        <li id="dislike-btn">{{dislikeCount}}</li>
                     </ul>
+                </footer>
+                <section id="comment-view">
+                    <section>
+                        <article>
+                            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                        </article>
+                        <section>
+                            <article>
+                                {{fullNameCommentUser}}
+                            </article>
+                            <article>
+                                {{postDateCommnet}}
+                            </article>
+                        </section>
+                    </section>
+                    <article id="comment-value">
+                        {{comment}}
+                    </article>
+                </section>
+                <section id="comments-form">
+                    <section>
+                        <article>
+                            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                        </article>
+                        <section id="add-comment">
+                            <form method="post" action="">
+                                <textarea id="profile-comment" rows="1" placeholder="Comment:"></textarea>
+                                <input type="submit" name="commentBtn" id="comment-btn" value="">
+                            </form>
+                        </section>
+                    </section>
                 </section>
             </section>
+            <!--end post view-->
         </main>
     </section>
 </div>
+</body>
+</html>
+
