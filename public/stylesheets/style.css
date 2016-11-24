@@ -7067,7 +7067,16 @@ article .author  {
   justify-content: center;
 }
 
+#newsfeed-wrapper{
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 960px;
+  justify-content: center;
+}
+
 #profile-info{
+  flex: 1;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -7079,6 +7088,7 @@ article .author  {
 }
 
 #profile-content{
+  flex: 2;
   width: 100%;
   max-width: 100%;
   padding: 10px 0 0 10px;
