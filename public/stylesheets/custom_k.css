@@ -1,25 +1,48 @@
-/*My styles*/
-
-/*Header styling*/
-
-header {
-    overflow: hidden;
-    background-color: #3b5998;
-    /*    border: 2px solid red;   */
-    padding: 10px 30px 10px 30px;
-
-}
+/*Our styles*/
 
 body {
     padding: 0 !important;
     margin: 0 !important;
 }
 
+a:hover{
+    border: 0;
+    color: black;
+}
+
+a:link, a:visited, a:active{
+    /*text-decoration: none;*/
+    border: 0;
+
+}
+
+input {
+    outline: none;
+    border-color: #E8E8E8;
+    /*    padding: 5px;*/
+}
+
+legend {
+    font-size: 30px;
+    font-weight: bold;
+    color: #3b5998;
+}
+
+/*Header styling when not logged in*/
+
+header {
+    overflow: hidden;
+    background-color: #3b5998;
+    /*    border: 2px solid red;   */
+    padding: 0px 30px 0px 30px;
+}
+
+
 .navbar-header>a{
     font-style: italic;
     color: aliceblue;
     font-weight: bold;
-    font-size: 45px;
+    font-size: 40px;
     margin: 0px;
 }
 
@@ -31,15 +54,62 @@ body {
 .left-align {
     /*    float: right;*/
     text-align:right;
-    margin-top: 8px;
+    margin-top: 10px;
     color: aliceblue;
     font-weight: bold;
 }
 
+.input-cstm-style{
+    padding: 7px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    color: #3b5998;
+    transition: border 0.1s ease-in-out;
+}
+
+.input-cstm-style:focus{
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+}
+
+/*Header styling when logged in*/
+
+nav>ul {
+    list-style-type: none;
+    overflow: hidden;
+    text-align: right;
+}
+
+nav>ul>li{
+    display: inline;
+    /*    float: left;*/
+    text-align: center;
+    margin-right: 5px;
+}
+
+nav>ul>li:last-of-type{
+    margin-right: 0;
+}
+
+nav>ul>li>a{
+    color: aliceblue;
+    display: inline-block;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.4s ease-in-out;
+}
+
+nav>ul>li>a:hover{
+    background-color: #224285;
+    color: aliceblue;
+    text-decoration: none;
+}
 
 /*Header styling up to here*/
 
-/* Style when not logged in*/
+/* Style of page content when not logged in*/
 #main-page-bcgrnd-not-loggedin {
     background-image: url(../background-pics/front_pic.jpg);
     background-size: cover;
@@ -51,6 +121,7 @@ body {
     min-height: 550px;
 }
 
+/* Buttons Learn more and Sign Up */
 #main-page-bcgrnd-not-loggedin>ul{
     list-style-type: none;
     overflow: hidden;
@@ -68,8 +139,6 @@ body {
     margin-right: 0;
 }
 
-
-
 .btn-cstm-style {
     display: inline-block;
     border: 1px solid #3b5998;
@@ -86,29 +155,43 @@ body {
 .btn-cstm-style:hover {
     background-color:#E8E8E8;
     color: #3b5998;
+    text-decoration: none;
     /*transition: color 0.7s;*/
     /*transition: background-color 0.7s;*/
+    /*
+        box-shadow: 0 0 1px rgba(81, 203, 238, 1);
+        border: 1px solid rgba(81, 203, 238, 1);
+    */
 }
 
 .sign-in-log-out{
+    padding: 7px;
     background-color: aliceblue;
+    border: 1px solid grey;
     color: #3b5998;
     font-size: 15px;
     font-weight: bold;
     transition: background 0.4s ease-in-out;
+    /*    transition: border 0.2s ease;*/
+
     /*transition-duration: 0.7s;*/
 }
 
 .sign-in-log-out:hover{
     background-color:#E8E8E8;
     color: #3b5998;
-    /*transition: background-color 0.7s;*/
+
+    box-shadow: 0 0 1px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
 }
 
-a:hover, a:link, a:visited, a:active{
-    /*text-decoration: none;*/
-    border: 0;
-}
+/* Up to here Buttons Learn more and Sign Up */
+
+
+/* up to here Style when not logged in*/
+
+
+/* Style when register*/
 
 .custom-link-style {
     color: #3b5998;
@@ -119,11 +202,6 @@ a:hover, a:link, a:visited, a:active{
     color: #3b5998;
 
 }
-
-
-/* up to here Style when not logged in*/
-
-/* Style when register*/
 
 #main-page-bcgrnd-register {
     background-image: url(../background-pics/register_pick.jpg);
@@ -155,7 +233,7 @@ a:hover, a:link, a:visited, a:active{
 
 .form-to-float {
     float: right;
-    margin: 1% 1.5% 1% 5px;
+    margin: 1% 30px 1% 5px;
 
 }
 
@@ -171,27 +249,18 @@ a:hover, a:link, a:visited, a:active{
 
 }
 
-input {
-    outline: none;
-    border-color: #E8E8E8;
-}
-
-legend {
-    font-size: 30px;
-    font-weight: bold;
-    color: #3b5998;
-}
-
-
-
-.cstm-input-area-style[type="text"], .cstm-input-area-style[type="password"] {
-    border-radius: 5px;
-    padding: 10px;
-}
-
-.cstm-input-area-style[type="text"]:focus, .cstm-input-area-style[type="password"]:focus {
-    border-radius: 5px;
+.cstm-input-register-style[type="text"], .cstm-input-register-style[type="password"] {
     border-color: #3b5998;
+    border-radius: 5px;
+    padding: 7px;
+    transition: border 0.3s ease-in-out !important;
+
+}
+
+.cstm-input-register-style[type="text"]:focus, .cstm-input-register-style[type="password"]:focus {
+    /*    border-radius: 5px;*/
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
 
 }
 
@@ -201,6 +270,12 @@ legend {
     float: right;
     border: 0;
 }
+/* Up to here Style when register*/
+
+
+
+
+/*Footer styling*/
 
 #cstm-stl-ftr {
     background-color: #3b5998;
