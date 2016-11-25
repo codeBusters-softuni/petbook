@@ -34,52 +34,30 @@ module.exports = {
       res.render('user/register', candidateUser)
       return
     }
-    // See if a user with the given email already exists
-    User.findOne({ email: candidateUser.email }).then((potentialUser) => {
-      if (potentialUser) {
+    User
+      .register(candidateUser.fullName, candidateUser.email, candidateUser.password)
+      .then(newUser => {
+        req.logIn(newUser, function (err, newUser) {
+          if (err) {
+            // req.session.errorMsg = 'Error while logging in after registration :('
+            // ERROR
+            // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+            return
+          }
+
+          // TODO: Add success message that the user is registered
+          return res.redirect('/')
+        })
+      }).catch((err) => {
+        console.log(err.message)
+        // Error when saving the user
+
+        // req.session.errorMsg = 'Error while logging in after registration :('
         // ERROR
         // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+        res.redirect('/')
         return
-      }
-      Role.findOne({ name: 'User' }).then(role => {
-        if (!role) {
-          // ERROR - such a role does not exist
-          res.redirect('/')
-          return
-        }
-        // create user
-        let salt = encryption.generateSalt()
-        let newUser = {
-          fullName: candidateUser.fullName,
-          email: candidateUser.email,
-          password: encryption.hashPassword(candidateUser.password, salt),
-          salt: salt,
-          roles: [role._id]
-        }
-
-        User.create(newUser).then((newUser) => {
-          req.logIn(newUser, function (err, newUser) {
-            if (err) {
-              // req.session.errorMsg = 'Error while logging in after registration :('
-              // ERROR
-              // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-              return
-            }
-
-            // TODO: Add success message that the user is registered
-            return res.redirect('/')
-          })
-        }).catch((err) => {
-          console.log(err.message)
-          // Error when saving the user
-
-          // req.session.errorMsg = 'Error while logging in after registration :('
-          // ERROR
-          // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-          return
-        })
       })
-    })
   },
 
   loginPost: (req, res) => {
