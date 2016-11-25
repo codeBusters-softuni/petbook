@@ -1,0 +1,58 @@
+<section id="post-view">
+    <header>
+        <section>
+            <article>
+                <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+            </article>
+            <section>
+                <article>
+                    {{fullName}}
+                </article>
+                <article>
+                    {{postDate}}
+                </article>
+            </section>
+        </section>
+    </header>
+    <article id="post-content">
+        {{postValue}}
+    </article>
+    <footer>
+        <ul>
+            <li id="like-btn">{{likeCount}}</li>
+            <li id="love-btn">{{loveCount}}</li>
+            <li id="dislike-btn">{{dislikeCount}}</li>
+        </ul>
+    </footer>
+    <section id="comment-view">
+        <section>
+            <article>
+                <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+            </article>
+            <section>
+                <article>
+                    {{fullNameCommentUser}}
+                </article>
+                <article>
+                    {{postDateCommnet}}
+                </article>
+            </section>
+        </section>
+        <article id="comment-value">
+            {{comment}}
+        </article>
+    </section>
+    <section id="comments-form">
+        <section>
+            <article>
+                <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+            </article>
+            <section id="add-comment">
+                <form method="post" action="">
+                    <textarea id="profile-comment" rows="1" placeholder="Comment:"></textarea>
+                    <input type="submit" name="commentBtn" id="comment-btn" value="">
+                </form>
+            </section>
+        </section>
+    </section>
+</section>

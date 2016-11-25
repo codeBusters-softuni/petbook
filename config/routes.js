@@ -7,6 +7,8 @@ module.exports = (app) => {
   app.post('/user/register', controllers.userController.registerPost)
   app.post('/user/login', controllers.userController.loginPost)
 
+  app.get('/user/logout', controllers.userController.logout)
+
   // EVERYTHING BELOW REQUIRES AUTHENTICATION
   app.use((req, res, next) => {
     if (!req.isAuthenticated()) {

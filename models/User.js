@@ -35,7 +35,6 @@ userSchema.pre('save', function (next) {
   })
 })
 
-
 userSchema.method({
   authenticate: function (password) {
     let inputPasswordHash = encryption.hashPassword(password, this.salt)

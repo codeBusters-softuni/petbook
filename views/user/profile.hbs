@@ -1,4 +1,4 @@
-<div id="profile-wrapper">
+<div class="wrapper">
     <section id="profile-info">
         <section id="large-profile-picture">
             <!--profile picture example: <img src="{dir photo resize width: 300px}"/>-->
@@ -6,9 +6,9 @@
         <button id="add-favorites" class="button-with-plus add-favorites">Add to Favorites</button>
         <section>
             <ul>
-                <li id="like">999</li>
-                <li id="love">1K</li>
-                <li id="dislike">2M</li>
+                <li id="like">{{totalLikeCount}}</li>
+                <li id="love">{{totalLoveCount}}</li>
+                <li id="dislike">{{totalDislikeCount}}</li>
             </ul>
         </section>
         <section id="user-info">
@@ -22,49 +22,15 @@
         </header>
         <nav id="user-nav">
             <ul>
-                <li id="user-profile-nav">Profile</li>
-                <li id="user-about-nav">About</li>
-                <li id="user-photos-nav">Photos</li>
-                <li id="user-groups-nav">Groups</li>
+                <li id="user-profile-nav"><a href="/user/{{id}}">Profile</a></li>
+                <li id="user-about-nav"><a href="/user/about">About</a></li>
+                <li id="user-photos-nav"><a href="/user/gallery">Photos</a></li>
+                <li id="user-groups-nav"><a href="/user/groups">Groups</a></li>
             </ul>
         </nav>
-        <section id="add-post">
-            <form method="post">
-                <textarea id="profile-post" rows="2" placeholder="How you doing?"></textarea>
-                <article id="bottom-line-post">
-                    <input type="button" name="add-photo" id="add-photo-btn" value=" "/>
-                    <input type="submit" name="submit-post" class="button-with-plus post-btn" value="Post"/>
-                </article>
-            </form>
-        </section>
+            <!-- Here include addPost.hbs if url is user/id-->
         <main>
-            <section id="post-view">
-                <header>
-                    <section>
-                        <article>
-                            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
-                        </article>
-                        <section>
-                            <article>
-                                {{fullName}}
-                            </article>
-                            <article>
-                                date
-                            </article>
-                        </section>
-                    </section>
-                </header>
-                <article id="post-content">
-                    publication
-                </article>
-                <section>
-                    <ul>
-                        <li id="like-btn">999</li>
-                        <li id="love-btn">1K</li>
-                        <li id="dislike-btn">2M</li>
-                    </ul>
-                </section>
-            </section>
+            <!-- Here include post view, about, photo gallery or groups views -->
         </main>
     </section>
 </div>

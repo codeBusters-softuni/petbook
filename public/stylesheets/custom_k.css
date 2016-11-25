@@ -1,109 +1,307 @@
-/*My styles*/
+/*Our styles*/
 
-/*Header styling*/
+body {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+a:hover{
+    border: 0;
+    color: black;
+}
+
+a:link, a:visited, a:active{
+    /*text-decoration: none;*/
+    border: 0;
+
+}
+
+input {
+    outline: none;
+    border-color: #E8E8E8;
+    /*    padding: 5px;*/
+}
+
+legend {
+    font-size: 30px;
+    font-weight: bold;
+    color: #3b5998;
+}
+
+/*Header styling when not logged in*/
 
 header {
     overflow: hidden;
     background-color: #3b5998;
     /*    border: 2px solid red;   */
-    padding: 10px 30px 10px 30px;
-
+    padding: 0px 30px 0px 30px;
 }
 
-.allNulled {
-    padding: 0;
-    margin: 0;
-}
 
 .navbar-header>a{
     font-style: italic;
     color: aliceblue;
     font-weight: bold;
-    font-size: 30px !important;
+    font-size: 40px;
     margin: 0px;
 }
 
+.navbar-header>a:hover, .navbar-header>a:link, .navbar-header>a:visited, .navbar-header>a:active{
+    text-decoration: none;
+}
 
-header>.leftAlign {
-    float: right;
-    margin-top: 8px;
+
+.left-align {
+    /*    float: right;*/
+    text-align:right;
+    margin-top: 11px;
     color: aliceblue;
     font-weight: bold;
 }
 
-header>.leftAlign div {
-    margin-left: 20px;
+.input-cstm-style{
+    padding: 7px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    color: #3b5998;
+    transition: border 0.1s ease-in-out;
 }
 
-header>.leftAlign input {
-    color: black;
+.input-cstm-style:focus{
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+}
+
+.search-cstm{
+    width: 280px;
+    margin-right: 0;
+    position:relative;
+    left: 6px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+/*Header styling when logged in*/
+
+
+.cstm-menu-header{
+    list-style-type: none;
+    overflow: hidden;
+    text-align: right;
+
+}
+
+.cstm-menu-header>li{
+    display: inline-block;
+    /*    float: left;*/
+    text-align: center;
+    margin-right: 5px;
+    margin-top: 3px;
+
+}
+
+.cstm-menu-header>li:last-of-type{
+    margin-right: 0;
+}
+
+nav>ul>li>a{
+    color: aliceblue;
+    display: inline-block;
+    font-size: 17px;
+    font-weight: bold;
+    padding: 5px 7px 5px 7px;
+    border-radius: 5px;
+    transition: background 0.2s ease-in-out;
+}
+
+nav>ul>li>a:hover{
+    background-color: #224285;
+    color: aliceblue;
+    text-decoration: none;
 }
 
 /*Header styling up to here*/
 
-/* Style when not logged in*/
-#mainPageBcgrndNotLoggedIn {
+/* Style of page content when not logged in*/
+#main-page-bcgrnd-not-loggedin {
     background-image: url(../background-pics/front_pic.jpg);
     background-size: cover;
-    /*    background-position: center top;*/
+    background-repeat: no-repeat;
+    background-position: center 50%;
     text-align: center;
+    padding-bottom: 20%;
+    width: 100%;
+    min-height: 550px;
 }
 
-#mainPageBcgrndNotLoggedIn>ul>li{
-    margin: 8% 5px 27% 5px;
+/* Buttons Learn more and Sign Up */
+#main-page-bcgrnd-not-loggedin>ul{
+    list-style-type: none;
+    overflow: hidden;
+    padding-left: 0;
+    display: inline-block;
+    padding-top: 150px;
+}
+
+#main-page-bcgrnd-not-loggedin>ul>li{
+    float: left;
+    text-align: center;
+    margin-right: 20px;
+}
+#main-page-bcgrnd-not-loggedin>ul>li:last-of-type{
+    margin-right: 0;
+}
+
+.btn-cstm-style {
+    display: inline-block;
     border: 1px solid #3b5998;
     border-radius: 5px;
-    list-style-type: none;
-    display: inline-block;
-}
-
-#mainPageBcgrndNotLoggedIn>ul>li>a {
-    display: inline-block;
-    padding: 10px;
-    width: 100px;
+    padding: 12px;
+    width: 140px;
     background-color: #3b5998;
     color: aliceblue;
     font-weight: bold;
-
+    font-size: 20px;
+    transition: background 0.4s ease-in-out;
 }
+
+.btn-cstm-style:hover {
+    background-color:#E8E8E8;
+    color: #3b5998;
+    text-decoration: none;
+    /*transition: color 0.7s;*/
+    /*transition: background-color 0.7s;*/
+    /*
+        box-shadow: 0 0 1px rgba(81, 203, 238, 1);
+        border: 1px solid rgba(81, 203, 238, 1);
+    */
+}
+
+.sign-in-log-out{
+    padding: 7px;
+    background-color: aliceblue;
+    border: 1px solid grey;
+    border-radius: 5px;
+    color: #3b5998;
+    font-size: 15px;
+    font-weight: bold;
+    transition: background 0.4s ease-in-out;
+    /*    transition: border 0.2s ease;*/
+
+    /*transition-duration: 0.7s;*/
+}
+
+.sign-in-log-out:hover{
+    background-color:#E8E8E8;
+    color: #3b5998;
+
+    box-shadow: 0 0 1px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+}
+
+/* Up to here Buttons Learn more and Sign Up */
+
 
 /* up to here Style when not logged in*/
 
+
 /* Style when register*/
 
-#mainPageBcgrndRegister {
+.custom-link-style {
+    color: #3b5998;
+}
+
+.custom-link-style:hover{
+    text-decoration: underline;
+    color: #3b5998;
+
+}
+
+#main-page-bcgrnd-register {
     background-image: url(../background-pics/register_pick.jpg);
     background-size: cover;
-    /*    background-position: center top;*/
-    /*    border: 2px solid red;*/
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 550px;
     overflow: hidden;
 }
 
-#formToFloat {
-    float: right;
-    margin: 4% 5% 8% 5px;
+.box-to-dim-behind{
+    background-color: rgba(255,255,255,0.7);
+    padding: 20px;
+    margin: 10px;
+    border-radius: 25px;
+    /*
+        padding: 10px;
+        background-color: azure;
+        opacity: 0.6;
+        filter: alpha(opacity=60);
+    */
+
 }
 
-#formToFloat label {
+.box-to-dim-behind > a {
+    float: right;
+    margin: 15px 0;
+}
+
+
+.form-to-float {
+    float: right;
+    margin: 1% 30px 1% 5px;
+
+}
+
+.form-to-float label {
     width: 130px;
     text-align: right;
     margin-right: 10px;
+
 }
 
-#formToFloat div {
+.form-to-float div {
     margin-bottom: 10px;
+
 }
 
-.mainPageF {
+.cstm-input-register-style[type="text"], .cstm-input-register-style[type="password"] {
+    border-color: #3b5998;
+    border-radius: 5px;
+    padding: 7px;
+    transition: border 0.3s ease-in-out !important;
+
+}
+
+.cstm-input-register-style[type="text"]:focus, .cstm-input-register-style[type="password"]:focus {
+    /*    border-radius: 5px;*/
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+
+}
+
+.rgstr-btn{
+    width: 100px;
+    /*    display: inline-block;*/
+    float: right;
+    border: 0;
+}
+/* Up to here Style when register*/
+
+
+
+
+/*Footer styling*/
+
+#cstm-stl-ftr {
     background-color: #3b5998;
     padding: 5px;
     width: 100%;
     bottom: 0;
     left: 0;
-    right: 0;
-    position: absolute;
+    position: fixed;
 }
-.mainPageF p{
+#cstm-stl-ftr p{
     text-align: center;
     color: #f7f7f7;
     margin: 0;

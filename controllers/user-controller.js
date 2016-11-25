@@ -110,6 +110,13 @@ module.exports = {
     })
   },
 
+  logout: (req, res) => {
+    req.logOut()
+    let returnUrl = '/'
+    return res.redirect(returnUrl)
+    // res.redirect('/');
+  },
+
   profilePageGet: (req, res) => {
     let userId = req.params.id
     User.findOne({ userId: userId }).then(user => {
