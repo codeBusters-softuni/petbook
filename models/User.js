@@ -44,10 +44,16 @@ userSchema.method({
   },
 
   isAdmin: function () {
-    // TODO: Implement once Roles are functional!
     return new Promise((resolve, reject) => {
-      resolve()
-      return true
+      Role.findOne({name: 'Admin'}).then(role => {
+        if (!role) {
+          // No such role exists!
+          let err = new Error('Admin role does not exist!')
+          reject(err)
+        } else {
+          resolve(this.roles.indexOf(role._id) !== -1)
+        }
+      })
     })
   }
 })

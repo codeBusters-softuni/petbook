@@ -94,7 +94,7 @@ module.exports = {
         return
       }
 
-      req.logIn(user, function (err, user) {
+      req.logIn(user, function (err) {
         if (err) {
           // req.session.errorMsg = 'Error while logging in :('
           // ERROR
