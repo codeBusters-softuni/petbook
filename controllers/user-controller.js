@@ -3,10 +3,13 @@ const encryption = require('./../utilities/encryption')
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const Role = mongoose.model('Role')
+const Category = mongoose.model('Category')
 
 module.exports = {
   registerGet: (req, res) => {
-    res.render('user/register')
+    Category.find({}).then(categories => {
+      res.render('user/register', { categories: categories })
+    })
   },
 
   registerPost: (req, res) => {

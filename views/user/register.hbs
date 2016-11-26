@@ -3,29 +3,38 @@
         <form class="" action="/user/register" method="POST">
             <fieldset>
                 <legend>Sign Up</legend>
+                <div class="">
+                    <label class="" for="email">Email</label>
+                    <input type="text" class="cstm-input-register-style input-cstm-style" id="email" , name="email" , value="{{email}}" , placeholder="Email"
+                    />
+                </div>
+                <div class="">
+                    <label class="" for="email">Name</label>
+                    <input type="text" class="cstm-input-register-style input-cstm-style" id="fullName" , name="fullName" , value="{{fullName}}"
+                        , placeholder="Name" />
+                </div>
+                <div class="">
+                    <label class="" for="password">Password</label>
+                    <input type="password" class="cstm-input-register-style input-cstm-style" id="password" , name="password" , placeholder="Password"
+                    />
+                </div>
+                <div class="">
+                    <label class="" for="confirmedPassword">Confirm Password</label>
+                    <input type="password" class="cstm-input-register-style input-cstm-style" id="confirmedPassword" , name="confirmedPassword"
+                        , placeholder="Confirm Password" />
+                </div>
+                <div class="">
+                    <select class="cstm-input-register-style input-cstm-style" name="category">
+                        {{#each categories}}
+                            <option value=name>{{name}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="">
                     <div class="">
-                        <label class="" for="email">Email</label>
-                        <input type="text" class="cstm-input-register-style input-cstm-style" id="email", name="email", value="{{email}}", placeholder="Email"/>
+                        <button type="submit" class="btn-cstm-style rgstr-btn">Register</button>
                     </div>
-                    <div class="">
-                        <label class="" for="email">Name</label>
-                        <input type="text" class="cstm-input-register-style input-cstm-style" id="fullName", name="fullName", value="{{fullName}}", placeholder="Name"/>
-                    </div>
-                    <div class="">
-                        <label class="" for="password">Password</label>
-                        <input type="password" class="cstm-input-register-style input-cstm-style" id="password", name="password", placeholder="Password"/>
-                    </div>
-                    <div class="">
-                        <label class="" for="confirmedPassword">Confirm Password</label>
-                        <input type="password" class="cstm-input-register-style input-cstm-style" id="confirmedPassword", name="confirmedPassword", placeholder="Confirm Password"/>
-                    </div>
-
-                    <div class="">
-                        <div class="">
-                            <button type="submit" class="btn-cstm-style rgstr-btn">Register</button>
-                        </div>
-
-                    </div>
+                </div>
             </fieldset>
         </form>
         <a href="" class="custom-link-style">Forgot your password?</a>

@@ -14,7 +14,7 @@ let userSchema = mongoose.Schema(
     profilePic: { type: mongoose.Schema.Types.ObjectId, ref: 'Photo' },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
-    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },      //  Мисля, че това все пак трябва да е масив group и да има възможност за членство в няколко групи, например Dogs, Labradors,
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   }
 )
