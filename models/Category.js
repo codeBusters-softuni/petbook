@@ -8,6 +8,18 @@ let categorySchema = mongoose.Schema({
   photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }]
 })
 
+categorySchema.method({
+  // adds a user to the category's users array
+  addUser: function (userId) {
+    return new Promise((resolve, reject) => {
+      this.users.push(userId)
+      this.save().then(() => {
+        resolve()
+      }).catch((err) => { reject(err) })
+    })
+  }
+})
+
 const Category = mongoose.model('Category', categorySchema)
 
 module.exports = Category

@@ -95,7 +95,12 @@ module.exports.register = function (fullName, email, password, category) {
                   category: potentialCategory._id
                 }
 
-                User.create(newUser).then((newUser) => { resolve(newUser) }).catch(() => { reject() })
+                User.create(newUser).then((newUser) => {
+                  // add the user to the category's users array
+                  potentialCategory.addUser(newUser._id).then(() => {
+                    resolve(newUser)
+                  })
+                }).catch(() => { reject() })
               }
             })
           }
