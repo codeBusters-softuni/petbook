@@ -14,11 +14,17 @@ module.exports = Category
 
 module.exports.initialize = () => {
   // this creates all our categories in case they don't exist
-  for (let category of categories) {
-    Category.findOne({ name: category }).then(categ => {
-      if (!categ) {
-        Category.create({ name: category })
-      }
+  return categories.map(category => {
+    return new Promise((resolve, reject) => {
+      Category.findOne({ name: category }).then(categ => {
+        if (!categ) {
+          Category.create({ name: category }).then(() => {
+            resolve()
+          }).catch((err) => { reject(err) })
+        } else {
+          resolve()
+        }
+      })
     })
-  }
+  })
 }
