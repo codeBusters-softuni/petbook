@@ -14,7 +14,7 @@ module.exports = {
 
   registerPost: (req, res) => {
     let candidateUser = req.body
-
+    console.log(candidateUser)
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
       // ERROR - Email is invalid!
@@ -38,7 +38,7 @@ module.exports = {
       return
     }
     User
-      .register(candidateUser.fullName, candidateUser.email, candidateUser.password)
+      .register(candidateUser.fullName, candidateUser.email, candidateUser.password, candidateUser.category)
       .then(newUser => {
         req.logIn(newUser, function (err, newUser) {
           if (err) {
