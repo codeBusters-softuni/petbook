@@ -1,7 +1,7 @@
 <div id="newsfeed-wrapper">
     <section id="add-post">
-        <form method="post" action="">
-            <textarea id="profile-post" rows="2" placeholder="How you doing?"></textarea>
+        <form method="post" action="/post/add">
+            <textarea id="profile-post" rows="2" name="postContent" placeholder="How are you doing?"></textarea>
             <article id="bottom-line-post">
                 <input type="button" name="add-photo" id="add-photo-btn" value=" "/>
                 <input type="submit" name="submit-post" class="button-with-plus post-btn" value="Post"/>
@@ -10,6 +10,7 @@
     </section>
     <main>
         <!-- Here post view -->
+        {{#each posts}}
         <section id="post-view">
             <header>
                 <section>
@@ -21,38 +22,42 @@
                             {{fullName}}
                         </article>
                         <article>
-                            {{postDate}}
+                            {{!--{{postDate}}--}}
                         </article>
                     </section>
                 </section>
             </header>
             <article id="post-content">
-                {{postValue}}
+                {{content}}
             </article>
             <footer>
                 <ul>
-                    <li id="like-btn">{{likeCount}}</li>
+                    {{!--<li id="like-btn">{{likeCount}}</li>
                     <li id="love-btn">{{loveCount}}</li>
-                    <li id="dislike-btn">{{dislikeCount}}</li>
+                    <li id="dislike-btn">{{dislikeCount}}</li>--}}
                 </ul>
             </footer>
             <section id="comment-view">
+                <!-- COMMENTS -->
+                {{#each comments}}
                 <section>
                     <article>
                         <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
                     </article>
                     <section>
                         <article>
-                            {{fullNameCommentUser}}
+                            {{author.fullName}}
                         </article>
                         <article>
-                            {{postDateCommnet}}
+                            {{date}}
                         </article>
                     </section>
                 </section>
                 <article id="comment-value">
-                    {{comment}}
+                    {{content}}
                 </article>
+                {{/each}}
+                <!-- END OF COMMENTS -->
             </section>
             <section id="comments-form">
                 <section>
@@ -61,13 +66,14 @@
                     </article>
                     <section id="add-comment">
                         <form method="post" action="">
-                            <textarea id="profile-comment" rows="1" placeholder="Comment:"></textarea>
+                            <textarea id="profile-comment" rows="1" placeholder="Add a comment"></textarea>
                             <input type="submit" name="commentBtn" id="comment-btn" value="">
                         </form>
                     </section>
                 </section>
             </section>
         </section>
+        {{/each}}
         <!--end post view-->
     </main>
     </section>
