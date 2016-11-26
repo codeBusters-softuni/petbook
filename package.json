@@ -18,6 +18,7 @@
   "homepage": "https://github.com/codeBusters-softuni/petbook#readme",
   "dependencies": {
     "body-parser": "1.15.2",
+    "chai": "3.5.0",
     "cookie-parser": "1.4.3",
     "crypto": "0.0.3",
     "email-validator": "1.0.7",
@@ -25,6 +26,7 @@
     "express-session": "1.14.2",
     "handlebars": "4.0.6",
     "hbs": "4.0.1",
+    "mocha": "3.2.0",
     "mongoose": "4.6.8",
     "mongoose-sequence": "3.1.0",
     "passport": "0.3.2",
