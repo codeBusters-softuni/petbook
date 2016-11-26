@@ -52,28 +52,28 @@ describe('User', function () {
     })
 
   it('two users with categories Dog should have the same category',
-  function (done) {
-    registerUser('first dog', 'first_dog@abv.bg', 'pass', dogCategoryName).then((firstDog) => {
-      registerUser('second dog', 'second_dog@abv.bg', 'pass', dogCategoryName).then((secondDog) => {
-        expect(firstDog.category).not.to.be.undefined
-        expect(secondDog.category).not.to.be.undefined
-        expect(firstDog.category).to.be.eqls(secondDog.category)
-        done()
+    function (done) {
+      registerUser('first dog', 'first_dog@abv.bg', 'pass', dogCategoryName).then((firstDog) => {
+        registerUser('second dog', 'second_dog@abv.bg', 'pass', dogCategoryName).then((secondDog) => {
+          expect(firstDog.category).not.to.be.undefined
+          expect(secondDog.category).not.to.be.undefined
+          expect(firstDog.category).to.be.eqls(secondDog.category)
+          done()
+        })
       })
     })
-  })
 
   it('two users with different categories should not have the same category',
-  function (done) {
-    registerUser('dog', 'dog@abv.bg', 'dog', dogCategoryName).then(dog => {
-      registerUser('cat', 'cat@abv.bg', 'cat', 'Cat').then(cat => {
-        expect(dog.category).not.to.be.undefined
-        expect(cat.category).not.to.be.undefined
-        expect(dog.category).not.to.be.eqls(cat.category)
-        done()
+    function (done) {
+      registerUser('dog', 'dog@abv.bg', 'dog', dogCategoryName).then(dog => {
+        registerUser('cat', 'cat@abv.bg', 'cat', 'Cat').then(cat => {
+          expect(dog.category).not.to.be.undefined
+          expect(cat.category).not.to.be.undefined
+          expect(dog.category).not.to.be.eqls(cat.category)
+          done()
+        })
       })
     })
-  })
 
   it('when registering a user, the password should be encrypted',
     function (done) {
@@ -81,6 +81,16 @@ describe('User', function () {
       registerUser('Stanislav Kozlovski', 'stanislav@abv.bg', rawPassword, dogCategoryName).then((newUser) => {
         expect(newUser.password).not.to.be.equal(rawPassword)
         done()
+      })
+    })
+
+  it('when registering a user, he should not be an admin',
+    function (done) {
+      registerUser('Stanislav Kozlovski', 'SOMEBODY@abv.bg', 'password', dogCategoryName).then((newUser) => {
+        newUser.isAdmin().then(isAdmin => {
+          expect(isAdmin).to.be.false
+          done()
+        }).catch((err) => {console.log(err)})
       })
     })
 
