@@ -23,16 +23,27 @@ const Role = mongoose.model('Role', roleSchema)
 module.exports = Role
 
 module.exports.initialize = () => {
-  Role.findOne({ name: 'User' }).then(role => {
-    if (!role) {
-      Role.create({ name: 'User' })
-    }
-  })
+  let promises = [
+    new Promise((resolve, reject) => {
+      Role.findOne({ name: 'User' }).then(role => {
+        if (!role) {
+          Role.create({ name: 'User' }).then(() => {
+            resolve()
+          })
+        } else { resolve() }
+      })
+    }),
+    new Promise((resolve, reject) => {
+      Role.findOne({ name: 'Admin' }).then(role => {
+        if (!role) {
+          Role.create({ name: 'Admin' }).then(() => {
+            resolve()
+          })
+        } else { resolve() }
+      })
+    })
+  ]
 
-  Role.findOne({ name: 'Admin' }).then(role => {
-    if (!role) {
-      Role.create({ name: 'Admin' })
-    }
-  })
+  return promises
 }
 
