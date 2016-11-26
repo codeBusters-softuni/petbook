@@ -72,8 +72,8 @@ module.exports.register = function (fullName, email, password, category) {
         return
       } else {
         // get the Category from the DB
-        Category.findOne({ name: category }).then(category => {
-          if (!category) {
+        Category.findOne({ name: category }).then(potentialCategory => {
+          if (!potentialCategory) {
             // no such category exists
             let err = new Error(`No category named ${category} exists!`)
             reject(err)
@@ -92,7 +92,7 @@ module.exports.register = function (fullName, email, password, category) {
                   password: encryption.hashPassword(password, salt),
                   salt: salt,
                   roles: [role.id],
-                  category: category._id
+                  category: potentialCategory._id
                 }
 
                 User.create(newUser).then((newUser) => { resolve(newUser) }).catch(() => { reject() })
