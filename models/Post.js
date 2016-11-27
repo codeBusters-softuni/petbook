@@ -40,9 +40,10 @@ postSchema.method({
   },
 
   splitLikes: function () {
-      this.paws = this.likes.filter(like => { return like.type === 'Paw' })
-      this.loves = this.likes.filter(like => { return like.type === 'Love' })
-      this.dislikes = this.likes.filter(like => { return like.type === 'Dislike' })
+    // Split the main likes array into TEMPORARY arrays of each like type.
+    this.paws = this.likes.filter(like => { return like.type === 'Paw' })
+    this.loves = this.likes.filter(like => { return like.type === 'Love' })
+    this.dislikes = this.likes.filter(like => { return like.type === 'Dislike' })
   }
 })
 

@@ -76,7 +76,7 @@ module.exports = {
           // User is un-liking this photo and giving it a {likeType}
           // So we simply change the name of this like
           post.likes[likeIndex].type = likeType
-          post.save().then(() => {
+          post.likes[likeIndex].save().then(() => {
             res.redirect('/')
             // Success!
           })
