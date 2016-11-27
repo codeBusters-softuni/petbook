@@ -1,0 +1,153 @@
+<!--            If user doesn't have any pics-->
+<section class="container pic-up-container">
+
+    <section id="upload-photos">
+        <h1>You currently don't have any photos.</h1>
+        <h2 class="album-tabs">Do you want to create a new album?</h2>
+        <h2 class="album-tabs">Or you just want to upload a single photo?</h2>
+        <ul>
+            <li>
+                <article class="cntnr-crte-albm">
+                    <header>
+                        <h3 class="col-xs-8 col-sm-6 col-md-6 rmv-mrgn">Create an album</h3>
+                        <div class="col-xs-4 col-sm-6 col-md-6">
+                            <button type="submit" class="btn btn-secondary sign-in-log-out">Cancel</button>
+                        </div>
+                    </header>
+                    <section class="container-fluid">
+                        <section class="col-xs-12 col-sm-4 col-md-3 rmv-mrgn float-left-cntr">
+                            <fieldset>
+                                <form action="" class="pic-form">
+
+                                    <div>
+                                        <label for="">Album name</label>
+                                        <input type="text" class="cstm-input-register-style input-cstm-style" id="" value="" placeholder="Title" />
+                                    </div>
+                                    <div>
+                                        <label for="">Description</label>
+                                        <textarea id="" class="cstm-input-register-style input-cstm-style" rows="10" cols="100" placeholder="Say something about this album..."></textarea>
+                                        <!--                                                    <input type="text" class="cstm-input-register-style input-cstm-style" id="" value="" placeholder="Say something about that album"/>-->
+                                    </div>
+                                    <div class="radion-questions">
+                                        <div>
+                                            <input type="radio" name="album-check" id="public" value="public-vsbl">
+                                            <label for="public">Is this album public?</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="album-check" id="category" value="group-vsbl">
+                                            <label for="category">Or is it visible to your category?</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="album-check" id="friends" value="friends-vsbl">
+                                            <label for="friends">Or is it visible only to your friends?</label>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </fieldset>
+                        </section>
+                        <section class="container col-xs-12 col-sm-8 col-md-9 float-left-cntr cntr-cntr">
+                        <!--                                            {{#each photos}}-->
+                            <article class="col-xs-12 col-sm-5 col-md-4">
+                                <section class="photo-cntnr">
+                                    <a href="" class="close">&times;</a>
+                                    <div class="album-photo-content">
+                                        <img src="../public/background-pics/front_pic.jpg" alt="">
+                                    </div>
+
+                                    <textarea id="" class="cstm-input-register-style input-cstm-style" rows="3" cols="30" placeholder="Say something about this photo..."></textarea>
+                                </section>
+                            </article>
+
+                            <article class="col-xs-12 col-sm-5 col-md-4">
+                                <section class="photo-cntnr">
+                                    <a href="" class="close">&times;</a>
+                                    <div class="album-photo-content">
+                                        <img src="../public/images/dogi.jpg" alt="">
+                                    </div>
+                                    <textarea id="" class="cstm-input-register-style input-cstm-style" rows="3" cols="30" placeholder="Say something about this photo..."></textarea>
+                                </section>
+                            </article>
+                                <!--                                            {{/each}}-->
+
+                            <article class="col-xs-12 col-sm-5 col-md-4 add-photo-button">
+                                <section class="photo-cntnr add-photo">
+                                    <a href="" class=""></a>
+                                </section>
+
+                            </article>
+                        </section>
+                    </section>
+                    <section class="col-xs-12 col-md-12">
+                        <button type="submit" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>
+                    </section>
+                </article>
+            </li>
+
+            <li>
+                <article class="cntnr-crte-albm">
+                    <header>
+                        <h3 class="col-xs-8 col-sm-6 col-md-6 rmv-mrgn">Upload a picture</h3>
+                        <div class="col-xs-4 col-sm-6 col-md-6">
+                            <button type="submit" class="btn btn-secondary sign-in-log-out">Cancel</button>
+                        </div>
+                    </header>
+                    <section class="container-fluid">
+                        <section class="col-xs-12 col-sm-4 col-md-3 rmv-mrgn float-left-cntr">
+                            <fieldset>
+                                <form action="" class="pic-form">
+                                    <div>
+                                        <label for="">Description</label>
+                                        <textarea id="" class="cstm-input-register-style input-cstm-style" rows="10" cols="100" placeholder="Say something about this picture..."></textarea>
+                                        <!--                                                    <input type="text" class="cstm-input-register-style input-cstm-style" id="" value="" placeholder="Say something about that album"/>-->
+                                    </div>
+                                    <div class="radion-questions">
+                                        <div>
+                                            <input type="radio" name="album-check" id="single-public" value="public-vsbl">
+                                            <label for="single-public">Is this picture public?</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="album-check" id="single-category" value="group-vsbl">
+                                            <label for="single-category">Or is it visible to your category?</label>
+                                        </div>
+                                        <div>
+                                            <input type="radio" name="album-check" id="single-friends" value="friends-vsbl">
+                                            <label for="single-friends">Or is it visible only to your friends?</label>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </fieldset>
+                        </section>
+                        <section class="container col-xs-12 col-sm-8 col-md-9 float-left-cntr cntr-cntr">
+                        <!--                                            {{#each photos}}-->
+
+                            <article class="col-xs-12 col-sm-5 col-md-4">
+                                <section class="photo-cntnr">
+                                    <a href="" class="close">&times;</a>
+                                    <div class="album-photo-content">
+                                        <img src="../public/images/dogi.jpg" alt="">
+                                    </div>
+                                    <textarea id="" class="cstm-input-register-style input-cstm-style" rows="3" cols="30" placeholder="Say something about this photo..."></textarea>
+                                </section>
+                            </article>
+                                <!--                                            {{/each}}-->
+
+                            <article class="col-xs-12 col-sm-5 col-md-4 add-photo-button">
+                                <section class="photo-cntnr add-photo">
+                                    <a href="" class=""></a>
+                                </section>
+
+                            </article>
+                        </section>
+                    </section>
+                    <section class="col-xs-12 col-md-12">
+                        <button type="submit" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>
+                    </section>
+                </article>
+
+            </li>
+        </ul>
+
+    </section>
+</section>
