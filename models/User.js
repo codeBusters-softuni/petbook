@@ -13,7 +13,7 @@ let userSchema = mongoose.Schema(
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }],
     owner: { type: String },
     profilePic: { type: mongoose.Schema.Types.ObjectId, ref: 'Photo' },
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
+//  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }], let's try what it's like to not hold the user's posts
     photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
