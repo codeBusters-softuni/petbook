@@ -52,7 +52,8 @@ module.exports = {
 
   },
 
-  addPaw: (req, res) => {
+  addLike: (req, res) => {
+    let likeType = req.params.likeType.slice(3)
     let postId = req.params.id
     let userId = req.user._id
     Post.findById(postId).populate('likes').then(post => {
@@ -61,17 +62,20 @@ module.exports = {
         res.redirect('/')
         return
       }
-      let likeIndex = post.likes.indexOf(userId) 
+      let likeIndex = post.likes.findIndex(like => {
+        return like.author.equals(userId)
+      })
+
       if (likeIndex !== -1) {
         // user has already liked this post
-        if (post.likes[likeIndex].type === 'Paw') {
-          // User has already PAWed this photo and is trying to again, ERROR!
+        if (post.likes[likeIndex].type === likeType) {
+          // User has already {likeType} this photo and is trying to again, ERROR!
           res.redirect('/')
           return
         } else {
-          // User is un-loving or un-disliking this photo and giving it a paw
-          // So we simply change the name of this liked
-          post.likes[likeIndex].type = 'Paw'
+          // User is un-liking this photo and giving it a {likeType}
+          // So we simply change the name of this like
+          post.likes[likeIndex].type = likeType
           post.save().then(() => {
             res.redirect('/')
             // Success!
@@ -79,7 +83,7 @@ module.exports = {
         }
       } else {
         // User is liking this post for the first time
-        Like.create({type: 'Paw', author: req.user._id}).then(like => {
+        Like.create({type: likeType, author: req.user._id}).then(like => {
           post.likes.push(like._id)
           post.save().then(() => {
             res.redirect('/')
