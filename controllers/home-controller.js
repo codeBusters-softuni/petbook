@@ -23,6 +23,10 @@ module.exports = {
                 post.splitLikes()
                 return post
               })
+              // Sort the posts in descending date order. (Newest ones first!)
+              postsToSee.sort((a, b) => {
+                return b.date - a.date
+              })
 
               res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost})
             })
