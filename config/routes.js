@@ -22,4 +22,5 @@ module.exports = (app) => {
 
   app.post('/post/add', controllers.postController.addPost)
   app.post('/post/:id/addComment', controllers.postController.addComment)
+  app.post('/post/:id/addPaw', controllers.postController.addPaw)
 }

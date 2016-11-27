@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Post = mongoose.model('Post')
 const Comment_ = mongoose.model('Comment')
+const Like = mongoose.model('Like')
 
 module.exports = {
   addPost: (req, res) => {
@@ -49,5 +50,43 @@ module.exports = {
       })
     })
 
+  },
+
+  addPaw: (req, res) => {
+    let postId = req.params.id
+    let userId = req.user._id
+    Post.findById(postId).populate('likes').then(post => {
+      if (!post) {
+        // ERROR - Post with ID does not exist!
+        res.redirect('/')
+        return
+      }
+      let likeIndex = post.likes.indexOf(userId) 
+      if (likeIndex !== -1) {
+        // user has already liked this post
+        if (post.likes[likeIndex].type === 'Paw') {
+          // User has already PAWed this photo and is trying to again, ERROR!
+          res.redirect('/')
+          return
+        } else {
+          // User is un-loving or un-disliking this photo and giving it a paw
+          // So we simply change the name of this liked
+          post.likes[likeIndex].type = 'Paw'
+          post.save().then(() => {
+            res.redirect('/')
+            // Success!
+          })
+        }
+      } else {
+        // User is liking this post for the first time
+        Like.create({type: 'Paw', author: req.user._id}).then(like => {
+          post.likes.push(like._id)
+          post.save().then(() => {
+            res.redirect('/')
+            // Success!
+          })
+        })
+      }
+    })
   }
 }
