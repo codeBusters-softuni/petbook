@@ -37,6 +37,12 @@ postSchema.method({
         resolve()
       }).catch((err) => { reject(err) })
     })
+  },
+
+  splitLikes: function () {
+      this.paws = this.likes.filter(like => { return like.type === 'Paw' })
+      this.loves = this.likes.filter(like => { return like.type === 'Love' })
+      this.dislikes = this.likes.filter(like => { return like.type === 'Dislike' })
   }
 })
 

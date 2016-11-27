@@ -9,7 +9,7 @@ let invalidLikeErrorMessage = "The like you passed does not exist in constants.j
 let validatorErrorPair = [likeValidator, invalidLikeErrorMessage]  // passes the validator function and the error message we want it to return in case it does not work
 
 let likeSchema = mongoose.Schema({
-  type: {type: String, required: true, unique: true, validator: validatorErrorPair},
+  type: {type: String, required: true, validator: validatorErrorPair},
   author: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'}
 })
 

@@ -15,10 +15,16 @@ module.exports = {
           // join the two arrays
           let postsToSee = categoryPosts.concat(publicPosts)
 
-          Post.populate(postsToSee, 'author comments').then(() => {
+          Post.populate(postsToSee, 'author comments likes').then(() => {
             // populate each comment's author. Must be done after the initial populate
             Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
-              res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost })
+              // Splits the post's likes array into arrays of paws, loves and dislikes so that we can handle it properly in the view
+              postsToSee = postsToSee.map(post => {
+                post.splitLikes()
+                return post
+              })
+
+              res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost})
             })
           })
         })

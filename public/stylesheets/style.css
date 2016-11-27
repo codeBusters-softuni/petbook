@@ -7146,11 +7146,27 @@ section>ul>#like{
   max-height: 40px;
   display: inline-block;
   margin-right: 10px;
-
 }
-
+#paw{
+    background: url("./../images/paw-like.png");
+  width: 40px;
+  height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  display: inline-block;
+  margin-right: 10px;
+}
 section>ul>#love{
   background: url("./../images/love.png");
+  width: 40px;
+  height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  display: inline-block;
+  margin-right: 10px;
+}
+#love{
+    background: url("./../images/love.png");
   width: 40px;
   height: 40px;
   max-width: 40px;
@@ -7161,6 +7177,14 @@ section>ul>#love{
 
 section>ul>#dislike{
   background: url("./../images/dislike.png");
+  width: 40px;
+  height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  display: inline-block;
+}
+#dislike{
+    background: url("./../images/dislike.png");
   width: 40px;
   height: 40px;
   max-width: 40px;

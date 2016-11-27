@@ -3,8 +3,8 @@
         <form method="post" action="/post/add">
             <textarea id="profile-post" rows="2" name="content" placeholder="How are you doing?">{{failedPost.postContent}}</textarea>
             <article id="bottom-line-post">
-                <input type="button" name="add-photo" id="add-photo-btn" value=" "/>
-                <input type="submit" class="button-with-plus post-btn" value="Post"/>
+                <input type="button" name="add-photo" id="add-photo-btn" value=" " />
+                <input type="submit" class="button-with-plus post-btn" value="Post" />
             </article>
         </form>
     </section>
@@ -32,11 +32,85 @@
                 {{content}}
             </article>
             <footer>
+                {{#if ../this.user}}
                 <ul>
-                    {{!--<li id="like-btn">{{likeCount}}</li>
-                    <li id="love-btn">{{loveCount}}</li>
-                    <li id="dislike-btn">{{dislikeCount}}</li>--}}
+                    {{#hasPawed paws ../this.user._id}}
+                    <form method="post" action="/post/:id/removePaw">
+                    {{!--SHOULD BE GREY--}}
+                        <li>
+                            <input type="submit" id="paw" class="btn" value="">{{likeCount}} Dislike
+                        </li>
+                    </form>
+                    <form method="post" action="/post/:id/addLove">
+                        <li>
+                            <input type="submit" id="love" class="btn" value="">{{loveCount}}
+                        </li>
+                    </form>
+                    <form method="post" action="/post/:id/addDislike>">
+                        <li>
+                            <input type="submit" id="dislike" class="btn" value="">{{dislikeCount}}
+                        </li>
+                    </form>
+                    {{else}}
+                    {{!--User has not pawed this post--}}
+                    {{#hasLoved loves ../this.user._id}}
+                         <form method="post" action="/post/{{id}}/addPaw">
+                        <li>
+                            <input type="submit" id="paw" class="btn" value="">{{pawCount}}
+                        </li>
+                    </form>
+                    <form method="post" action="/post/{{id}}/removeLove">
+                    {{!--SHOULD BE GREY--}}
+                        <li>
+                            <input type="submit" id="love" class="btn" value="">{{loveCount}}
+                        </li>
+                    </form>
+                    <form method="post" action="/post/{{id}}/addDislike>">
+                        <li>
+                            <input type="submit" id="dislike" class="btn" value="">{{dislikeCount}}
+                        </li>
+                    </form>
+                    {{else}}
+                    {{!--User has not loved this post--}}
+                    {{#hasDisliked dislikes ../this.user._id}}
+                         <form method="post" action="/post/{{id}}/addPaw">
+                        <li>
+                            <input type="submit" id="paw" class="btn" value="">{{pawCount}}
+                        </li>
+                    </form>
+                    <form method="post" action="/post/{{id}}/addLove">
+                        <li>
+                            <input type="submit" id="love" class="btn" value="">{{loveCount}}
+                        </li>
+                    </form>
+                    <form method="post" action="/post/{{id}}/removeDislike>">
+                    {{!--SHOULD BE GREY--}}
+                        <li>
+                            <input type="submit" id="dislike" class="btn" value="">{{dislikeCount}}
+                        </li>
+                    </form>
+                    {{else}}
+                    {{!--User has not liked this post at all--}}
+                    <form method="post" action="/post/{{id}}/addPaw">
+                        <li>
+                            <input type="submit" id="paw" class="btn" value="">{{pawCount}}
+                        </li>
+                    </form>
+                    <form method="post" action="/post/{{id}}/addLove">
+                        <li>
+                            <input type="submit" id="love" class="btn" value="">{{loveCount}}
+                        </li>
+                    </form>
+                    <form method="post" action="/post/{{id}}/addDislike>">
+                        <li>
+                            <input type="submit" id="dislike" class="btn" value="">{{dislikeCount}}
+                        </li>
+                    </form>
+                    {{/hasDisliked}}
+                    {{/hasLoved}}
+                    {{/hasPawed}}
                 </ul>
+                {{/if}}
             </footer>
             <section id="comment-view">
                 <!-- COMMENTS -->
