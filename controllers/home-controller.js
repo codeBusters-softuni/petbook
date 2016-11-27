@@ -1,4 +1,5 @@
 const Post = require('mongoose').model('Post')
+
 module.exports = {
   homePageGet: (req, res) => {
     if (req.user) {
