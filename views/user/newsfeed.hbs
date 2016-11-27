@@ -35,18 +35,18 @@
                 {{#if ../this.user}}
                 <ul>
                     {{#hasPawed paws ../this.user._id}}
-                    <form method="post" action="/post/:id/removePaw">
+                    <form method="post" action="/post/{{id}}/removePaw">
                     {{!--SHOULD BE GREY--}}
                         <li>
                             <input type="submit" id="paw" class="btn" value="">{{likeCount}} Dislike
                         </li>
                     </form>
-                    <form method="post" action="/post/:id/addLove">
+                    <form method="post" action="/post/{{id}}/addLove">
                         <li>
                             <input type="submit" id="love" class="btn" value="">{{loveCount}}
                         </li>
                     </form>
-                    <form method="post" action="/post/:id/addDislike>">
+                    <form method="post" action="/post/{{id}}/addDislike>">
                         <li>
                             <input type="submit" id="dislike" class="btn" value="">{{dislikeCount}}
                         </li>
