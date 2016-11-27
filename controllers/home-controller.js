@@ -1,5 +1,4 @@
 const Post = require('mongoose').model('Post')
-
 module.exports = {
   homePageGet: (req, res) => {
     if (req.user) {
@@ -15,7 +14,10 @@ module.exports = {
           // join the two arrays
           let postsToSee = categoryPosts.concat(publicPosts)
 
-          res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost })
+          // populate the threads' authors
+          Post.populate(postsToSee, 'author').then(() => {
+            res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost })
+          })
         })
       })
     } else {
