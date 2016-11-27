@@ -15,9 +15,11 @@ module.exports = {
           // join the two arrays
           let postsToSee = categoryPosts.concat(publicPosts)
 
-          // populate the threads' authors
-          Post.populate(postsToSee, 'author').then(() => {
-            res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost })
+          Post.populate(postsToSee, 'author comments').then(() => {
+            // populate each comment's author. Must be done after the initial populate
+            Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
+              res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost })
+            })
           })
         })
       })

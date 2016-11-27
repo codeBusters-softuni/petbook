@@ -50,7 +50,7 @@
                             {{author.fullName}}
                         </article>
                         <article>
-                            {{date}}
+                            {{dateStr}}
                         </article>
                     </section>
                 </section>
@@ -66,9 +66,9 @@
                         <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
                     </article>
                     <section id="add-comment">
-                        <form method="post" action="">
-                            <textarea id="profile-comment" rows="1" placeholder="Add a comment"></textarea>
-                            <input type="submit" name="commentBtn" id="comment-btn" value="">
+                        <form method="post" action="/post/{{id}}/addComment">
+                            <textarea id="profile-comment" name="content" rows="1" placeholder="Add a comment"></textarea>
+                            <input type="submit" id="comment-btn" value="">
                         </form>
                     </section>
                 </section>
