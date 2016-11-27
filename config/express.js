@@ -6,6 +6,7 @@ const session = require('express-session')
 const passport = require('passport')
 
 module.exports = (app, config) => {
+  require('./handlebar-helpers')  // load handlebars helpers
   app.set('views', path.join(config.rootFolder, '/views'))
   app.set('view engine', 'hbs')
 
