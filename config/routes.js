@@ -19,4 +19,6 @@ module.exports = (app) => {
     }
   })
   app.get('/user/:id', controllers.userController.profilePageGet)  // must be below other user urls!
+
+  app.post('/post/add', controllers.postController.addPost)
 }

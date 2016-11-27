@@ -12,7 +12,10 @@
  */
 const homeController = require('./home-controller')
 const userController = require('./user-controller')
+const postController = require('./post-controller')
+
 module.exports = {
   userController,
-  homeController
+  homeController,
+  postController
 }

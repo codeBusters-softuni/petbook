@@ -1,10 +1,10 @@
 <div id="newsfeed-wrapper">
     <section id="add-post">
         <form method="post" action="/post/add">
-            <textarea id="profile-post" rows="2" name="postContent" placeholder="How are you doing?"></textarea>
+            <textarea id="profile-post" rows="2" name="content" placeholder="How are you doing?">{{failedPost.postContent}}</textarea>
             <article id="bottom-line-post">
                 <input type="button" name="add-photo" id="add-photo-btn" value=" "/>
-                <input type="submit" name="submit-post" class="button-with-plus post-btn" value="Post"/>
+                <input type="submit" class="button-with-plus post-btn" value="Post"/>
             </article>
         </form>
     </section>
