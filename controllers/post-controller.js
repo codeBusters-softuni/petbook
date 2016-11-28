@@ -92,5 +92,40 @@ module.exports = {
         })
       }
     })
+  },
+
+  removeLike: (req, res) => {
+    // regex is: /post\/(.+)\/remove(.{3,7})/
+    let postId = req.params[0]
+    let likeType = req.params[1]
+    let userId = req.user._id
+
+    Post.findById(postId).populate('likes').then(post => {
+      if (!post) {
+        // ERROR - Post with ID does not exist!
+        res.redirect('/')
+        return
+      }
+      // Get the index of the user's like'
+      let likeIndex = post.likes.findIndex(like => {
+        return like.author.equals(userId)
+      })
+
+      if (likeIndex === -1) {
+        // ERROR - User has not liked this at all
+        res.redirect('/')
+        return
+      } else {
+        let likeId = post.likes[likeIndex]._id
+        post.likes.remove(likeId)  // remove it from the post's likes
+
+        post.save().then(() => {
+          // Like is removed!
+          res.redirect('/')
+          return
+        })
+        Like.findByIdAndRemove(likeId)
+      }
+    })
   }
 }
