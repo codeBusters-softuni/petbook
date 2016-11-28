@@ -49,12 +49,12 @@ module.exports = {
         })
       })
     })
-
   },
 
   addLike: (req, res) => {
-    let likeType = req.params.likeType.slice(3)
-    let postId = req.params.id
+    // regex is: /post\/(.+)\/add(.{3,7})/
+    let postId = req.params[0]
+    let likeType = req.params[1]
     let userId = req.user._id
     Post.findById(postId).populate('likes').then(post => {
       if (!post) {

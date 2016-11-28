@@ -23,5 +23,5 @@ module.exports = (app) => {
   app.post('/post/add', controllers.postController.addPost)
   app.post('/post/:id/addComment', controllers.postController.addComment)
   // Like a post
-  app.post('/post/:id/:likeType', controllers.postController.addLike)
+  app.post(/post\/(.+)\/add(.{3,7})/, controllers.postController.addLike)
 }
