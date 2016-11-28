@@ -38,6 +38,24 @@ postSchema.method({
       }).catch((err) => { reject(err) })
     })
   },
+  // adds a like to the post, assumes that validation has been done
+  addLike: function (likeId) {
+    return new Promise((resolve, reject) => {
+      this.likes.push(likeId)
+      this.save().then(() => {
+        resolve()
+      }).catch((err) => { reject(err) })
+    })
+  },
+  // removes a like from the post's likes, assumes that the appropriate validation has been done
+  removeLike: function (likeId) {
+    return new Promise((resolve, reject) => {
+      this.likes.remove(likeId)
+      this.save().then(() => {
+        resolve()
+      }).catch((err) => { reject(err) })
+    })
+  },
 
   splitLikes: function () {
     // Split the main likes array into TEMPORARY arrays of each like type.

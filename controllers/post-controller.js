@@ -83,11 +83,9 @@ module.exports = {
         }
       } else {
         // User is liking this post for the first time
-        Like.create({type: likeType, author: req.user._id}).then(like => {
-          post.likes.push(like._id)
-          post.save().then(() => {
-            res.redirect('/')
-            // Success!
+        Like.create({ type: likeType, author: req.user._id }).then(like => {
+          post.addLike(like._id).then(() => {
+            res.redirect('/')  // Success!
           })
         })
       }
@@ -122,9 +120,7 @@ module.exports = {
           return
         }
         let likeId = post.likes[likeIndex]._id
-        post.likes.remove(likeId)  // remove it from the post's likes
-
-        post.save().then(() => {
+        post.removeLike(likeId).then(() => {
           // Like is removed!
           res.redirect('/')
           return
