@@ -116,6 +116,11 @@ module.exports = {
         res.redirect('/')
         return
       } else {
+        if (post.likes[likeIndex].type !== likeType) {
+          // ERROR - example: User is trying to unPAW a post he has LOVED
+          res.redirect('/')
+          return
+        }
         let likeId = post.likes[likeIndex]._id
         post.likes.remove(likeId)  // remove it from the post's likes
 
