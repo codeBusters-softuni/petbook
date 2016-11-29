@@ -5,6 +5,10 @@ body {
     margin: 0 !important;
 }
 
+main{
+    padding-bottom: 50px;
+}
+
 a:hover{
     border: 0;
     color: black;
@@ -77,6 +81,7 @@ header {
     margin-right: 0;
     position:relative;
     left: 6px;
+    top: 2px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
@@ -125,13 +130,13 @@ nav>ul>li>a:hover{
 /* Style of page content when not logged in*/
 #main-page-bcgrnd-not-loggedin {
     background-image: url(../background-pics/front_pic.jpg);
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
-    background-position: center 50%;
+    background-position: center 85%;
     text-align: center;
     padding-bottom: 20%;
     width: 100%;
-    min-height: 550px;
+    min-height: 520px;
 }
 
 /* Buttons Learn more and Sign Up */
@@ -140,7 +145,7 @@ nav>ul>li>a:hover{
     overflow: hidden;
     padding-left: 0;
     display: inline-block;
-    padding-top: 150px;
+    padding-top: 100px;
 }
 
 #main-page-bcgrnd-not-loggedin>ul>li{
@@ -172,8 +177,8 @@ nav>ul>li>a:hover{
     /*transition: color 0.7s;*/
     /*transition: background-color 0.7s;*/
     /*
-        box-shadow: 0 0 1px rgba(81, 203, 238, 1);
-        border: 1px solid rgba(81, 203, 238, 1);
+    box-shadow: 0 0 1px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
     */
 }
 
@@ -223,7 +228,7 @@ nav>ul>li>a:hover{
     background-repeat: no-repeat;
     background-position: center;
     width: 100%;
-    height: 550px;
+    height: 520px;
     overflow: hidden;
 }
 
@@ -233,10 +238,10 @@ nav>ul>li>a:hover{
     margin: 10px;
     border-radius: 25px;
     /*
-        padding: 10px;
-        background-color: azure;
-        opacity: 0.6;
-        filter: alpha(opacity=60);
+    padding: 10px;
+    background-color: azure;
+    opacity: 0.6;
+    filter: alpha(opacity=60);
     */
 
 }
@@ -288,8 +293,331 @@ nav>ul>li>a:hover{
 }
 /* Up to here Style when register*/
 
+/* Photos */
+
+/* show / unshow album creation*/
+
+#upload-photos h2.album-tabs {
+    cursor: pointer;
+    width: 200px;
+    height: 55px;
+    text-align: left;
+    float: left;
+    padding: 10px;
+    margin-bottom: 0;
+}
+#upload-photos h2.album-tabs.active-title {
+    font-weight: 600;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: rgba(240, 248, 255, 0.7);
+}
+#upload-photos ul {
+    list-style-type: none;
+    clear: both;
+}
+#upload-photos ul li .cntnr-crte-albm  {
+    /*    display: none;*/
+    /*    max-height: 0;*/
+    /*    transition: max-height 0.25s ease-out;*/
+    /*    overflow: hidden;*/
+    height: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.5s, opacity 0.5s linear;
+}
+#upload-photos ul li.active-section .cntnr-crte-albm{
+    min-height: 600px;
+    height: auto;
+    /*    display: block;*/
+    overflow: hidden;
+    /*
+    transition: min-height 1.45s ease;
+    opacity: 1;
+    */
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+}
+/* style album creation*/
+
+.pic-up-container {
+    text-align: justify;
+    overflow: hidden;
+    background-image: url(../background-pics/dog-photographer.jpg);
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center 100%;
+    /* background-attachment: fixed; */
+    padding-bottom: 15px;
+    width: 100%;
+    min-height: 600px;
+}
+#upload-photos {
+    /*    margin: 35px;*/
+}
+#upload-photos>ul {
+    padding-left: 0;
+    margin-top: 30px;
+}
+#upload-photos h1,
+#upload-photos h2,
+#upload-photos h3 {
+    color: #3b5998;
+    margin-left: 0;
+    padding-right: 0;
+}
+.white-background {
+    /*    display: inline-block;*/
+    background-color: rgba(255, 255, 255, 0.8);
+}
+.cntnr-crte-albm > .container-fluid > .container {
+    margin-top: 15px;
+}
+.cntnr-crte-albm>header {
+    overflow: hidden;
+    background-color: rgba(240, 248, 255, 0);
+}
+.cntnr-crte-albm>header>* {
+    float: left;
+}
+.cntnr-crte-albm button {
+    float: right;
+    margin-top: 20px;
+    background-color: #3b5998;
+    color: aliceblue;
+    transition: background 0.2s ease-in-out;
+}
+.cntnr-crte-albm button:hover {
+    background-color: #E8E8E8;
+    color: #3b5998;
+    box-shadow: 0 0 1px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+}
+.cntnr-crte-albm {
+    overflow: hidden;
+    color: #3b5998;
+    font-style: italic;
+    border-radius: 4px;
+    border-top-left-radius: 0;
+    background-color: rgba(240, 248, 255, 0.7);
+}
+.cntnr-crte-albm input[type="radio"] {
+    margin-right: 10px;
+}
+.float-left-cntr {
+    display: inline-block;
+    padding: 5px 10px 5px 10px;
+    /*    background-color: rgba(240,248,255, 0.5);*/
+    /*    text-align: center;*/
+}
+.pic-form {
+    overflow: hidden;
+    text-align: left;
+    padding: 25px;
+    /*    background-color: rgba(233, 235, 238, 0.5);*/
+    border-radius: 15px;
+}
+
+.form-inputs-style{
+    background-color: rgba(233, 235, 238, 0.5);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.form-inputs-style label {
+    width: 90%;
+}
+.form-inputs-style div {
+    margin-bottom: 15px;
+}
+.form-inputs-style input[type="text"] {
+    width: 90%;
+}
+.form-inputs-style textarea {
+    resize: none;
+    width: 90%;
+}
+
+.radio-questions label {
+    font-size: 1em;
+    display: inline;
+}
+
+#upload-photos h1 {
+    font-size: 1.5em;
+}
+
+#upload-photos h2 {
+    font-size: 1.2em;
+}
+
+#upload-photos h3 {
+    font-size: 1em;
+}
+
+.cntr-cntr {
+    overflow: hidden;
+    border-radius: 15px;
+    padding: 15px;
+    margin-right: 0;
+    margin-left: 0;
+    background-color: rgba(233, 235, 238, 0.5)
+}
+article.add-photo-button {
+    height: 322px;
+}
+
+article.add-photo-button label{
+    height: inherit;
+}
+
+.photo-cntnr {
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.photo-cntnr .album-photo-content {
+    display: table-cell;
+    height: 200px;
+    vertical-align: middle;
+    width: 400px;
+}
+.photo-cntnr .album-photo-content img {
+    display: block;
+    max-width: 90%;
+    max-height: 200px;
+    margin: 0 auto;
+}
+/*
+.photo-cntnr>section {
+overflow: hidden;
+height: 220px;
+width: 220px;
+text-align: center;
+}
+.photo-cntnr>.container>div {
+overflow: hidden;
+}
+*/
+.photo-cntnr .close {
+    display: block;
+    text-align: right;
+    z-index: 1;
+    color: #3b5998;
+    float: none;
+    padding-right: 15px;
+}
 
 
+
+.photo-cntnr textarea {
+    width: 90%;
+    resize: none;
+    margin-top: 10px;
+    display: block;
+    margin: 10px auto;
+}
+.photo-cntnr:hover {
+    box-shadow: 0 0 1px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+}
+
+
+
+.add-photo {
+    background: #fff url(../background-pics/add-photo.jpg);
+    background-size: 100%;
+    padding-bottom: 100%;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.add-photo input[type="file"]{
+    visibility: hidden;
+}
+
+
+.btn-publish {
+    margin-top: 10px!important;
+    margin: 0px 25px 20px 0px;
+}
+
+/*Style for Title Photos*/
+
+
+/* show / unshow tabs in Photos*/
+
+li.active-section #view-tabs-in-photos h2.photos-tabs {
+    cursor: pointer;
+    width: 200px;
+    height: 55px;
+    text-align: left;
+    float: left;
+    padding: 10px;
+    margin-bottom: 0;
+}
+li.active-section #view-tabs-in-photos h2.photos-tabs.active-tab {
+    font-weight: 600;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: rgba(233, 235, 238, 0.5);
+}
+/*
+#view-tabs-in-photos ul {
+list-style-type: none;
+clear: both;
+}
+*/
+
+li.active-section #view-tabs-in-photos>ul>li .cntnr-photos {
+    height: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.5s, opacity 0.5s linear;
+}
+
+li.active-section #view-tabs-in-photos>ul>li.active-tab-section .cntnr-photos {
+    min-height: 600px;
+    height: auto;
+    /*    display: block;*/
+    overflow: hidden;
+    /*
+    transition: min-height 1.45s ease;
+    opacity: 1;
+    */
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+.cntnr-photos{
+    overflow: hidden;
+    color: #3b5998;
+    font-style: italic;
+    /*
+    border-radius: 4px;
+    border-top-left-radius: 0;
+    background-color: rgba(233, 235, 238, 0.5);
+    */
+}
+
+#container-photo-tabs{
+    overflow: hidden;
+    margin: 0px 10px;
+}
+
+#view-tabs-in-photos>ul{
+    margin: 0px 10px 15px 10px;
+    padding-left: 0px;
+    padding: 15px;
+    border-radius: 4px;
+    border-top-left-radius: 0;
+    background-color: rgba(233, 235, 238, 0.5);
+}
 
 /*Footer styling*/
 

@@ -2,30 +2,37 @@
 <html>
 <head>
     <title>{{title}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel='stylesheet' href='/stylesheets/style.css'/>
-    <link rel="stylesheet" href="/stylesheets/custom_k.css">
-    <script rel="javascript" href="javascripts/jquery-1.10.2.js"></script>
-    <script rel="javascript" href="javascripts/bootstrap.js"></script>
+    <link rel="stylesheet" href="/stylesheets/custom_k.css"/>
+    <link rel="stylesheet" href="/stylesheets/custom_resp_k.css"/>
+
+    <script src="/javascripts/jquery-1.10.2.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script src="/javascripts/custom_script_k.js"></script>
+
 </head>
-<body class="allNulled">
-<header>
-    <section class="col-xs-12 col-md-2">
+<body>
+<header class="">
+    <section class="col-xs-12 col-sm-1 col-lg-4">
         <div class="navbar-header">
             <a href="/" class="">Petbook</a>
         </div>
     </section>
     {{#if this.user}}
-        <section class="col-xs-12 col-md-6 left-align">
+        <section class="col-xs-12 col-sm-6 col-lg-4 left-align">
             <form class="form-inline">
                 <div class="form-group">
                     <label class="sr-only" for="">Search Field</label>
                     <input type="text" class="input-cstm-style search-cstm" id="" placeholder="Search...">
+                    <button type="submit" class="btn btn-secondary sign-in-log-out">Search</button>
                 </div>
-                <button type="submit" class="btn btn-secondary sign-in-log-out">Search</button>
+
             </form>
         </section>
 
-        <nav class="col-xs-12 col-md-4 left-align">
+        <nav class="col-xs-12 col-sm-5 col-lg-4  left-align">
 
             <ul class="cstm-menu-header">
                 <li><a href="">{{user.fullName}}</a></li>
@@ -35,7 +42,7 @@
         </nav>
     {{/if}}
     {{#unless this.user}}
-        <section class="col-xs-12 col-md-10 left-align">
+        <section class="col-xs-12 col-sm-11 col-lg-8 left-align">
             <form class="form-inline" method="POST" action="/user/login">
                 <div class="form-group">
                     <label class="sr-only" for="exampleInputEmail3">Email:</label>
@@ -62,5 +69,6 @@
         <p>&copy; 2016 - codeBusters</p>
     </div>
 </footer>
+
 </body>
 </html>
