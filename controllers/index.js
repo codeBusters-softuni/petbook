@@ -14,10 +14,12 @@ const homeController = require('./home-controller')
 const userController = require('./user-controller')
 const postController = require('./post-controller')
 const categoryController = require('./category-controller')
+const friendRequestController = require('./friendrequest-controller')
 
 module.exports = {
   userController,
   homeController,
   postController,
-  categoryController
+  categoryController,
+  friendRequestController
 }

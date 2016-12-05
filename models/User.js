@@ -20,7 +20,7 @@ let userSchema = mongoose.Schema(
     pendingFriendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FriendRequest' }]
   }
 )
-// Post save hook
+// Pre save hook
 userSchema.pre('save', function (next) {
   let rolePromises = this.roles.map((role) => {
     Role.findById(role).then((role) => {
@@ -65,6 +65,15 @@ userSchema.method({
       return frReq.receiver.equals(userId)
     })
     return friendReqIndex !== -1
+  },
+
+  addFriendRequest: function (friendReqId) {
+    return new Promise((resolve, reject) => {
+      this.pendingFriendRequests.push(friendReqId)
+      this.save().then(() => {
+        resolve()
+      })
+    })
   }
 
 })
