@@ -151,7 +151,7 @@ module.exports.register = function (fullName, email, password, category) {
                 }
 
                 User.create(newUser).then((newUser) => {
-                  resolve()
+                  resolve(newUser)
                 }).catch(() => { reject() })
               }
             })
