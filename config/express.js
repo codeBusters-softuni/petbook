@@ -18,6 +18,8 @@ module.exports = (app, config) => {
   // cookie storage
   app.use(session({ secret: 's3cr3t5tr1ng', resave: false, saveUninitialized: false }))
 
+  app.use(express.static(path.join(config.rootFolder, 'public')))
+
   app.use(passport.initialize())
   app.use(passport.session())
 
@@ -33,6 +35,4 @@ module.exports = (app, config) => {
       next()
     }
   })
-
-  app.use(express.static(path.join(config.rootFolder, 'public')))
 }
