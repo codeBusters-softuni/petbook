@@ -56,7 +56,17 @@ userSchema.method({
         }
       })
     })
+  },
+
+  hasSentRequest: function (userId) {
+    // friendRequests msut be populated!
+    // returns a boolean indicating if the user has sent a friend request to the given user
+    let friendReqIndex = this.pendingFriendRequests.findIndex(frReq => {
+      return frReq.receiver.equals(userId)
+    })
+    return friendReqIndex !== -1
   }
+
 })
 
 // using the mongoose-sequence module to have a unique integer Id for each user
