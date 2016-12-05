@@ -82,8 +82,25 @@ userSchema.method({
         resolve()
       })
     })
-  }
+  },
 
+  removeFriendRequest: function (friendReqId) {
+    return new Promise((resolve, reject) => {
+      this.pendingFriendRequests.remove(friendReqId)
+      this.save().then(() => {
+        resolve()
+      })
+    })
+  },
+
+  addFriend: function (friendId) {
+    return new Promise((resolve, reject) => {
+      this.friends.push(friendId)
+      this.save().then(() => {
+        resolve()
+      })
+    })
+  }
 })
 
 // using the mongoose-sequence module to have a unique integer Id for each user

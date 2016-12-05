@@ -44,5 +44,33 @@ module.exports = {
         res.redirect(`/user/${user.userId}`)
       })
     })
+  },
+
+  acceptRequest: (req, res) => {
+    let frReqId = req.params.id
+    FriendRequest.findById(frReqId).populate('sender receiver').then(friendRequest => {
+      if (!friendRequest) {
+        // ERROR - No such friend request exists!
+        res.render('index')
+        return
+      }
+      let sender = friendRequest.sender
+      let receiver = friendRequest.receiver
+      let promises = [
+        // make them friends
+        sender.addFriend(receiver.id),
+        receiver.addFriend(sender.id),
+        // remove their friend requests
+        sender.removeFriendRequest(frReqId),
+        receiver.removeFriendRequest(frReqId)
+      ]
+
+      Promise.all(promises).then(() => {
+        // Success - users are now friends, delete the FriendRequest
+        friendRequest.remove()
+        // TODO: Attach success message
+        res.redirect('/friendRequests')
+      })
+    })
   }
 }
