@@ -13,5 +13,6 @@ module.exports = (config) => {
   require('./../models/Comment')
   require('./../models/Tag')
   require('./../models/Like')
+  require('./../models/FriendRequest')
 }
 
