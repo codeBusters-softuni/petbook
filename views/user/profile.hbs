@@ -5,6 +5,7 @@
         </section>
         {{#if friendStatus.sentRequest}}
         {{else if friendStatus.areFriends}}
+        <label class="add-favorites">Friends</label>
         {{else}}
           {{#isSameUser this.user.id profileUser.id}} <!-- you can't friend REQ yourself!-->
           {{else}}
