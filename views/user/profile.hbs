@@ -5,12 +5,12 @@
         </section>
         {{#if friendStatus.sentRequest}}
         {{else if friendStatus.areFriends}}
-        <label class="add-favorites">Friends</label>
+        <label class="add-friend">Friends</label>
         {{else}}
           {{#isSameUser this.user.id profileUser.id}} <!-- you can't friend REQ yourself!-->
           {{else}}
           <form method="POST" action="/sendFriendRequest/{{profileUser.id}}">
-            <input type="submit" id="add-favorites" class="button-with-plus add-favorites" value="Send Friend Request"></button>
+            <input type="submit" id="add-friend" class="button-with-plus add-friend" value="Send Friend Request"></button>
           </form>
           {{/isSameUser}}
         {{/if}}

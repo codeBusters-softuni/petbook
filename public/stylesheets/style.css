@@ -7121,14 +7121,24 @@ article .author  {
   text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff;
 }
 
-.add-favorites{
+.add-friend{
   margin: 10px;
   background: #bdff5f;
 }
 
-.add-favorites:hover{
+.add-friend:hover{
   margin: 10px;
   background: #afeb5a;
+}
+
+.remove-friend{
+  margin: 10px;
+  background: #ff3a3a;
+}
+
+.remove-friend:hover{
+  margin: 10px;
+  background: #ff5b5b;
 }
 
 #profile-info>section>ul{
