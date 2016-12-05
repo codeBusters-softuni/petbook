@@ -1,6 +1,21 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
 
+function initializeForView (posts) {
+  // this function initializes an array of posts to be ready to be sent to a view
+  // Splits the post's likes array into arrays of paws, loves and dislikes so that we can handle it properly in the view
+  posts = posts.map(post => {
+    post.splitLikes()
+    return post
+  })
+  // Sort the posts in descending date order. (Newest ones first!)
+  posts.sort((a, b) => {
+    return b.date - a.date
+  })
+
+  return posts
+}
+
 let postSchema = mongoose.Schema(
   {
     content: { type: String, required: true },
@@ -68,3 +83,4 @@ postSchema.method({
 const Post = mongoose.model('Post', postSchema)
 
 module.exports = Post
+module.exports.initializeForView = initializeForView
