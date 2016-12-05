@@ -21,6 +21,10 @@ module.exports = {
       // ERROR - You cannot friend yourself!
       res.render('index')
       return
+    } else if (req.user.hasFriend(receiverId)) {
+      // ERROR - User already has him as a friend
+      res.render('index')
+      return
     }
 
     User.findById(receiverId).populate('pendingFriendRequests').then(user => {
@@ -29,6 +33,9 @@ module.exports = {
         // Something is wrong with the logic or the user is malicious
         res.render('index')
         return
+      } else if (user.hasFriend(req.user.id)) {
+        // ERROR - User already has the logged in user as a friend
+        throw Error(`ERROR: Inconsistency with friends, user ${req.user.email} does not have user ${user.email} as a friend, but ${user.email} does`)
       }
       // validate that such a request does not exist
       let potentialRequestIdx = user.pendingFriendRequests.findIndex(frReq => {

@@ -100,6 +100,10 @@ userSchema.method({
         resolve()
       })
     })
+  },
+
+  hasFriend: function (friendId) {
+    return this.friends.indexOf(friendId) !== -1
   }
 })
 
