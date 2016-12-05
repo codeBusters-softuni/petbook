@@ -9,7 +9,7 @@
         {{else}}
           {{#isSameUser this.user.id profileUser.id}} <!-- you can't friend REQ yourself!-->
           {{else}}
-          <form method="POST" action="/sendFriendRequest/{{profileUser.id}}">
+          <form method="POST" action="/friendRequest/{{profileUser.id}}/send">
             <input type="submit" id="add-friend" class="button-with-plus add-friend" value="Send Friend Request"></button>
           </form>
           {{/isSameUser}}

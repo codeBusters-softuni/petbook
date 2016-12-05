@@ -21,10 +21,10 @@ module.exports = (app) => {
 
   app.get('/category/:category', controllers.categoryController.showArticles)
   app.get('/user/:id', controllers.userController.profilePageGet)  // must be below other user urls!
-  app.post('/sendFriendRequest/:id', controllers.friendRequestController.sendRequest)
+  app.post('/friendRequest/:receiverId/send', controllers.friendRequestController.sendRequest)
   app.post('/friendRequest/:id/accept', controllers.friendRequestController.acceptRequest)
   app.post('/friendRequest/:id/decline', controllers.friendRequestController.declineRequest)
-  
+
   app.get('/friendRequests', controllers.friendRequestController.showRequests)
 
   app.post('/post/add', controllers.postController.addPost)

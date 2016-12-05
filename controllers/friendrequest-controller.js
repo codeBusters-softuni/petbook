@@ -16,7 +16,7 @@ module.exports = {
   sendRequest: (req, res) => {
     // sends a friend request to the given user
     // Validate given ID
-    let receiverId = req.params.id
+    let receiverId = req.params.receiverId
     if (req.user.id === receiverId) {
       // ERROR - You cannot friend yourself!
       res.render('index')
