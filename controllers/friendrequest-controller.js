@@ -1,8 +1,18 @@
 const mongoose = require('mongoose')
 const FriendRequest = mongoose.model('FriendRequest')
 const User = mongoose.model('User')
-
+// TODO: Add Accept Friendship button in profile.hbs
 module.exports = {
+  showRequests: (req, res) => {
+    // remove the requests that are sent by the user
+    let receivedFriendRequests = req.user.pendingFriendRequests.filter(frReq => {
+      return !frReq.sender.equals(req.user.id)
+    })
+    FriendRequest.populate(receivedFriendRequests, { path: 'sender' }).then(reqs => {
+      res.render('user/friendRequests', { friendRequests: receivedFriendRequests })
+    })
+  },
+
   sendRequest: (req, res) => {
     // sends a friend request to the given user
     // Validate given ID

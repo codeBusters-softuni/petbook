@@ -1,0 +1,20 @@
+<div id="newsfeed-wrapped">
+  <main>
+    {{#each friendRequests}}
+    <section id="post-view">
+      <article>
+        <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+        <a href="/user/{{sender.userId}}">{{sender.fullName}}</a>
+      </article>
+      <article id="post-content">
+        <form method="POST" action="/friendRequest/{{id}}/accept">
+          <input type="submit" class="button-with-plus add-favorites" value="Accept Friendship">
+        </form>
+        <form method="POST" action="/friendRequest/{{id}}/decline">
+          <input type="submit" class="button-with-plus add-favorites" value="Decline Friendship">
+        </form>
+      </article>
+    </section>
+    {{/each}}
+  </main>
+</div>
