@@ -128,8 +128,15 @@ module.exports = {
         // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
         res.redirect('/')
       }
-
-      res.render('user/profile', user)
+      // find the relation between the users
+      console.log(req.user)
+      let areFriends = req.user.friends.indexOf(user.id) !== -1
+      let hasSentRequest = req.user.hasSentRequest(user.id)
+      let friendStatus = {
+        sentRequest: hasSentRequest,
+        areFriends: areFriends
+      }
+      res.render('user/profile', {user: user, friendStatus: friendStatus})
     })
   }
 }

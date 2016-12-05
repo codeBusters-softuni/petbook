@@ -3,12 +3,18 @@
         <section id="large-profile-picture">
             <!--profile picture example: <img src="{dir photo resize width: 300px}"/>-->
         </section>
-        <button id="add-favorites" class="button-with-plus add-favorites">Add to Favorites</button>
+        {{#if friendStatus.sentRequest}}
+        {{else if friendStatus.areFriends}}
+        {{else}}
+        <form method="POST" action="/sendFriendRequest/{{user.id}}/">
+          <input type="submit" id="add-favorites" class="button-with-plus add-favorites" value="Send Friend Request"></button>
+        </form>
+        {{/if}}
         <section>
             <ul>
-                <li id="like">{{totalLikeCount}}</li>
-                <li id="love">{{totalLoveCount}}</li>
-                <li id="dislike">{{totalDislikeCount}}</li>
+                <li id="like">{{user.totalLikeCount}}</li>
+                <li id="love">{{user.totalLoveCount}}</li>
+                <li id="dislike">{{user.totalDislikeCount}}</li>
             </ul>
         </section>
         <section id="user-info">
@@ -17,7 +23,7 @@
     </section>
     <section id="profile-content">
         <header id="user-names">
-            <p><a href="#">{{fullName}}</a></p>
+            <p><a href="#">{{user.fullName}}</a></p>
             <p>owner name</p>
         </header>
         <nav id="user-nav">
