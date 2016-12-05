@@ -79,5 +79,29 @@ module.exports = {
         res.redirect('/friendRequests')
       })
     })
+  },
+
+  declineRequest: (req, res) => {
+    // TODO: Delete the request from both user and the request itself
+    let frReqId = req.params.id
+    FriendRequest.findById(frReqId).populate('sender receiver').then(friendRequest => {
+      if (!friendRequest) {
+        // ERROR - Invalid Friend Request ID
+        res.render('index')
+        return
+      }
+      let sender = friendRequest.sender
+      let receiver = friendRequest.receiver
+      let promises = [
+        // remove the user's friend requests
+        sender.removeFriendRequest(frReqId),
+        receiver.removeFriendRequest(frReqId)
+      ]
+
+      Promise.all(promises).then(() => {
+        friendRequest.remove()
+        res.redirect('/friendRequests')
+      })
+    })
   }
 }
