@@ -67,6 +67,14 @@ userSchema.method({
     return friendReqIndex !== -1
   },
 
+  hasFriendRequest: function () {
+    // returns a boolean indicating if the user has a pending friend request
+    let friendReqIndex = this.pendingFriendRequests.findIndex(frRex => {
+      return frRex.receiver.equals(this.id)
+    })
+    return friendReqIndex !== -1
+  },
+
   addFriendRequest: function (friendReqId) {
     return new Promise((resolve, reject) => {
       this.pendingFriendRequests.push(friendReqId)

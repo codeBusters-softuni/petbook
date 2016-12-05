@@ -27,6 +27,7 @@ module.exports = (app, config) => {
   app.use((req, res, next) => {
     if (req.user) {
       res.locals.user = req.user
+      res.locals.user.hasRequest = req.user.hasFriendRequest()
       req.user.isAdmin().then(isAdmin => {
         res.locals.user.isAdministrator = isAdmin
         next()

@@ -129,7 +129,6 @@ module.exports = {
         res.redirect('/')
       }
       // find the relation between the users
-      console.log(req.user)
       let areFriends = req.user.friends.indexOf(user.id) !== -1
       let hasSentRequest = req.user.hasSentRequest(user.id)
       let friendStatus = {
