@@ -13,7 +13,7 @@ let userSchema = mongoose.Schema(
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }],
     owner: { type: String },
     profilePic: { type: mongoose.Schema.Types.ObjectId, ref: 'Photo' },
-//  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }], let's try what it's like to not hold the user's posts
+    //  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }], let's try what it's like to not hold the user's posts
     photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
@@ -45,7 +45,7 @@ userSchema.method({
 
   isAdmin: function () {
     return new Promise((resolve, reject) => {
-      Role.findOne({name: 'Admin'}).then(role => {
+      Role.findOne({ name: 'Admin' }).then(role => {
         if (!role) {
           // No such role exists!
           let err = new Error('Admin role does not exist!')
@@ -102,10 +102,7 @@ module.exports.register = function (fullName, email, password, category) {
                 }
 
                 User.create(newUser).then((newUser) => {
-                  // add the user to the category's users array
-                  potentialCategory.addUser(newUser._id).then(() => {
-                    resolve(newUser)
-                  })
+                  resolve()
                 }).catch(() => { reject() })
               }
             })

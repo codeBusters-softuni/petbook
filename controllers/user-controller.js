@@ -37,7 +37,7 @@ module.exports = {
       res.render('user/register', candidateUser)
       return
     }
-    User
+    User  // function in the User.js model
       .register(candidateUser.fullName, candidateUser.email, candidateUser.password, candidateUser.category)
       .then(newUser => {
         req.logIn(newUser, function (err, newUser) {
