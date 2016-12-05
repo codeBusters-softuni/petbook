@@ -6,15 +6,18 @@
         {{#if friendStatus.sentRequest}}
         {{else if friendStatus.areFriends}}
         {{else}}
-        <form method="POST" action="/sendFriendRequest/{{user.id}}/">
-          <input type="submit" id="add-favorites" class="button-with-plus add-favorites" value="Send Friend Request"></button>
-        </form>
+          {{#isSameUser this.user.id profileUser.id}} <!-- you can't friend REQ yourself!-->
+          {{else}}
+          <form method="POST" action="/sendFriendRequest/{{profileUser.id}}/">
+            <input type="submit" id="add-favorites" class="button-with-plus add-favorites" value="Send Friend Request"></button>
+          </form>
+          {{/isSameUser}}
         {{/if}}
         <section>
             <ul>
-                <li id="like">{{user.totalLikeCount}}</li>
-                <li id="love">{{user.totalLoveCount}}</li>
-                <li id="dislike">{{user.totalDislikeCount}}</li>
+                <li id="like">{{profileUser.totalLikeCount}}</li>
+                <li id="love">{{profileUser.totalLoveCount}}</li>
+                <li id="dislike">{{profileUser.totalDislikeCount}}</li>
             </ul>
         </section>
         <section id="user-info">
@@ -23,12 +26,12 @@
     </section>
     <section id="profile-content">
         <header id="user-names">
-            <p><a href="#">{{user.fullName}}</a></p>
+            <p><a href="#">{{profileUser.fullName}}</a></p>
             <p>owner name</p>
         </header>
         <nav id="user-nav">
             <ul>
-                <li id="user-profile-nav"><a href="/user/{{id}}">Profile</a></li>
+                <li id="user-profile-nav"><a href="/user/{{profileUser.id}}">Profile</a></li>
                 <li id="user-about-nav"><a href="/user/about">About</a></li>
                 <li id="user-photos-nav"><a href="/user/gallery">Photos</a></li>
                 <li id="user-groups-nav"><a href="/user/groups">Groups</a></li>

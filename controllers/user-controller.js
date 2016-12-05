@@ -136,7 +136,7 @@ module.exports = {
         sentRequest: hasSentRequest,
         areFriends: areFriends
       }
-      res.render('user/profile', {user: user, friendStatus: friendStatus})
+      res.render('user/profile', {profileUser: user, friendStatus: friendStatus})
     })
   }
 }

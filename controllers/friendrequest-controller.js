@@ -7,6 +7,12 @@ module.exports = {
     // sends a friend request to the given user
     // Validate given ID
     let receiverId = req.params.id
+    if (this.user.id.equals(receiverId)) {
+      // ERROR - You cannot friend yourself!
+      res.render('index')
+      return
+    }
+
     User.findById(receiverId).populate('pendingFriendRequests').then(user => {
       if (!user) {
         // ERROR - User does not exist
