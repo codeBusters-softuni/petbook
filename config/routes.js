@@ -1,4 +1,5 @@
 const controllers = require('./../controllers')
+const photoController = require('./../controllers/photo-controller');
 
 module.exports = (app) => {
   app.get('/', controllers.homeController.homePageGet)
@@ -20,6 +21,8 @@ module.exports = (app) => {
   })
 
   app.get('/category/:category', controllers.categoryController.showArticles)
+  app.get('/user/uploadPhotos', photoController.allGet)
+
   app.get('/user/:id', controllers.userController.profilePageGet)  // must be below other user urls!
   app.post('/friendRequest/:receiverId/send', controllers.friendRequestController.sendRequest)
   app.post('/friendRequest/:id/accept', controllers.friendRequestController.acceptRequest)
@@ -33,4 +36,8 @@ module.exports = (app) => {
   app.post(/post\/(.+)\/add(.{3,7})/, controllers.postController.addLike)
   // Dislike a post
   app.post(/post\/(.+)\/remove(.{3,7})/, controllers.postController.removeLike)
+
+
+  //Upload single photos without album
+  app.post('/photo/all/single', photoController.uploadPhotosPost)
 }

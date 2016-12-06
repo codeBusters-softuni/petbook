@@ -1,10 +1,10 @@
 <section class="container pic-up-container">
 
     <section id="upload-photos">
-        <h1>You currently don't have any photos.</h1>
+        <!--                    <h1>You currently don't have any photos.</h1>-->
         <h2 class="album-tabs active-title">Photos</h2>
         <h2 class="album-tabs">Do you want to create a new album?</h2>
-        <h2 class="album-tabs">Or you just want to upload a single photo?</h2>
+        <h2 class="album-tabs">Or you just want to upload single photos?</h2>
         <ul>
             <li class="active-section">
                 <article id="view-tabs-in-photos" class="cntnr-crte-albm">
@@ -14,15 +14,151 @@
                     </div>
 
                     <ul>
-                        <li class="active-tab-section">
-                            <article class="cntnr-photos">
-                                bla
+                        Photos view
+                        <li class="active-tab-section  container-fluid">
+                            <article class="cntnr-photos row custom-gallery">
+
+                                <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+
+                                    <section class="photo-cntnr">
+
+                                        <header class="preview-photo-thumbnail-header">
+                                            <div>
+                                                <a href="" class="edit-custom-button fa fa-pencil-square-o"></a>
+                                                <a href="" class="delete-custom-button fa fa-trash-o"></a>
+                                            </div>
+
+                                        </header>
+
+                                        <div class="album-photo-content">
+                                            <img src="/background-pics/register_pick.jpg" alt="">
+                                        </div>
+                                        <footer class="preview-photo-thumbnail-footer">
+                                            <ul>
+                                                <form action="">
+                                                    <li>
+                                                        <input type="submit" id="paw" class="" value=""><label>4</label>
+                                                    </li>
+                                                </form>
+                                                <form action="">
+                                                    <li>
+                                                        <input type="submit" id="love" class=""
+                                                               value=""><label>15000</label>
+                                                    </li>
+                                                </form>
+                                                <form action="">
+                                                    <li>
+                                                        <input type="submit" id="dislike" class=""
+                                                               value=""><label>0</label>
+                                                    </li>
+                                                </form>
+                                            </ul>
+                                        </footer>
+
+                                    </section>
+                                </article>
+
+                                <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+
+                                    <section class="photo-cntnr">
+
+                                        <header class="preview-photo-thumbnail-header">
+                                            <div>
+                                                <a href="" class="edit-custom-button fa fa-pencil-square-o"></a>
+                                                <a href="" class="delete-custom-button fa fa-trash-o"></a>
+                                            </div>
+
+                                        </header>
+
+                                        <div class="album-photo-content">
+                                            <img src="/background-pics/dog-photographer.jpg" alt="">
+                                        </div>
+                                        <footer class="preview-photo-thumbnail-footer">
+                                            <ul>
+                                                <form action="">
+                                                    <li>
+                                                        <input type="submit" id="paw" class="" value=""><label>4</label>
+                                                    </li>
+                                                </form>
+                                                <form action="">
+                                                    <li>
+                                                        <input type="submit" id="love" class=""
+                                                               value=""><label>15000</label>
+                                                    </li>
+                                                </form>
+                                                <form action="">
+                                                    <li>
+                                                        <input type="submit" id="dislike" class=""
+                                                               value=""><label>0</label>
+                                                    </li>
+                                                </form>
+                                            </ul>
+                                        </footer>
+
+                                    </section>
+                                </article>
+
+                                <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+
+                                    <section class="photo-cntnr">
+
+                                        <header class="preview-photo-thumbnail-header">
+                                            <div>
+                                                <a href="" class="edit-custom-button fa fa-pencil-square-o"></a>
+                                                <a href="" class="delete-custom-button fa fa-trash-o"></a>
+                                            </div>
+
+                                        </header>
+
+                                        <div class="album-photo-content">
+                                            <img src="/background-pics/front_pic.jpg" alt="">
+                                        </div>
+                                        <footer class="preview-photo-thumbnail-footer">
+                                            <ul>
+                                                <form action="">
+                                                    <li>
+                                                        <input type="submit" id="paw" class="" value=""><label>4</label>
+                                                    </li>
+                                                </form>
+                                                <form action="">
+                                                    <li>
+                                                        <input type="submit" id="love" class=""
+                                                               value=""><label>15000</label>
+                                                    </li>
+                                                </form>
+                                                <form action="">
+                                                    <li>
+                                                        <input type="submit" id="dislike" class=""
+                                                               value=""><label>0</label>
+                                                    </li>
+                                                </form>
+                                            </ul>
+                                        </footer>
+
+                                    </section>
+                                </article>
+
+
                             </article>
 
                         </li>
-                        <li>
-                            <article class="cntnr-photos">
-                                vla
+                        <li class="container-fluid">
+                            <!--                                       Album view-->
+                            <article class="row cntnr-photos">
+                                <section class="col-xs-12 col-sm-4 col-md-3">
+                                    <article id="display-all-albums">
+                                        vlala
+                                    </article>
+
+                                </section>
+                                <section class="col-xs-12 col-sm-8 col-md-9">
+                                    <article id="display-photos-in-selected-album">
+                                        lalalal
+                                    </article>
+
+
+                                </section>
+
                             </article>
                         </li>
                     </ul>
@@ -30,8 +166,10 @@
             </li>
             <li>
                 <article class="container-fluid cntnr-crte-albm">
-                    <fieldset>
-                        <form action="" class="pic-form">
+
+                    <form action="/photo/all/album" method="POST" enctype="multipart/form-data" class="pic-form"
+                          id="album-upload-form">
+                        <fieldset>
                             <section class="col-xs-12 col-sm-4 col-md-3 float-left-cntr">
                                 <article class="form-inputs-style">
                                     <div>
@@ -46,16 +184,15 @@
                                     </div>
                                     <div class="radio-questions">
                                         <div>
-                                            <input type="radio" name="album-check" id="public" value="public-vsbl">
-                                            <label for="public">Is this album public?</label>
+                                            <input type="radio" name="photocheck" id="single-public"
+                                                   value="publicvisible" checked="checked">
+                                            <label for="single-public">Is this album public?</label>
                                         </div>
                                         <div>
-                                            <input type="radio" name="album-check" id="category" value="group-vsbl">
-                                            <label for="category">Or is it visible to your category?</label>
-                                        </div>
-                                        <div>
-                                            <input type="radio" name="album-check" id="friends" value="friends-vsbl">
-                                            <label for="friends">Or is it visible only to your friends?</label>
+                                            <input type="radio" name="photocheck" id="single-category-friends"
+                                                   value="groupvisible">
+                                            <label for="single-category">Or is it visible to your category and
+                                                friends?</label>
                                         </div>
                                     </div>
                                 </article>
@@ -64,68 +201,78 @@
                             <section class="container-fluid col-xs-12 col-sm-8 col-md-9 float-left-cntr ">
                                 <article class="cntr-cntr">
                                     <output></output>
-
+                                    <!--<div id="selectedFiles"></div>-->
                                     <article class="col-xs-12 col-sm-5 col-md-4 add-photo-button">
 
-                                        <label for="files">
+                                        <label for="" class="browseBtnLabel">
                                             <section class="photo-cntnr add-photo">
-                                                <input id="files" type="file" multiple/>
+                                                <input id="" name="" type="file" multiple/>
                                             </section>
                                         </label>
                                     </article>
                                 </article>
 
                             </section>
-                            <button type="submit" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>
+                            <input type="" id="" class="check-before-send-btn"/> I want to publish these photos.
+                            <button type="" id="" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>
 
-                        </form>
-                    </fieldset>
-
+                        </fieldset>
+                    </form>
                 </article>
             </li>
             <li>
                 <article class="container-fluid cntnr-crte-albm">
-                    <fieldset>
-                        <form action="" class="pic-form">
+
+                    <form action="/photo/all/single" method="POST" enctype="multipart/form-data" class="pic-form"
+                          id="single-photos-form">
+                        <fieldset>
                             <section class="col-xs-12 col-sm-4 col-md-3 float-left-cntr">
                                 <article class="form-inputs-style">
                                     <div class="radio-questions">
                                         <div>
-                                            <input type="radio" name="album-check" id="single-public"
-                                                   value="public-vsbl">
+                                            <input type="radio" name="photocheck" id="single-public"
+                                                   value="publicvisible" checked="checked">
                                             <label for="single-public">Are these photos public?</label>
                                         </div>
                                         <div>
-                                            <input type="radio" name="album-check" id="single-category"
-                                                   value="group-vsbl">
-                                            <label for="single-category">Or are they visible to your category?</label>
-                                        </div>
-                                        <div>
-                                            <input type="radio" name="album-check" id="single-friends"
-                                                   value="friends-vsbl">
-                                            <label for="single-friends">Or are they visible only to your
+                                            <input type="radio" name="photocheck" id="single-category-friends"
+                                                   value="groupvisible">
+                                            <label for="single-category">Or are they visible to your category and
                                                 friends?</label>
                                         </div>
+                                        <!--<div>-->
+                                        <!--<input type="radio" name="album-check" id="single-friends"-->
+                                        <!--value="friends-vsbl">-->
+                                        <!--<label for="single-friends">Or are they visible only to your-->
+                                        <!--friends?</label>-->
+                                        <!--</div>-->
                                     </div>
                                 </article>
 
                             </section>
-                            <section class="container col-xs-12 col-sm-8 col-md-9 float-left-cntr cntr-cntr">
+                            <section class="container col-xs-12 col-sm-8 col-md-9 float-left-cntr">
+                                <article class="cntr-cntr">
+                                    <output></output>
+                                    <!--<div id="selectedFiles"></div>-->
+                                    <article class="col-xs-12 col-sm-5 col-md-4 add-photo-button">
 
-                                <output></output>
+                                        <label for="uploadPhotos" class="browseBtnLabel">
+                                            <section class="photo-cntnr add-photo" id="add-single-photos">
 
-                                <article class="col-xs-12 col-sm-5 col-md-4 add-photo-button">
-
-                                    <label for="files">
-                                        <section class="photo-cntnr add-photo">
-                                            <input id="files" type="file" multiple/>
-                                        </section>
-                                    </label>
+                                                <input name="uploadedPhotos" id="uploadPhotos" type="file" multiple/>
+                                            </section>
+                                        </label>
+                                    </article>
                                 </article>
                             </section>
-                            <button type="submit" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>
-                        </form>
-                    </fieldset>
+                            <input type="checkbox" id="check-before-send" class="check-before-send-btn"/> I want to
+                            publish these photos.
+                            <button type="submit" id="publish-photos"
+                                    class="btn btn-secondary sign-in-log-out btn-publish">Publish
+                            </button>
+
+                        </fieldset>
+                    </form>
                 </article>
 
             </li>
@@ -133,3 +280,141 @@
 
     </section>
 </section>
+
+
+
+<!--<section class="container pic-up-container">-->
+
+    <!--<section id="upload-photos">-->
+        <!--<h1>You currently don't have any photos.</h1>-->
+        <!--<h2 class="album-tabs active-title">Photos</h2>-->
+        <!--<h2 class="album-tabs">Do you want to create a new album?</h2>-->
+        <!--<h2 class="album-tabs">Or you just want to upload a single photo?</h2>-->
+        <!--<ul>-->
+            <!--<li class="active-section">-->
+                <!--<article id="view-tabs-in-photos" class="cntnr-crte-albm">-->
+                    <!--<div id="container-photo-tabs">-->
+                        <!--<h2 class="photos-tabs active-tab">Your Photos</h2>-->
+                        <!--<h2 class="photos-tabs">Your Albums</h2>-->
+                    <!--</div>-->
+
+                    <!--<ul>-->
+                        <!--<li class="active-tab-section">-->
+                            <!--<article class="cntnr-photos">-->
+                                <!--bla-->
+                            <!--</article>-->
+
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<article class="cntnr-photos">-->
+                                <!--vla-->
+                            <!--</article>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</article>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<article class="container-fluid cntnr-crte-albm">-->
+                    <!--<fieldset>-->
+                        <!--<form action="" class="pic-form">-->
+                            <!--<section class="col-xs-12 col-sm-4 col-md-3 float-left-cntr">-->
+                                <!--<article class="form-inputs-style">-->
+                                    <!--<div>-->
+                                        <!--<label for="">Album name</label>-->
+                                        <!--<input type="text" class="cstm-input-register-style input-cstm-style" id=""-->
+                                               <!--value="" placeholder="Title"/>-->
+                                    <!--</div>-->
+                                    <!--<div>-->
+                                        <!--<label for="">Description</label>-->
+                                        <!--<textarea id="" class="cstm-input-register-style input-cstm-style" rows="10"-->
+                                                  <!--cols="100" placeholder="Say something about this album..."></textarea>-->
+                                    <!--</div>-->
+                                    <!--<div class="radio-questions">-->
+                                        <!--<div>-->
+                                            <!--<input type="radio" name="album-check" id="public" value="public-vsbl">-->
+                                            <!--<label for="public">Is this album public?</label>-->
+                                        <!--</div>-->
+                                        <!--<div>-->
+                                            <!--<input type="radio" name="album-check" id="category" value="group-vsbl">-->
+                                            <!--<label for="category">Or is it visible to your category?</label>-->
+                                        <!--</div>-->
+                                        <!--<div>-->
+                                            <!--<input type="radio" name="album-check" id="friends" value="friends-vsbl">-->
+                                            <!--<label for="friends">Or is it visible only to your friends?</label>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</article>-->
+
+                            <!--</section>-->
+                            <!--<section class="container-fluid col-xs-12 col-sm-8 col-md-9 float-left-cntr ">-->
+                                <!--<article class="cntr-cntr">-->
+                                    <!--<output></output>-->
+
+                                    <!--<article class="col-xs-12 col-sm-5 col-md-4 add-photo-button">-->
+
+                                        <!--<label for="files">-->
+                                            <!--<section class="photo-cntnr add-photo">-->
+                                                <!--<input id="files" type="file" multiple/>-->
+                                            <!--</section>-->
+                                        <!--</label>-->
+                                    <!--</article>-->
+                                <!--</article>-->
+
+                            <!--</section>-->
+                            <!--<button type="submit" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>-->
+
+                        <!--</form>-->
+                    <!--</fieldset>-->
+
+                <!--</article>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<article class="container-fluid cntnr-crte-albm">-->
+                    <!--<fieldset>-->
+                        <!--<form action="" class="pic-form">-->
+                            <!--<section class="col-xs-12 col-sm-4 col-md-3 float-left-cntr">-->
+                                <!--<article class="form-inputs-style">-->
+                                    <!--<div class="radio-questions">-->
+                                        <!--<div>-->
+                                            <!--<input type="radio" name="album-check" id="single-public"-->
+                                                   <!--value="public-vsbl">-->
+                                            <!--<label for="single-public">Are these photos public?</label>-->
+                                        <!--</div>-->
+                                        <!--<div>-->
+                                            <!--<input type="radio" name="album-check" id="single-category"-->
+                                                   <!--value="group-vsbl">-->
+                                            <!--<label for="single-category">Or are they visible to your category?</label>-->
+                                        <!--</div>-->
+                                        <!--<div>-->
+                                            <!--<input type="radio" name="album-check" id="single-friends"-->
+                                                   <!--value="friends-vsbl">-->
+                                            <!--<label for="single-friends">Or are they visible only to your-->
+                                                <!--friends?</label>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</article>-->
+
+                            <!--</section>-->
+                            <!--<section class="container col-xs-12 col-sm-8 col-md-9 float-left-cntr cntr-cntr">-->
+
+                                <!--<output></output>-->
+
+                                <!--<article class="col-xs-12 col-sm-5 col-md-4 add-photo-button">-->
+
+                                    <!--<label for="files">-->
+                                        <!--<section class="photo-cntnr add-photo">-->
+                                            <!--<input id="files" type="file" multiple/>-->
+                                        <!--</section>-->
+                                    <!--</label>-->
+                                <!--</article>-->
+                            <!--</section>-->
+                            <!--<button type="submit" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>-->
+                        <!--</form>-->
+                    <!--</fieldset>-->
+                <!--</article>-->
+
+            <!--</li>-->
+        <!--</ul>-->
+
+    <!--</section>-->
+<!--</section>-->
