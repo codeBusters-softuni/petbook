@@ -168,7 +168,7 @@
                 <article class="container-fluid cntnr-crte-albm">
 
                     <form action="/photo/all/album" method="POST" enctype="multipart/form-data" class="pic-form"
-                          id="album-upload-form">
+                          id="album-photos-form">
                         <fieldset>
                             <section class="col-xs-12 col-sm-4 col-md-3 float-left-cntr">
                                 <article class="form-inputs-style">
@@ -178,9 +178,9 @@
                                                value="" name="nameAlbum" placeholder="Title"/>
                                     </div>
                                     <div>
-                                        <label for="">Description</label>
+                                        <label  for="descriptionAlbum">Description</label>
                                         <textarea id="" class="cstm-input-register-style input-cstm-style" rows="10"
-                                                  cols="100" placeholder="Say something about this album..."></textarea>
+                                                  cols="100" placeholder="Say something about this album..." name="descriptionAlbum"></textarea>
                                     </div>
                                     <div class="radio-questions">
                                         <div>
@@ -204,17 +204,17 @@
                                     <!--<div id="selectedFiles"></div>-->
                                     <article class="col-xs-12 col-sm-5 col-md-4 add-photo-button">
 
-                                        <label for="" class="browseBtnLabel">
+                                        <label for="uploadAlbum" class="browseBtnLabel">
                                             <section class="photo-cntnr add-photo">
-                                                <input id="" name="" type="file" multiple/>
+                                                <input id="uploadAlbum" name="uploadAlbum" type="file" multiple/>
                                             </section>
                                         </label>
                                     </article>
                                 </article>
 
                             </section>
-                            <input type="" id="" class="check-before-send-btn"/> I want to publish these photos.
-                            <button type="" id="" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>
+                            <input type="checkbox" id="check-before-send-album" class="check-before-send-btn"/> I want to publish these photos.
+                            <button type="submit" id="publish-album" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>
 
                         </fieldset>
                     </form>

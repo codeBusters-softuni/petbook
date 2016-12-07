@@ -191,6 +191,7 @@ function uploadPhoto(event) {
         var picReader = new FileReader();
 
         picReader.removeEventListener("load", saveAsHTML);
+        counter = 0;
         picReader.addEventListener("load", saveAsHTML);
 
         //Read the image
@@ -200,10 +201,17 @@ function uploadPhoto(event) {
 
 };
 
-function browsePicture() {
-    var filesInput = document.getElementById("uploadPhotos");
+function browsePicture(index) {
+    var filesInput = "";
+    if(index == 2){
+        filesInput = document.getElementById("uploadPhotos");
+    }
+    else{
+        filesInput = document.getElementById("uploadAlbum");
+    }
 
     filesInput.removeEventListener("change", uploadPhoto);
+    counter = 0;
     filesInput.addEventListener("change", uploadPhoto);
 };
 
@@ -215,13 +223,15 @@ $(document).ready(function () {
         titleContainer = [],
         titleIndex = '',
         fieldsetArea = $('#upload-photos fieldset'),
-        formUploadPhotos = $('#upload-photos .pic-form'),
-        picContainer = $('#upload-photos output'),
-        formInputFilesBtn = $('#upload-photos input[type=file]'),
-        browseLabelBtn = $('#upload-photos .browseBtnLabel'),
-        checkBtn = $('#upload-photos .check-before-send-btn'),
-        publishBtn = $('#upload-photos .btn-publish'),
-        btnBrowse = "";
+        // formUploadPhotos = $('#upload-photos .pic-form'),
+        picContainer = $('#upload-photos output');
+        // formInputFilesBtn = $('#upload-photos input[type=file]'),
+        // browseLabelBtn = $('#upload-photos .browseBtnLabel'),
+        // checkBtn = $('#upload-photos .check-before-send-btn');
+        // publishBtn = $('#upload-photos .btn-publish'),
+        // btnBrowse = "";
+
+    // checkBtn.css("disabled", "disabled");
 
     title.each(function () {
         titleContainer = $(this).find('>h2');
@@ -229,13 +239,13 @@ $(document).ready(function () {
 
     titleContainer.on('click', function () {
         titleIndex = $(this).index();
-        formUploadPhotos.removeAttr('action method enctype id');
+        // formUploadPhotos.removeAttr('action method enctype id');
         picContainer.removeAttr("id");
-        formInputFilesBtn.removeAttr('id name type');
-        browseLabelBtn.removeAttr('for');
+        // formInputFilesBtn.removeAttr('id name type');
+        // browseLabelBtn.removeAttr('for');
 
-        checkBtn.removeAttr('type id disabled checked');
-        publishBtn.removeAttr('type id');
+        // checkBtn.removeAttr('type id disabled checked');
+        // publishBtn.removeAttr('type id');
 
 
         activeTitle.eq(titleIndex).addClass('active-title')
@@ -245,17 +255,17 @@ $(document).ready(function () {
             .addClass('active-section')
             .siblings().removeClass('active-section');
 
-        formUploadPhotos.eq(titleIndex - 1).attr({
-            action: "/photo/all/single",
-            method: "POST",
-            enctype: "multipart/form-data",
-            id: "single-photos-form"
-        });
+        // formUploadPhotos.eq(titleIndex - 1).attr({
+        //     action: "/photo/all/single",
+        //     method: "POST",
+        //     enctype: "multipart/form-data",
+        //     id: "single-photos-form"
+        // });
         picContainer.eq(titleIndex - 1).attr("id", "result");
-        formInputFilesBtn.eq(titleIndex - 1).attr({id: "uploadPhotos", name: "uploadedPhotos", type: "file"});
-        browseLabelBtn.eq(titleIndex - 1).attr("for", "uploadPhotos");
-        checkBtn.eq(titleIndex - 1).attr({type: "checkbox", id: "check-before-send"});
-        publishBtn.eq(titleIndex - 1).attr({type: "submit", id: "publish-photos"});
+        // formInputFilesBtn.eq(titleIndex - 1).attr({id: "uploadPhotos", name: "uploadedPhotos", type: "file"});
+        // browseLabelBtn.eq(titleIndex - 1).attr("for", "uploadPhotos");
+        // checkBtn.eq(titleIndex - 1).attr({type: "checkbox", id: "check-before-send"});
+        // publishBtn.eq(titleIndex - 1).attr({type: "submit", id: "publish-photos"});
 
 
         var picContainerArticle = document.getElementsByClassName('pic-container-article');
@@ -266,12 +276,21 @@ $(document).ready(function () {
             }
         }
 
-        browsePicture();
+        browsePicture(titleIndex);
 
+        var sendbtn = "";
+        var browsePhotos = "";
+        if(titleIndex-1==1){
+            checker = $('#check-before-send');
+            sendbtn = $('#publish-photos');
+            browsePhotos = $('.add-photo-button');
+        }
+        else if(titleIndex-1==0) {
+            checker = $('#check-before-send-album');
+            sendbtn = $('#publish-album');
+            browsePhotos = $('.add-photo-button');
+        }
 
-        var checker = $('#check-before-send');
-        var sendbtn = $('#publish-photos');
-        var browsePhotos = $('.add-photo-button');
         sendbtn.attr("disabled", "disabled");
         checker.on('click', function () {
             console.log("yes");

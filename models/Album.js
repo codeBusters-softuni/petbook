@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 let albumSchema = mongoose.Schema(
     {
-            name: {type: String, unique: true},
+            name: String,
             description: String,
             photos: [{type: mongoose.Schema.Types.ObjectId, ref: 'Photo'}],
             author: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},

@@ -51,9 +51,9 @@ module.exports = {
                 if(!album){
                     albumUp.name = "Photos"+" "+albumArgs.author;
                     albumUp.author = albumArgs.author;
-                    Album.create(albumUp).then(newalbum =>{
-                        newalbum.prepareUploadAlbum();
-                        albumID = newalbum.id;
+                    Album.create(albumUp).then(newAlbum =>{
+                        newAlbum.prepareUploadAlbum();
+                        albumID = newAlbum.id;
                     });
                 }
                 else{
@@ -62,7 +62,7 @@ module.exports = {
             })
         }
 
-
+        console.log(albumID);
         upload(req, res, function () {
             let photoArgs = req.body;
             // console.log(photoArgs)

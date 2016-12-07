@@ -49,12 +49,14 @@ photoSchema.method({
         let User = mongoose.model('User');
         User.findById(this.author).then(user =>{
             user.photos.push(this.id);
+            console.log(this);
             user.save();
         });
 
         let Album = mongoose.model('Album');
         Album.findOne({name: "Photos"+" "+this.author}).then(album =>{
             album.photos.push(this.id);
+            console.log(this);
             album.save();
         })
 
