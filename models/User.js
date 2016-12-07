@@ -15,6 +15,7 @@ let userSchema = mongoose.Schema(
     profilePic: { type: mongoose.Schema.Types.ObjectId, ref: 'Photo' },
     //  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }], let's try what it's like to not hold the user's posts
     photos: [{type: mongoose.Schema.Types.ObjectId, ref:'Photo'}],
+    albums: [{type: mongoose.Schema.Types.ObjectId, ref:'Album'}],
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     pendingFriendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FriendRequest' }]

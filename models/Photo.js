@@ -22,8 +22,9 @@ let photoSchema = mongoose.Schema(
       size: Number,
       // content: {type: String, required: true},
       author: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
-      public: { type: Boolean, required: true },
-      album: {type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Album'},
+      public: { type: Boolean, required: true, default: true },
+      description: {type: String, required: false, default:""},
+      album: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Album' },
       // tags: [{type: mongoose.Schema.Types.ObjectId, required:true, ref:'Tag'}],
       date: {type: Date, default: Date.now()}
   }
@@ -49,8 +50,16 @@ photoSchema.method({
         User.findById(this.author).then(user =>{
             user.photos.push(this.id);
             user.save();
+        });
+
+        let Album = mongoose.model('Album');
+        Album.findOne({name: "Photos"+" "+this.author}).then(album =>{
+            album.photos.push(this.id);
+            album.save();
         })
+
     }
+
 
 })
 

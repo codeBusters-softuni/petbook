@@ -160,7 +160,7 @@ function saveAsHTML(event) {  // picReader.addEventListener("load",function(even
     var textarea = document.createElement("textarea");
     textarea.className += "cstm-input-register-style input-cstm-style";
     textarea.setAttribute("placeholder", "Say something about this photo...");
-    textarea.setAttribute("name", counter);
+    textarea.setAttribute("name", counter ); //counter
     textarea.setAttribute("rows", "3");
     textarea.setAttribute("cols", "30");
     section.appendChild(textarea);
@@ -170,6 +170,13 @@ function saveAsHTML(event) {  // picReader.addEventListener("load",function(even
 }
 
 function uploadPhoto(event) {
+    var picContainerArticle = document.getElementsByClassName('pic-container-article');
+    for (var i = picContainerArticle.length - 1; i >= 0; i--) {
+        if (picContainerArticle[i] && picContainerArticle[i].parentNode) {
+            picContainerArticle[i].parentNode.removeChild(picContainerArticle[i]);
+
+        }
+    }
 
     var files = event.target.files; //FileList object
     console.log(1);

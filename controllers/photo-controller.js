@@ -1,29 +1,30 @@
 const Photo = require('mongoose').model('Photo');
+const Album = require('mongoose').model('Album');
 
 // For uploading photos!!!
 var formidable = require('formidable');
 var multer  =   require('multer');
 
 
-var storage =   multer.memoryStorage({ //diskStorage
-    destination: function (req, file, callback) { //file   ???
-        callback(null, __dirname + '/uploads/');
-    },
-    filename: function (req, file, callback) {  //file    ???
-        var originalname = file.originalname;  //file  ???
-        var extension = originalname.split(".");
-        callback(null, file.fieldname + '-' + Date.now()+ '.' + extension[extension.length-1]);  //file   ???
-    }
-});
+// var storage =   multer.memoryStorage({ //diskStorage
+//     destination: function (req, file, callback) { //file   ???
+//         callback(null, __dirname + '/uploads/');
+//     },
+//     filename: function (req, file, callback) {  //file    ???
+//         var originalname = file.originalname;  //file  ???
+//         var extension = originalname.split(".");
+//         callback(null, file.fieldname + '-' + Date.now()+ '.' + extension[extension.length-1]);  //file   ???
+//     }
+// });
 var upload = multer({ dest: __dirname + '/uploads/'}).array('uploadedPhotos');
 // up to here for uploading photos!!!
 
 
 module.exports = {
     allGet: (req, res) => {
-        console.log(req.user)
+        // console.log(req.user)
         if(!req.user){
-            console.log('HERE')
+            // console.log('HERE')
             let returnUrl = '/user/uploadPhotos';
             req.session.returnUrl = returnUrl;
 
@@ -37,12 +38,41 @@ module.exports = {
     },
 
     uploadPhotosPost: (req, res) =>{
+        let albumArgs = req.body;
+        // console.log(photoArgs)
+        albumArgs.author = req.user.id;
+        // let counter = 0;
+
+        var albumID = "";
+        var albumUp = new Album();
+
+        if(albumArgs.nameAlbum == null){
+            Album.findOne({name: "Photos"+" "+albumArgs.author}).then(album =>{
+                if(!album){
+                    albumUp.name = "Photos"+" "+albumArgs.author;
+                    albumUp.author = albumArgs.author;
+                    Album.create(albumUp).then(newalbum =>{
+                        newalbum.prepareUploadAlbum();
+                        albumID = newalbum.id;
+                    });
+                }
+                else{
+                    albumID = album.id;
+                }
+            })
+        }
+
+
         upload(req, res, function () {
             let photoArgs = req.body;
-            console.log(photoArgs)
+            // console.log(photoArgs)
             photoArgs.author = req.user.id;
-            let counter = 0
+            // photoArgs
+            let counter = 1
+            // console.log(counter)
+
             req.files.forEach(function (item) {
+
                 var photoUp = new Photo({
                     fieldname: item.fieldname,
                     originalname: item.originalname,
@@ -52,11 +82,15 @@ module.exports = {
                     filename: item.filename,
                     path: item.path,
                     size: item.size,
-                    author: photoArgs.author
+                    author: photoArgs.author,
+                    description: photoArgs[counter.toString()],
+                    album: albumID
                 });
-                counter += 1
-                console.log(photoArgs[counter.toString()])
-                console.log(item.originalname)
+
+                // console.log(photoArgs);
+                // console.log(photoArgs[counter.toString()])
+                // console.log(item.originalname)
+                counter += 1;
                 if(photoArgs.photocheck.toString() == "publicvisible"){
                     photoUp.public = true;
                 }
