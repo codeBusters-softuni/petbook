@@ -45,7 +45,8 @@ let photoSchema = mongoose.Schema(
 // })
 
 photoSchema.method({
-    prepareUpload: function () {
+
+    prepareUploadSinglePhotos: function (idAlbum) {
         let User = mongoose.model('User');
         User.findById(this.author).then(user =>{
             user.photos.push(this.id);
@@ -54,12 +55,32 @@ photoSchema.method({
         });
 
         let Album = mongoose.model('Album');
-        Album.findOne({name: "Photos"+" "+this.author}).then(album =>{
+        Album.findOne(idAlbum).then(album =>{
             album.photos.push(this.id);
-            console.log(this);
+            // console.log(this);
             album.save();
         })
 
+    },
+
+    prepareUpload: function () {
+        let User = mongoose.model('User');
+        User.findById(this.author).then(user =>{
+            user.photos.push(this.id);
+            console.log(this);
+            user.save();
+        });
+
+    },
+
+    prepareUploadInAlbum: function (albumId) {
+        let Album = mongoose.model('Album');
+        Album.findById(albumId).then(album =>{
+            album.photos.push(this.id);
+            console.log("ADDED TO ALBUM");
+            console.log(album)
+            album.save();
+        });
     }
 
 

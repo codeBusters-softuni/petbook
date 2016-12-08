@@ -1,5 +1,6 @@
 const controllers = require('./../controllers')
 const photoController = require('./../controllers/photo-controller');
+const albumController = require('./../controllers/album-controller');
 
 module.exports = (app) => {
   app.get('/', controllers.homeController.homePageGet)
@@ -38,6 +39,9 @@ module.exports = (app) => {
   app.post(/post\/(.+)\/remove(.{3,7})/, controllers.postController.removeLike)
 
 
-  //Upload single photos without album
+  //Upload single photos in default album
   app.post('/photo/all/single', photoController.uploadPhotosPost)
+    //Upload album with photos
+  app.post('/photo/all/album', albumController.uploadAlbum)
+
 }

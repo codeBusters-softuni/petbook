@@ -43,86 +43,91 @@ module.exports = {
         albumArgs.author = req.user.id;
         // let counter = 0;
 
-        var albumID = "";
+        // var albumID = "";
         var albumUp = new Album();
+        var _id = 0;
 
-        if(albumArgs.nameAlbum == null){
+        // if(albumArgs.nameAlbum == null){
             Album.findOne({name: "Photos"+" "+albumArgs.author}).then(album =>{
                 if(!album){
                     albumUp.name = "Photos"+" "+albumArgs.author;
                     albumUp.author = albumArgs.author;
+                    albumUp.public = false;
+
                     Album.create(albumUp).then(newAlbum =>{
                         newAlbum.prepareUploadAlbum();
-                        albumID = newAlbum.id;
+                        _id = newAlbum._id;
                     });
                 }
                 else{
-                    albumID = album.id;
+                    _id = album._id;
                 }
+            }).then(() => {
+                // console.log(albumID);
+                upload(req, res, function () {
+                    let photoArgs = req.body;
+                    // console.log(photoArgs)
+                    photoArgs.author = req.user.id;
+                    // photoArgs
+                    let counter = 1
+                    // console.log(counter)
+
+                    req.files.forEach(function (item) {
+
+                        var photoUp = new Photo({
+                            fieldname: item.fieldname,
+                            originalname: item.originalname,
+                            encoding: item.encoding,
+                            mimetype: item.mimetype,
+                            destination:item.destination,
+                            filename: item.filename,
+                            path: item.path,
+                            size: item.size,
+                            author: photoArgs.author,
+                            description: photoArgs[counter.toString()],
+                            album: _id
+                        });
+
+                        // console.log(photoArgs);
+                        // console.log(photoArgs[counter.toString()])
+                        // console.log(item.originalname)
+                        counter += 1;
+                        if(photoArgs.photocheck.toString() == "publicvisible"){
+                            photoUp.public = true;
+                        }
+                        else
+                        {
+                            photoUp.public = false;
+                        }
+
+                        // photoUp.save(function (err, resp) {
+                        //     if(err){
+                        //         console.log(err);
+                        //         res.send({
+                        //             message :'something went wrong'
+                        //         });
+                        //     }
+                        //     else {
+                        //         // res.send({
+                        //         //     message:'the photos has bees saved'
+                        //         // });
+                        //     }
+                        // });
+
+                        Photo.create(photoUp).then(photo => {
+                                photo.prepareUploadSinglePhotos(photoUp.album);
+                            }
+                        )
+
+
+                    });
+                })
+
+
+                res.render('user/uploadPhotos');
             })
-        }
-
-        console.log(albumID);
-        upload(req, res, function () {
-            let photoArgs = req.body;
-            // console.log(photoArgs)
-            photoArgs.author = req.user.id;
-            // photoArgs
-            let counter = 1
-            // console.log(counter)
-
-            req.files.forEach(function (item) {
-
-                var photoUp = new Photo({
-                    fieldname: item.fieldname,
-                    originalname: item.originalname,
-                    encoding: item.encoding,
-                    mimetype: item.mimetype,
-                    destination:item.destination,
-                    filename: item.filename,
-                    path: item.path,
-                    size: item.size,
-                    author: photoArgs.author,
-                    description: photoArgs[counter.toString()],
-                    album: albumID
-                });
-
-                // console.log(photoArgs);
-                // console.log(photoArgs[counter.toString()])
-                // console.log(item.originalname)
-                counter += 1;
-                if(photoArgs.photocheck.toString() == "publicvisible"){
-                    photoUp.public = true;
-                }
-                else
-                {
-                    photoUp.public = false;
-                }
-
-                // photoUp.save(function (err, resp) {
-                //     if(err){
-                //         console.log(err);
-                //         res.send({
-                //             message :'something went wrong'
-                //         });
-                //     }
-                //     else {
-                //         // res.send({
-                //         //     message:'the photos has bees saved'
-                //         // });
-                //     }
-                // });
-
-                Photo.create(photoUp).then(photo => {
-                        photo.prepareUpload();
-                    }
-                )
+        // }
 
 
-            });
-        })
-
-
-        res.render('user/uploadPhotos');
     }
 };
