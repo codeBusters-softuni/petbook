@@ -16,7 +16,12 @@ var multer  =   require('multer');
 //         callback(null, file.fieldname + '-' + Date.now()+ '.' + extension[extension.length-1]);  //file   ???
 //     }
 // });
-var upload = multer({ dest: __dirname + '/uploads/'}).array('uploadedPhotos');
+
+var dest = __dirname.toString().split('\\');
+dest[dest.length-1] = "public";
+dest = dest.join('\\');
+var upload = multer({ dest: dest + '/uploads/'}).array('uploadedPhotos');
+
 // up to here for uploading photos!!!
 
 
@@ -52,7 +57,7 @@ module.exports = {
                 if(!album){
                     albumUp.name = "Photos"+" "+albumArgs.author;
                     albumUp.author = albumArgs.author;
-                    albumUp.public = false;
+                    albumUp.public = true;
 
                     Album.create(albumUp).then(newAlbum =>{
                         newAlbum.prepareUploadAlbum();
@@ -100,20 +105,6 @@ module.exports = {
                             photoUp.public = false;
                         }
 
-                        // photoUp.save(function (err, resp) {
-                        //     if(err){
-                        //         console.log(err);
-                        //         res.send({
-                        //             message :'something went wrong'
-                        //         });
-                        //     }
-                        //     else {
-                        //         // res.send({
-                        //         //     message:'the photos has bees saved'
-                        //         // });
-                        //     }
-                        // });
-
                         Photo.create(photoUp).then(photo => {
                                 photo.prepareUploadSinglePhotos(photoUp.album);
                             }
@@ -124,7 +115,7 @@ module.exports = {
                 })
 
 
-                res.render('user/uploadPhotos');
+                res.redirect('/user/uploadPhotos');
             })
         // }
 

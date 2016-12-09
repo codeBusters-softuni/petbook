@@ -160,7 +160,7 @@ function saveAsHTML(event) {  // picReader.addEventListener("load",function(even
     var textarea = document.createElement("textarea");
     textarea.className += "cstm-input-register-style input-cstm-style";
     textarea.setAttribute("placeholder", "Say something about this photo...");
-    textarea.setAttribute("name", counter ); //counter
+    textarea.setAttribute("name", counter.toString() ); //counter
     textarea.setAttribute("rows", "3");
     textarea.setAttribute("cols", "30");
     section.appendChild(textarea);

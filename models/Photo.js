@@ -26,7 +26,9 @@ let photoSchema = mongoose.Schema(
       description: {type: String, required: false, default:""},
       album: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Album' },
       // tags: [{type: mongoose.Schema.Types.ObjectId, required:true, ref:'Tag'}],
-      date: {type: Date, default: Date.now()}
+      date: {type: Date, default: Date.now()},
+
+      post: {type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Post'},
   }
 )
 
@@ -81,7 +83,17 @@ photoSchema.method({
             console.log(album)
             album.save();
         });
+    },
+
+    prepareUploadInPost: function (postId) {
+        let Post = mongoose.model('Post');
+        Post.findById(postId).then(post => {
+            post.photos.push(this.id);
+            post.save();
+        })
     }
+
+
 
 
 })

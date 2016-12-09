@@ -22,7 +22,10 @@ module.exports = {
 
 
     uploadAlbum: (req, res) => {
-        var upload = multer({ dest: __dirname +'/uploads/'}).array('uploadAlbum');  //__dirname +
+        var dest = __dirname.toString().split('\\');
+        dest[dest.length-1] = "public";
+        dest = dest.join('\\');
+        var upload = multer({ dest: dest +'/uploads/'}).array('uploadAlbum');  //__dirname +
 
         upload(req, res, function () {
             let albumArgs = req.body;
@@ -89,7 +92,7 @@ module.exports = {
             });
         })
 
-        res.render('user/uploadPhotos');
+        res.redirect('/user/uploadPhotos');
     }
 
 }

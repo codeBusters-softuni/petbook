@@ -22,7 +22,8 @@ module.exports = (app) => {
   })
 
   app.get('/category/:category', controllers.categoryController.showArticles)
-  app.get('/user/uploadPhotos', photoController.allGet)
+  // app.get('/user/uploadPhotos', photoController.allGet)
+  app.get('/user/uploadPhotos', controllers.homeController.userOwnPhotosGet)  //allGet
 
   app.get('/user/:id', controllers.userController.profilePageGet)  // must be below other user urls!
   app.post('/friendRequest/:receiverId/send', controllers.friendRequestController.sendRequest)
