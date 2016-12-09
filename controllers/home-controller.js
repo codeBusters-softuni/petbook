@@ -39,8 +39,8 @@ module.exports = {
 //             Photo.find({author: req.user.id}).then(photos => {  //populate('destination filename')
 //                 res.render('user/uploadPhotos', {photos: photos});
 //             })
-            User.findById(req.user.id).populate('photos').then(user => {
-                res.render('user/uploadPhotos', {photos: user.photos});
+            User.findById(req.user.id).populate('photos albums').then(user => {  // 'photos'
+                res.render('user/uploadPhotos', {photos: user.photos, albums: user.albums}); //photos: user.photos
             })
 
 

@@ -61,12 +61,14 @@ module.exports = {
             albumArgs.author = req.user.id;
             var nameNewAlbum = albumArgs.nameAlbum;
             var descriptionNewAlbum = albumArgs.descriptionAlbum;
-
+            var classForCss = nameNewAlbum.split(' ').filter(function(n){return n!=""});
+            classForCss = classForCss.join('-')+"-DbStyle";
 
             var newAlbumUp = new Album({
                 name: nameNewAlbum,
                 description: descriptionNewAlbum,
-                author: albumArgs.author
+                author: albumArgs.author,
+                classCss: classForCss
             });
             var _id = newAlbumUp._id;
 
@@ -76,7 +78,6 @@ module.exports = {
             else{
                 newAlbumUp.public = false;
             }
-            console.log(newAlbumUp.public);
 
             Album.create(newAlbumUp).then(newAlbum => {
                 newAlbum.prepareUploadAlbum();
@@ -99,7 +100,8 @@ module.exports = {
                     author: albumArgs.author,
                     description: albumArgs[counter.toString()],
                     album: _id,
-                    post: _idNewPost
+                    post: _idNewPost,
+                    classCss: classForCss
                 });
 
                 counter += 1;
@@ -110,8 +112,6 @@ module.exports = {
                 {
                     photoUp.public = false;
                 }
-
-
 
                 Photo.create(photoUp).then(photo => {
                         photo.prepareUpload();

@@ -20,23 +20,27 @@ module.exports = {
         let albumArgs = req.body;
         albumArgs.author = req.user.id;
         // for uploading photo in post
+        var classForCss;
         var albumUp = new Album();
         var _idAlbum = albumUp._id;
         var idThisNewPost;
-        
-        Album.findOne({name: "Photos" + " " + albumArgs.author}).then(album => {
+
+        Album.findOne({name: "Your photos from NewsFeed" + " " + albumArgs.author}).then(album => {
             if (!album) {
-                albumUp.name = "Photos" + " " + albumArgs.author;
+                albumUp.name = "Your photos from NewsFeed" + " " + albumArgs.author;
                 albumUp.author = albumArgs.author;
                 albumUp.public = true;
+                albumUp.classCss = "Your-photos-from-NewsFeed-DbStyle";
 
                 Album.create(albumUp).then(newAlbum => {
                     newAlbum.prepareUploadAlbum();
                     _idAlbum = newAlbum._id;
+                    classForCss = newAlbum.classCss;
                 });
             }
             else {
                 _idAlbum = album._id;
+                classForCss = album.classCss
             }
         }).then(() => {
             upload(req, res, function () {
@@ -75,6 +79,8 @@ module.exports = {
 
                 let counter = 1
 
+                console.log(classForCss);
+
                 req.files.forEach(function (item) {
 
                     var photoUp = new Photo({
@@ -88,8 +94,9 @@ module.exports = {
                         size: item.size,
                         post: _idNewPost,
                         author: newPost.author,
-                        description: newPostArg[counter.toString()],
-                        album: _idAlbum
+                        album: _idAlbum,
+                        classCss: classForCss,
+                        description: newPostArg[counter.toString()]
                     });
 
                     counter += 1;

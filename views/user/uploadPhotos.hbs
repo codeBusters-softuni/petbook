@@ -14,51 +14,52 @@
                     </div>
 
                     <ul>
-                        Photos view
+
                         <li class="active-tab-section  container-fluid">
                             <article class="cntnr-photos row custom-gallery">
 
 
                                 {{#each photos}}
-                                <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                                    <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 
-                                    <section class="photo-cntnr">
+                                        <section class="photo-cntnr">
 
-                                        <header class="preview-photo-thumbnail-header">
-                                            <div>
-                                                <a href="" class="edit-custom-button fa fa-pencil-square-o"></a>
-                                                <a href="" class="delete-custom-button fa fa-trash-o"></a>
+                                            <header class="preview-photo-thumbnail-header">
+                                                <div>
+                                                    <a href="" class="edit-custom-button fa fa-pencil-square-o"></a>
+                                                    <a href="" class="delete-custom-button fa fa-trash-o"></a>
+                                                </div>
+
+                                            </header>
+
+                                            <div class="album-photo-content">
+                                                <img src="/uploads/{{this.filename}}" alt="">
                                             </div>
+                                            <footer class="preview-photo-thumbnail-footer">
+                                                <ul>
+                                                    <form action="">
+                                                        <li>
+                                                            <input type="submit" id="paw" class=""
+                                                                   value=""><label>4</label>
+                                                        </li>
+                                                    </form>
+                                                    <form action="">
+                                                        <li>
+                                                            <input type="submit" id="love" class=""
+                                                                   value=""><label>15000</label>
+                                                        </li>
+                                                    </form>
+                                                    <form action="">
+                                                        <li>
+                                                            <input type="submit" id="dislike" class=""
+                                                                   value=""><label>0</label>
+                                                        </li>
+                                                    </form>
+                                                </ul>
+                                            </footer>
 
-                                        </header>
-
-                                        <div class="album-photo-content">
-                                            <img src="/uploads/{{this.filename}}" alt="">
-                                        </div>
-                                        <footer class="preview-photo-thumbnail-footer">
-                                            <ul>
-                                                <form action="">
-                                                    <li>
-                                                        <input type="submit" id="paw" class="" value=""><label>4</label>
-                                                    </li>
-                                                </form>
-                                                <form action="">
-                                                    <li>
-                                                        <input type="submit" id="love" class=""
-                                                               value=""><label>15000</label>
-                                                    </li>
-                                                </form>
-                                                <form action="">
-                                                    <li>
-                                                        <input type="submit" id="dislike" class=""
-                                                               value=""><label>0</label>
-                                                    </li>
-                                                </form>
-                                            </ul>
-                                        </footer>
-
-                                    </section>
-                                </article>
+                                        </section>
+                                    </article>
                                 {{/each}}
 
                             </article>
@@ -69,13 +70,76 @@
                             <article class="row cntnr-photos">
                                 <section class="col-xs-12 col-sm-4 col-md-3">
                                     <article id="display-all-albums">
-                                        vlala
+
+                                        <span class="filter-text">Filter:</span>
+                                        <section>
+                                            <input type="radio" id="filter-all" class="filter-input" name="filter"
+                                                   checked/>
+                                            <label for="filter-all" class="filter-label">All</label>
+                                        </section>
+                                        {{#each albums}}
+                                            <section>
+                                                <input type="radio" id="{{this.classCss}}" class="filter-input"
+                                                       name="filter"/>
+                                                <label for="{{this.classCss}}"
+                                                       class="filter-label">{{this.name}}</label>
+                                            </section>
+                                        {{/each}}
+
                                     </article>
 
                                 </section>
                                 <section class="col-xs-12 col-sm-8 col-md-9">
                                     <article id="display-photos-in-selected-album">
-                                        lalalal
+
+                                        <section class="filter-wrap">
+                                            {{#each photos}}
+                                                <article class="col-xs-12 col-sm-6 col-md-4 col-lg-4 filter-item {{this.classCss}}">
+
+                                                    <section class="photo-cntnr">
+
+                                                        <header class="preview-photo-thumbnail-header">
+                                                            <div>
+                                                                <a href="" class="edit-custom-button fa fa-pencil-square-o"></a>
+                                                                <a href="" class="delete-custom-button fa fa-trash-o"></a>
+                                                            </div>
+
+                                                        </header>
+
+                                                        <div class="album-photo-content">
+                                                            <img src="/uploads/{{this.filename}}" alt="">
+                                                        </div>
+                                                        <footer class="preview-photo-thumbnail-footer">
+                                                            <ul>
+                                                                <form action="">
+                                                                    <li>
+                                                                        <input type="submit" id="paw" class=""
+                                                                               value=""><label>4</label>
+                                                                    </li>
+                                                                </form>
+                                                                <form action="">
+                                                                    <li>
+                                                                        <input type="submit" id="love" class=""
+                                                                               value=""><label>15000</label>
+                                                                    </li>
+                                                                </form>
+                                                                <form action="">
+                                                                    <li>
+                                                                        <input type="submit" id="dislike" class=""
+                                                                               value=""><label>0</label>
+                                                                    </li>
+                                                                </form>
+                                                            </ul>
+                                                        </footer>
+
+                                                    </section>
+                                                </article>
+
+
+                                            {{/each}}
+                                            <section id="filter-mask"></section> <!-- mask is last -->
+                                        </section>
+
                                     </article>
 
 
@@ -100,9 +164,10 @@
                                                value="" name="nameAlbum" placeholder="Title"/>
                                     </div>
                                     <div>
-                                        <label  for="descriptionAlbum">Description</label>
+                                        <label for="descriptionAlbum">Description</label>
                                         <textarea id="" class="cstm-input-register-style input-cstm-style" rows="10"
-                                                  cols="100" placeholder="Say something about this album..." name="descriptionAlbum"></textarea>
+                                                  cols="100" placeholder="Say something about this album..."
+                                                  name="descriptionAlbum"></textarea>
                                     </div>
                                     <div class="radio-questions">
                                         <div>
@@ -135,8 +200,11 @@
                                 </article>
 
                             </section>
-                            <input type="checkbox" id="check-before-send-album" class="check-before-send-btn"/> I want to publish these photos.
-                            <button type="submit" id="publish-album" class="btn btn-secondary sign-in-log-out btn-publish">Publish</button>
+                            <input type="checkbox" id="check-before-send-album" class="check-before-send-btn"/> I want
+                            to publish these photos.
+                            <button type="submit" id="publish-album"
+                                    class="btn btn-secondary sign-in-log-out btn-publish">Publish
+                            </button>
 
                         </fieldset>
                     </form>
@@ -151,9 +219,10 @@
                             <section class="col-xs-12 col-sm-4 col-md-3 float-left-cntr">
                                 <article class="form-inputs-style">
                                     <div>
-                                        <label  for="descriptionPostPhotos">Post</label>
+                                        <label for="descriptionPostPhotos">Post</label>
                                         <textarea id="" class="cstm-input-register-style input-cstm-style" rows="10"
-                                                  cols="100" placeholder="Say something about these photos..." name="descriptionPostPhotos"></textarea>
+                                                  cols="100" placeholder="Say something about these photos..."
+                                                  name="descriptionPostPhotos"></textarea>
                                     </div>
                                     <div class="radio-questions">
                                         <div>

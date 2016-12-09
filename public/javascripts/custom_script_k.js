@@ -360,3 +360,72 @@ $(document).ready(function () {
             .siblings().removeClass('active-tab-section');
     });
 });
+
+$(document).ready(function () {
+    function filterHide(el){
+        for (var i = 0; i < el.length; ++i){
+            el[i].style.display = 'none';
+        }
+    }
+    function filterShow(el){
+        for (var i = 0; i < el.length; ++i){
+            el[i].style.display = 'block';
+        }
+    }
+    function filterMask(){
+        var mask = document.getElementById('filter-mask');
+        mask.className = 'filter-mask';
+        setTimeout(function(){ mask.className = '' }, 1000);
+    }
+
+    //get the unique classed of photos
+    var photosDisplayed = $('#display-photos-in-selected-album .filter-wrap article');
+    // console.log(photosDisplayed);
+    var uniqueClasses = [];
+    var access = true;
+    for(var i = 2; i<photosDisplayed.length; i++){
+
+        var attributeClass = photosDisplayed[i];
+        attributeClass = attributeClass.getAttribute('class').split(' ');
+        var classNeeded = attributeClass[attributeClass.length-1];
+
+        for(var k = 0; k<uniqueClasses.length; k++){
+            if(uniqueClasses[k].toString() === classNeeded.toString()){
+                access = false;
+                break;
+            }
+        }
+        if(access){
+            uniqueClasses.push(classNeeded);
+            continue;
+        }
+        access = true;
+    }
+
+    console.log(uniqueClasses);
+
+
+
+    var filterVars = uniqueClasses; // define filter categories here
+    var filterItems = document.querySelectorAll('.filter-wrap .filter-item');
+    for (var i = 0; i < filterVars.length; i++){
+
+        var querySelector = '.filter-wrap .' + filterVars[i].toString();
+
+        window['btn' + filterVars[i]] = document.getElementById(filterVars[i]);
+        window['get' + filterVars[i]] = document.querySelectorAll(querySelector);  //'.filter-wrap .' + filterVars[i]
+        window['btn' + filterVars[i]].onclick = (function(i){
+            return function(){
+                filterMask();
+                setTimeout(function(){
+                    filterHide(filterItems);
+                    filterShow(window['get' + filterVars[i]]);
+                }, 500);
+            }
+        }(i));
+    }
+    document.getElementById('filter-all').onclick = function(){
+        filterMask();
+        setTimeout(function(){ filterShow(filterItems); }, 500);
+    }
+})

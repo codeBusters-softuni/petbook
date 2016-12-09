@@ -7,7 +7,8 @@ let albumSchema = mongoose.Schema(
         author: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
         photos: [{type: mongoose.Schema.Types.ObjectId, ref: 'Photo'}],
         public: {type: Boolean, required: true},
-        date: {type: Date, default: Date.now()}
+        date: {type: Date, default: Date.now()},
+        classCss: String
     }
 );
 
@@ -22,10 +23,10 @@ albumSchema.method({
     },
 
 
-    findAlbumID: function () {
-        let Photos = mongoose.model('Photo');
-
-    }
+    // findAlbumID: function () {
+    //     let Photos = mongoose.model('Photo');
+    //
+    // }
 
 })
 

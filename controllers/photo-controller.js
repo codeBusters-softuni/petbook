@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
-const Photo = require('mongoose').model('Photo');
-const Album = require('mongoose').model('Album');
+const Photo = require('mongoose').model('Photo')
+const Album = require('mongoose').model('Album')
 const Post = mongoose.model('Post')
 
 // For uploading photos!!!
@@ -11,9 +11,7 @@ var dest = __dirname.toString().split('\\');
 dest[dest.length-1] = "public";
 dest = dest.join('\\');
 var upload = multer({ dest: dest + '/uploads/'}).array('uploadedPhotos');
-
 // up to here for uploading photos!!!
-
 
 module.exports = {
     allGet: (req, res) => {
@@ -32,25 +30,29 @@ module.exports = {
 
     uploadPhotosPost: (req, res) =>{
         let albumArgs = req.body;
-        // console.log(photoArgs)
         albumArgs.author = req.user.id;
 
+        var classForCss;
         var albumUp = new Album();
+
         var _id = albumUp._id;
 
-            Album.findOne({name: "Photos"+" "+albumArgs.author}).then(album =>{
+            Album.findOne({name: "Your photos from NewsFeed" + " " + albumArgs.author}).then(album =>{
                 if(!album){
-                    albumUp.name = "Photos"+" "+albumArgs.author;
+                    albumUp.name = "Your photos from NewsFeed"+" "+albumArgs.author;
                     albumUp.author = albumArgs.author;
                     albumUp.public = true;
+                    albumUp.classCss = "Your-photos-from-NewsFeed-DbStyle";
 
                     Album.create(albumUp).then(newAlbum =>{
                         newAlbum.prepareUploadAlbum();
                         _id = newAlbum._id;
+                        classForCss = newAlbum.classCss;
                     });
                 }
                 else{
                     _id = album._id;
+                    classForCss = album.classCss;
                 }
             }).then(() => {
                 upload(req, res, function () {
@@ -85,11 +87,8 @@ module.exports = {
                     //Logic for the upload of photos
 
                     let photoArgs = req.body;
-                    // console.log(photoArgs)
                     photoArgs.author = req.user.id;
-                    // photoArgs
                     let counter = 1
-                    // console.log(counter)
 
                     req.files.forEach(function (item) {
 
@@ -105,7 +104,8 @@ module.exports = {
                             author: photoArgs.author,
                             description: photoArgs[counter.toString()],
                             album: _id,
-                            post: _idNewPost
+                            post: _idNewPost,
+                            classCss: classForCss
                         });
 
                         counter += 1;
@@ -123,14 +123,10 @@ module.exports = {
                             }
                         )
 
-
                     });
                 })
 
                 res.redirect('/')
             })
-        // }
-
-
     }
 };
