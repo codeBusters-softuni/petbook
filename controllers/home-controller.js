@@ -18,7 +18,7 @@ module.exports = {
                     // join the two arrays
                     let postsToSee = categoryPosts.concat(publicPosts)
 
-                    Post.populate(postsToSee, 'author comments likes').then(() => {
+                    Post.populate(postsToSee, 'author comments likes photos').then(() => {
                         // populate each comment's author. Must be done after the initial populate
                         Post.populate(postsToSee, {path: 'comments.author', model: 'User'}).then(() => {
                             postsToSee = Post.initializeForView(postsToSee)
@@ -36,8 +36,11 @@ module.exports = {
     userOwnPhotosGet: (req, res) => {
         if (req.user) {
 // Need to look in the user collection by user Id and from there get the photos id ....  !!!!!
-            Photo.find({author: req.user.id}).then(photos => {  //populate('destination filename')
-                res.render('user/uploadPhotos', {photos: photos});
+//             Photo.find({author: req.user.id}).then(photos => {  //populate('destination filename')
+//                 res.render('user/uploadPhotos', {photos: photos});
+//             })
+            User.findById(req.user.id).populate('photos').then(user => {
+                res.render('user/uploadPhotos', {photos: user.photos});
             })
 
 

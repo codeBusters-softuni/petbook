@@ -1,21 +1,11 @@
+const mongoose = require('mongoose')
 const Photo = require('mongoose').model('Photo');
 const Album = require('mongoose').model('Album');
+const Post = mongoose.model('Post')
 
 // For uploading photos!!!
 var formidable = require('formidable');
 var multer  =   require('multer');
-
-
-// var storage =   multer.memoryStorage({ //diskStorage
-//     destination: function (req, file, callback) { //file   ???
-//         callback(null, __dirname + '/uploads/');
-//     },
-//     filename: function (req, file, callback) {  //file    ???
-//         var originalname = file.originalname;  //file  ???
-//         var extension = originalname.split(".");
-//         callback(null, file.fieldname + '-' + Date.now()+ '.' + extension[extension.length-1]);  //file   ???
-//     }
-// });
 
 var dest = __dirname.toString().split('\\');
 dest[dest.length-1] = "public";
@@ -27,9 +17,7 @@ var upload = multer({ dest: dest + '/uploads/'}).array('uploadedPhotos');
 
 module.exports = {
     allGet: (req, res) => {
-        // console.log(req.user)
         if(!req.user){
-            // console.log('HERE')
             let returnUrl = '/user/uploadPhotos';
             req.session.returnUrl = returnUrl;
 
@@ -46,13 +34,10 @@ module.exports = {
         let albumArgs = req.body;
         // console.log(photoArgs)
         albumArgs.author = req.user.id;
-        // let counter = 0;
 
-        // var albumID = "";
         var albumUp = new Album();
-        var _id = 0;
+        var _id = albumUp._id;
 
-        // if(albumArgs.nameAlbum == null){
             Album.findOne({name: "Photos"+" "+albumArgs.author}).then(album =>{
                 if(!album){
                     albumUp.name = "Photos"+" "+albumArgs.author;
@@ -68,8 +53,37 @@ module.exports = {
                     _id = album._id;
                 }
             }).then(() => {
-                // console.log(albumID);
                 upload(req, res, function () {
+
+                    // logic for the post
+                    var newPostArg = req.body
+                    var newPost = new Post({
+                        author: req.user._id,
+                        category: req.user.category,
+                        content: newPostArg.descriptionPostPhotos
+                    })
+
+                    if (newPost.content.length < 1) {
+                        // ERROR - Content is too short!
+                        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+                        req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
+                        res.redirect('/')
+                        return
+                    }
+
+                    if (newPostArg.photocheck.toString() === "publicvisible") {
+                        newPost.public = true;
+                    }
+
+                    // TODO: Once User can set if he wants his post to be public or not, add functionality here
+                    var _idNewPost = newPost._id;
+                    Post.create(newPost).then(post => {
+                        _idNewPost = post._id;
+                    })
+
+
+                    //Logic for the upload of photos
+
                     let photoArgs = req.body;
                     // console.log(photoArgs)
                     photoArgs.author = req.user.id;
@@ -90,12 +104,10 @@ module.exports = {
                             size: item.size,
                             author: photoArgs.author,
                             description: photoArgs[counter.toString()],
-                            album: _id
+                            album: _id,
+                            post: _idNewPost
                         });
 
-                        // console.log(photoArgs);
-                        // console.log(photoArgs[counter.toString()])
-                        // console.log(item.originalname)
                         counter += 1;
                         if(photoArgs.photocheck.toString() == "publicvisible"){
                             photoUp.public = true;
@@ -107,6 +119,7 @@ module.exports = {
 
                         Photo.create(photoUp).then(photo => {
                                 photo.prepareUploadSinglePhotos(photoUp.album);
+                                photo.prepareUploadInPost(photoUp.post);
                             }
                         )
 
@@ -114,8 +127,7 @@ module.exports = {
                     });
                 })
 
-
-                res.redirect('/user/uploadPhotos');
+                res.redirect('/')
             })
         // }
 

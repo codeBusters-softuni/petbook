@@ -1,5 +1,7 @@
+const mongoose = require('mongoose')
 const Album = require('mongoose').model('Album');
 const Photo = require('mongoose').model('Photo');
+const Post = mongoose.model('Post')
 
 // For uploading photos!!!
 var formidable = require('formidable');
@@ -8,7 +10,6 @@ var multer  =   require('multer');
 module.exports = {
     createAlbumGet: (req, res) => {
         if(!req.user){
-            // console.log('HERE')
             let returnUrl = '/user/uploadPhotos';
             req.session.returnUrl = returnUrl;
 
@@ -25,11 +26,38 @@ module.exports = {
         var dest = __dirname.toString().split('\\');
         dest[dest.length-1] = "public";
         dest = dest.join('\\');
-        var upload = multer({ dest: dest +'/uploads/'}).array('uploadAlbum');  //__dirname +
+        var upload = multer({ dest: dest +'/uploads/'}).array('uploadAlbum');
 
         upload(req, res, function () {
+
+            // logic for the post
+            var newPostArg = req.body
+            var newPost = new Post({
+                author: req.user._id,
+                category: req.user.category,
+                content: newPostArg.descriptionAlbum
+            })
+
+            if (newPost.content.length < 1) {
+                // ERROR - Content is too short!
+                // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+                req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
+                res.redirect('/')
+                return
+            }
+
+            if (newPostArg.photocheckAlbum.toString() === "publicvisible") {
+                newPost.public = true;
+            }
+
+            // TODO: Once User can set if he wants his post to be public or not, add functionality here
+            var _idNewPost = newPost._id;
+            Post.create(newPost).then(post => {
+                _idNewPost = post._id;
+            })
+
+
             let albumArgs = req.body;
-            // console.log(photoArgs)
             albumArgs.author = req.user.id;
             var nameNewAlbum = albumArgs.nameAlbum;
             var descriptionNewAlbum = albumArgs.descriptionAlbum;
@@ -70,7 +98,8 @@ module.exports = {
                     size: item.size,
                     author: albumArgs.author,
                     description: albumArgs[counter.toString()],
-                    album: _id
+                    album: _id,
+                    post: _idNewPost
                 });
 
                 counter += 1;
@@ -87,12 +116,12 @@ module.exports = {
                 Photo.create(photoUp).then(photo => {
                         photo.prepareUpload();
                         photo.prepareUploadInAlbum(photoUp.album);
+                        photo.prepareUploadInPost(photoUp.post);
                     }
                 )
             });
         })
-
-        res.redirect('/user/uploadPhotos');
+        res.redirect('/')
     }
 
 }

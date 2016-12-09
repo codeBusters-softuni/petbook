@@ -10,9 +10,6 @@ const Album = require('mongoose').model('Album');
 var formidable = require('formidable');
 var multer = require('multer');
 
-
-
-
 module.exports = {
     addPost: (req, res) => {
         var dest = __dirname.toString().split('\\');
@@ -25,8 +22,8 @@ module.exports = {
         // for uploading photo in post
         var albumUp = new Album();
         var _idAlbum = albumUp._id;
-
-        // if(albumArgs.nameAlbum == null){
+        var idThisNewPost;
+        
         Album.findOne({name: "Photos" + " " + albumArgs.author}).then(album => {
             if (!album) {
                 albumUp.name = "Photos" + " " + albumArgs.author;
@@ -61,7 +58,7 @@ module.exports = {
                     return
                 }
 
-                if(newPostArg.publicPost.toString() === "publicvisible"){
+                if (newPostArg.publicPost.toString() === "publicvisible") {
                     newPost.public = true;
                 }
 
@@ -69,13 +66,14 @@ module.exports = {
                 var _idNewPost = newPost._id;
                 Post.create(newPost).then(post => {
                     _idNewPost = post._id;
+                    idThisNewPost = _idNewPost;
                     // res.redirect('/')
                 })
-                console.log(_idNewPost)
 
+
+                //Logic for the upload of photos
 
                 let counter = 1
-                // console.log(counter)
 
                 req.files.forEach(function (item) {
 
@@ -110,12 +108,11 @@ module.exports = {
 
 
                 });
-            })
 
+            })
 
             res.redirect('/')
         })
-
 
 
     },
