@@ -42,3 +42,4 @@ jspm_packages
 typings/
 typings.json
 jsconfig.json
+public/uploads/
