@@ -28,13 +28,13 @@ module.exports = {
       .then(album => {
         savePhotos(req, res, function () {  // middleware to parse the uploaded files to req.files and save them on the server
           // logic for the post
-          let newPostArg = req.body
-          let postPublicity = newPostArg.photocheck.toString() === 'publicvisible'
+          let newPostInfo = req.body
+          let postIsPublic = newPostInfo.photocheck.toString() === 'publicvisible'
           let newPost = new Post({
             author: req.user._id,
             category: req.user.category,
-            content: newPostArg.descriptionPostPhotos,
-            public: postPublicity
+            content: newPostInfo.descriptionPostPhotos,
+            public: postIsPublic
           })
           if (newPost.content.length < 1) {
             // ERROR - Content is too short!
@@ -45,29 +45,22 @@ module.exports = {
           }
 
           Post.create(newPost).then(post => {
-            // Logic for the upload of photos
-            // the newPostArgs hold the description for each photo, the key being their number. We start from 1 and for each photo increment
-            let counter = 1
+            // the newPostInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
+            let photoIndex = 1
 
             // create a photo object for each uploaded photo
             req.files.forEach(function (photo) {
-              let photoUp = new Photo({
-                fieldname: photo.fieldname,
-                originalname: photo.originalname,
-                encoding: photo.encoding,
-                mimetype: photo.mimetype,
-                destination: photo.destination,
-                filename: photo.filename,
-                path: photo.path,
-                size: photo.size,
+              let photoUp = Object.assign(photo, {
+                // merge the photo's metadata and the data tied with the server
                 author: post.author,
-                description: newPostArg[counter.toString()],
+                description: newPostInfo[photoIndex.toString()],
                 album: album._id,
                 post: post._id,
                 classCss: album.classForCss,
-                public: postPublicity
+                public: postIsPublic
               })
-              counter += 1
+
+              photoIndex += 1
 
               Photo.create(photoUp).then(photo => {
                 photo.prepareUploadSinglePhotos(photoUp.album)

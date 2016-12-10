@@ -4,6 +4,7 @@ const Photo = mongoose.model('Photo')
 const Post = mongoose.model('Post')
 const multer = require('multer')
 const photoUploadsPath = require('../config/constants').photoUploadsPath
+let saveFiles = multer({ dest: photoUploadsPath }).array('uploadAlbum')
 
 module.exports = {
   createAlbumGet: (req, res) => {
@@ -18,9 +19,7 @@ module.exports = {
   },
 
   uploadAlbum: (req, res) => {
-    let readFiles = multer({ dest: photoUploadsPath }).array('uploadAlbum')
-    readFiles(req, res, function () {
-      // logic for the post
+    saveFiles(req, res, function () {
       let newPostArg = req.body
       let postIsPublic = newPostArg.photocheckAlbum.toString() === 'publicvisible'
 
@@ -41,13 +40,12 @@ module.exports = {
 
 
       Post.create(newPost).then(post => {
-        let albumArgs = req.body
-        let cssClassName = albumArgs.nameAlbum.split(' ').filter(function (n) { return n !== '' })
-        cssClassName = cssClassName.join('-') + '-DbStyle'
+        let newAlbumInfo = req.body
+        let cssClassName = newAlbumInfo.nameAlbum.replace(' ', '-') + '-DbStyle'
 
         let newAlbumUp = new Album({
-          name: albumArgs.nameAlbum,
-          description: albumArgs.descriptionAlbum,
+          name: newAlbumInfo.nameAlbum,
+          description: newAlbumInfo.descriptionAlbum,
           author: req.user._id,
           classCss: cssClassName,
           public: postIsPublic
@@ -56,35 +54,27 @@ module.exports = {
 
         Album.create(newAlbumUp).then(newAlbum => {
           newAlbum.prepareUploadAlbum()
-
-          let counter = 1
+          // the newAlbumInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
+          let photoIndex = 1
 
           req.files.forEach(function (photo) {
-            let photoUp = new Photo({
-              fieldname: photo.fieldname,
-              originalname: photo.originalname,
-              encoding: photo.encoding,
-              mimetype: photo.mimetype,
-              destination: photo.destination,
-              filename: photo.filename,
-              path: photo.path,
-              size: photo.size,
+            let photoUp = Object.assign(photo, {
+              // merge the photo's metadata and the data tied with the server
               author: newAlbum.author,
-              description: albumArgs[counter.toString()],
+              description: newAlbumInfo[photoIndex.toString()],
               album: newAlbum._id,
               post: post._id,
               classCss: cssClassName,
               public: postIsPublic
             })
 
-            counter += 1
+            photoIndex += 1
 
             Photo.create(photoUp).then(photo => {
               photo.prepareUpload()
               photo.prepareUploadInAlbum(photoUp.album)
               photo.prepareUploadInPost(photoUp.post)
-            }
-            )
+            })
           })
         })
         res.redirect('/')
