@@ -43,16 +43,15 @@ module.exports = {
             res.redirect('/')
             return
           }
+          // the newPostInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
+          let photoIndex = 1
 
-          Post.create(newPost).then(post => {
-            // the newPostInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
-            let photoIndex = 1
-
-            // create a photo object for each uploaded photo
-            req.files.forEach(function (photo) {
+          // create a photo object for each uploaded photo
+          let photoUploadPromises = req.files.map(function (photo) {
+            return new Promise((resolve, reject) => {
               let photoUp = Object.assign(photo, {
                 // merge the photo's metadata and the data tied with the server
-                author: post.author,
+                author: newPost.author,
                 description: newPostInfo[photoIndex.toString()],
                 album: album._id,
                 classCss: album.classForCss,
@@ -62,14 +61,17 @@ module.exports = {
               photoIndex += 1
 
               Photo.create(photoUp).then(photo => {
-                photo.prepareUploadSinglePhotos(photoUp.album)
-                photo.prepareUploadInPost(photoUp.post)
-              }
-              )
+                resolve(photo._id)
+              })
             })
           })
 
-          res.redirect('/')
+          Promise.all(photoUploadPromises).then((uploadedPhotos) => {
+            newPost.photos = uploadedPhotos
+            Post.create(newPost).then(post => {
+              res.redirect('/')
+            })
+          })
         })
       })
   }

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 let albumSchema = mongoose.Schema(
   {
@@ -12,15 +12,15 @@ let albumSchema = mongoose.Schema(
   }
 )
 
-
-albumSchema.method({
-  prepareUploadAlbum: function () {
-    let User = mongoose.model('User')
-    User.findById(this.author).then(user => {
-      user.albums.push(this.id)
-      user.save()
+albumSchema.pre('save', true, function (next, done) {
+  let User = mongoose.model('User')
+  User.findById(this.author).then(user => {
+    user.albums.push(this.id)
+    user.save().then(() => {
+      next()
+      done()
     })
-  }
+  })
 })
 
 const Album = mongoose.model('Album', albumSchema)
