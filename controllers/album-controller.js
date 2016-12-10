@@ -38,26 +38,24 @@ module.exports = {
         return
       }
 
+      let newAlbumInfo = req.body
+      let cssClassName = newAlbumInfo.nameAlbum.replace(' ', '-') + '-DbStyle'
 
-      Post.create(newPost).then(post => {
-        let newAlbumInfo = req.body
-        let cssClassName = newAlbumInfo.nameAlbum.replace(' ', '-') + '-DbStyle'
-
-        let newAlbumUp = new Album({
-          name: newAlbumInfo.nameAlbum,
-          description: newAlbumInfo.descriptionAlbum,
-          author: req.user._id,
-          classCss: cssClassName,
-          public: postIsPublic
-        })
+      let newAlbumUp = new Album({
+        name: newAlbumInfo.nameAlbum,
+        description: newAlbumInfo.descriptionAlbum,
+        author: req.user._id,
+        classCss: cssClassName,
+        public: postIsPublic
+      })
 
 
-        Album.create(newAlbumUp).then(newAlbum => {
-          newAlbum.prepareUploadAlbum()
-          // the newAlbumInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
-          let photoIndex = 1
-
-          req.files.forEach(function (photo) {
+      Album.create(newAlbumUp).then(newAlbum => {
+        newAlbum.prepareUploadAlbum()
+        // the newAlbumInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
+        let photoIndex = 1
+        let photoUploadPromises = req.files.map(function (photo) {
+          return new Promise((resolve, reject) => {
             let photoUp = Object.assign(photo, {
               // merge the photo's metadata and the data tied with the server
               author: newAlbum.author,
@@ -70,13 +68,17 @@ module.exports = {
             photoIndex += 1
 
             Photo.create(photoUp).then(photo => {
-              photo.prepareUpload()
-              photo.prepareUploadInAlbum(photoUp.album)
-              photo.prepareUploadInPost(photoUp.post)
+              resolve(photo.id)
             })
           })
         })
-        res.redirect('/')
+        Promise.all(photoUploadPromises).then((uploadedPhotos) => {
+          // once all the photos are uploaded, create the post
+          newPost.photos = uploadedPhotos
+          Post.create(newPost).then(post => {
+            res.redirect('/')
+          })
+        })
       })
     })
   }
