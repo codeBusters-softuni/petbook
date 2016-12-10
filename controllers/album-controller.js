@@ -66,14 +66,13 @@ module.exports = {
             })
 
             photoIndex += 1
-
             Photo.create(photoUp).then(photo => {
               resolve(photo.id)
             })
           })
         })
+        // once all the photos are uploaded, create the post
         Promise.all(photoUploadPromises).then((uploadedPhotos) => {
-          // once all the photos are uploaded, create the post
           newPost.photos = uploadedPhotos
           Post.create(newPost).then(post => {
             res.redirect('/')

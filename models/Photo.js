@@ -22,63 +22,47 @@ let photoSchema = mongoose.Schema(
 
 // Fills the dateStr field with a pretty string representation of the date the photo was created
 photoSchema.pre('save', true, function (next, done) {
-  if (!this.dateStr) {
-    this.dateStr = moment(this.date).format('MMM Do [at] hh:mmA')
-    this.save().then(() => {
-      next()
-      done()
+  let User = mongoose.model('User')
+  let Album = mongoose.model('Album')
+
+  let datePromise = new Promise((resolve, reject) => {
+    if (!this.dateStr) {
+      this.dateStr = moment(this.date).format('MMM Do [at] hh:mmA')
+      this.save().then(() => {
+        resolve()
+      })
+    } else {
+      resolve()
+    }
+  })
+
+  let userPromise = new Promise((resolve, reject) => {
+    User.findById(this.author).then(user => {
+      if (!user) {
+        reject(Error(`User with id ${this.author} does not exist!`))
+      }
+      user.photos.push(this.id)
+      user.save().then(() => {
+        resolve()
+      })
     })
-  } else {
+  })
+  let albumPromise = new Promise((resolve, reject) => {
+    Album.findOne(this.album).then(album => {
+      if (!album) {
+        reject(Error(`Album with id ${this.album} does not exist!`))
+      }
+      album.photos.push(this.id)
+      album.save().then(() => {
+        resolve()
+      })
+    })
+  })
+
+  Promise.all([datePromise, userPromise, albumPromise]).then(() => {
     next()
     done()
-  }
-})
-
-photoSchema.method({
-  prepareUploadSinglePhotos: function (idAlbum) {
-    let User = mongoose.model('User')
-    User.findById(this.author).then(user => {
-      user.photos.push(this.id)
-      user.save()
-    })
-
-    let Album = mongoose.model('Album');
-    Album.findOne(idAlbum).then(album => {
-      album.photos.push(this.id);
-      // console.log(this);
-      album.save()
-    })
-  },
-
-  prepareUpload: function () {
-    let User = mongoose.model('User')
-    User.findById(this.author).then(user => {
-      user.photos.push(this.id)
-      user.save()
-    })
-  },
-
-  prepareUploadInAlbum: function (albumId) {
-    let Album = mongoose.model('Album');
-    Album.findById(albumId).then(album => {
-      album.photos.push(this.id);
-      // console.log("ADDED TO ALBUM");
-      // console.log(album)
-      album.save();
-    });
-  },
-
-  prepareUploadInPost: function (postId) {
-    let Post = mongoose.model('Post');
-    Post.findById(postId).then(post => {
-      post.photos.push(this.id);
-      post.save();
-    })
-  }
-
-
-
-
+  })
 })
 
 const Photo = mongoose.model('Photo', photoSchema)
