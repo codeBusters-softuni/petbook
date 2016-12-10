@@ -1,7 +1,8 @@
 let express = require('express')
 let app = express()
-const config = require('./config/config').initialize()['development']
+const config = require('./config/config')['development']
 
+require('./config/config').initialize()
 require('./config/database')(config)
 require('./config/express')(app, config)
 require('./config/routes')(app)
