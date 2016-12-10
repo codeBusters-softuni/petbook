@@ -19,7 +19,7 @@ module.exports = {
             // populate each comment's author. Must be done after the initial populate
             Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
               postsToSee = Post.initializeForView(postsToSee)
-
+              req.session.returnUrl = '/'
               res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost })
             })
           })

@@ -124,7 +124,12 @@ module.exports = {
           // So we simply change the name of this like
           post.likes[likeIndex].type = likeType
           post.likes[likeIndex].save().then(() => {
-            res.redirect('/')
+            let returnUrl = '/'
+            if (req.session.returnUrl) {
+              returnUrl = req.session.returnUrl
+              delete req.session.returnUrl
+            }
+            res.redirect(returnUrl)
             // Success!
           })
         }
@@ -132,7 +137,13 @@ module.exports = {
         // User is liking this post for the first time
         Like.create({ type: likeType, author: req.user._id }).then(like => {
           post.addLike(like._id).then(() => {
-            res.redirect('/')  // Success!
+            let returnUrl = '/'
+            if (req.session.returnUrl) {
+              returnUrl = req.session.returnUrl
+              delete req.session.returnUrl
+            }
+
+            res.redirect(returnUrl)
           })
         })
       }
@@ -169,7 +180,13 @@ module.exports = {
         let likeId = post.likes[likeIndex]._id
         post.removeLike(likeId).then(() => {
           // Like is removed!
-          res.redirect('/')
+          let returnUrl = '/'
+          if (req.session.returnUrl) {
+            returnUrl = req.session.returnUrl
+            delete req.session.returnUrl
+          }
+
+          res.redirect(returnUrl)
           return
         })
         Like.findByIdAndRemove(likeId)

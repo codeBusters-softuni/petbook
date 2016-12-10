@@ -108,7 +108,7 @@ module.exports = {
           delete req.session.returnUrl
         }
 
-        return res.redirect(returnUrl)
+        res.redirect(returnUrl)
       })
     })
   },
@@ -187,6 +187,8 @@ module.exports = {
               })
               let promises = [pawLikesPromise, loveLikesPromise, dislikesLikesPromise]
               Promise.all(promises).then(() => {
+                req.session.returnUrl = req.originalUrl
+                console.log(req.originalUrl)
                 res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee })
               })
             })
