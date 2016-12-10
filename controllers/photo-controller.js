@@ -2,12 +2,10 @@ const mongoose = require('mongoose')
 const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
 const Post = mongoose.model('Post')
-const path = require('path')
-const config = require('../config/config')['development']  // TODO: Set environment variable!
 const multer = require('multer')
+const photoUploadsPath = require('../config/constants').photoUploadsPath
 
-let publicDirPath = path.join(config.rootFolder, 'public')
-let readFiles = multer({ dest: path.join(publicDirPath, 'uploads') }).array('uploadedPhotos')
+let savePhotos = multer({ dest: photoUploadsPath }).array('uploadedPhotos')
 
 module.exports = {
   allGet: (req, res) => {
@@ -28,7 +26,7 @@ module.exports = {
     // Try to find the user's album to add the picture to, otherwise create a new one
     Album.findOrCreateAlbum(albumName, req.user._id)  // custom function in Album.js
       .then(album => {
-        readFiles(req, res, function () {  // middleware to parse the uploaded files to req.files
+        savePhotos(req, res, function () {  // middleware to parse the uploaded files to req.files and save them on the server
           // logic for the post
           let newPostArg = req.body
           let postPublicity = newPostArg.photocheck.toString() === 'publicvisible'

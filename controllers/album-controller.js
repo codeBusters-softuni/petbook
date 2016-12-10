@@ -3,13 +3,13 @@ const Album = mongoose.model('Album')
 const Photo = mongoose.model('Photo')
 const Post = mongoose.model('Post')
 const multer = require('multer')
+const photoUploadsPath = require('../config/constants').photoUploadsPath
 
 module.exports = {
   createAlbumGet: (req, res) => {
     if (!req.user) {
       let returnUrl = '/user/uploadPhotos'
       req.session.returnUrl = returnUrl
-
       res.redirect('/user/login')
       return
     }
@@ -17,13 +17,8 @@ module.exports = {
     res.render('user/uploadPhotos')
   },
 
-
-
   uploadAlbum: (req, res) => {
-    var dest = __dirname.toString().split('\\')
-    dest[dest.length - 1] = 'public'
-    dest = dest.join('\\')
-    let readFiles = multer({ dest: dest + '/uploads/' }).array('uploadAlbum')
+    let readFiles = multer({ dest: photoUploadsPath }).array('uploadAlbum')
     readFiles(req, res, function () {
       // logic for the post
       let newPostArg = req.body
@@ -78,15 +73,11 @@ module.exports = {
               description: albumArgs[counter.toString()],
               album: newAlbum._id,
               post: post._id,
-              classCss: cssClassName
+              classCss: cssClassName,
+              public: postIsPublic
             })
 
             counter += 1
-            if (albumArgs.photocheckAlbum.toString() === 'publicvisible') {
-              photoUp.public = true
-            } else {
-              photoUp.public = false
-            }
 
             Photo.create(photoUp).then(photo => {
               photo.prepareUpload()
