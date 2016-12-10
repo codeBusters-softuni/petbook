@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
-const Photo = require('mongoose').model('Photo')
-const Album = require('mongoose').model('Album')
+const Photo = mongoose.model('Photo')
+const Album = mongoose.model('Album')
 const Post = mongoose.model('Post')
 const path = require('path')
 const config = require('../config/config')['development']  // TODO: Set environment variable!
 const multer = require('multer')
-
 
 let publicDirPath = path.join(config.rootFolder, 'public')
 let readFiles = multer({ dest: path.join(publicDirPath, 'uploads') }).array('uploadedPhotos')
@@ -63,7 +62,7 @@ module.exports = {
                 filename: photo.filename,
                 path: photo.path,
                 size: photo.size,
-                author: newPostArg.author,
+                author: post.author,
                 description: newPostArg[counter.toString()],
                 album: album._id,
                 post: post._id,
