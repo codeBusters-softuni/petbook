@@ -120,6 +120,30 @@ module.exports = {
     // res.redirect('/');
   },
 
+  cancelFriendship: (req, res) => {
+    let friendId = req.params.id
+    User.findById(friendId).then(friend => {
+      if (!friend) {
+        // ERROR - Friend does not exist!
+        res.render('index')
+        return
+      } else if (!req.user.hasFriend(friendId) || !friend.hasFriend(req.user.id)) {
+        // ERROR - Users are not friends!
+        res.render('index')
+        return
+      }
+      // remove friends
+      let cancelFriendPromise = req.user.removeFriend(friendId)
+      let cancelFriendPromise2 = friend.removeFriend(req.user.id)
+
+      Promise.all([cancelFriendPromise, cancelFriendPromise2]).then(() => {
+        // Success - Attach message
+        res.redirect('user/newsfeed')
+        return
+      })
+    })
+}
+
   profilePageGet: (req, res) => {
     let userId = req.params.id
     User.findOne({ userId: userId }).then(user => {

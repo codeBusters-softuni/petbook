@@ -20,17 +20,17 @@ module.exports = (app) => {
   })
 
   app.get('/category/:category', controllers.categoryController.showArticles)
+  app.post('/user/:id/cancelFriendship', controllers.friendRequestController.removeFriend)
   app.get('/user/:id', controllers.userController.profilePageGet)  // must be below other user urls!
+
   app.post('/friendRequest/:receiverId/send', controllers.friendRequestController.sendRequest)
   app.post('/friendRequest/:id/accept', controllers.friendRequestController.acceptRequest)
   app.post('/friendRequest/:id/decline', controllers.friendRequestController.declineRequest)
-
   app.get('/friendRequests', controllers.friendRequestController.showRequests)
 
   app.post('/post/add', controllers.postController.addPost)
   app.post('/post/:id/addComment', controllers.postController.addComment)
-  // Like a post
-  app.post(/post\/(.+)\/add(.{3,7})/, controllers.postController.addLike)
-  // Dislike a post
-  app.post(/post\/(.+)\/remove(.{3,7})/, controllers.postController.removeLike)
+
+  app.post(/post\/(.+)\/add(.{3,7})/, controllers.postController.addLike)  // Like a post
+  app.post(/post\/(.+)\/remove(.{3,7})/, controllers.postController.removeLike) // Dislike a post
 }
