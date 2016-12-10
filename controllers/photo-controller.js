@@ -8,7 +8,7 @@ const multer = require('multer')
 
 
 let publicDirPath = path.join(config.rootFolder, 'public')
-let uploadDirPath = multer({ dest: path.join(publicDirPath, 'uploads') }).array('uploadedPhotos')
+let readFiles = multer({ dest: path.join(publicDirPath, 'uploads') }).array('uploadedPhotos')
 
 module.exports = {
   allGet: (req, res) => {
@@ -26,96 +26,62 @@ module.exports = {
   // function that handles photo uploads on the newsfeed
   uploadPhotosPost: (req, res) => {
     let albumName = 'newsfeed-photos-' + req.user._id
-    let classForCss
-    let albumUp = new Album()
-    let albumId = undefined
     // Try to find the user's album to add the picture to, otherwise create a new one
-    Album.findOne({ name: albumName }).then(album => {
-      // TODO: Add a wrapper function in Album.js which returns an album object
-      if (!album) {
-        albumUp.name = albumName
-        albumUp.author = req.user._id
-        albumUp.public = true
-        albumUp.classCss = 'Your-photos-from-NewsFeed-DbStyle'
+    Album.findOrCreateAlbum(albumName, req.user._id)  // custom function in Album.js
+      .then(album => {
+        readFiles(req, res, function () {  // middleware to parse the uploaded files to req.files
+          // logic for the post
+          let newPostArg = req.body
+          let postPublicity = newPostArg.photocheck.toString() === 'publicvisible'
+          let newPost = new Post({
+            author: req.user._id,
+            category: req.user.category,
+            content: newPostArg.descriptionPostPhotos,
+            public: postPublicity
+          })
+          if (newPost.content.length < 1) {
+            // ERROR - Content is too short!
+            // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+            req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
+            res.redirect('/')
+            return
+          }
 
-        Album.create(albumUp).then(newAlbum => {
-          newAlbum.prepareUploadAlbum()
-          let albumId = newAlbum._id
-          classForCss = newAlbum.classCss
-        })
-      } else {
-        let albumId = album._id
-        classForCss = album.classCss
-      }
-    }).then(() => {
-      uploadDirPath(req, res, function () {
+          Post.create(newPost).then(post => {
+            // Logic for the upload of photos
+            // the newPostArgs hold the description for each photo, the key being their number. We start from 1 and for each photo increment
+            let counter = 1
 
-        // logic for the post
-        var newPostArg = req.body
-        var newPost = new Post({
-          author: req.user._id,
-          category: req.user.category,
-          content: newPostArg.descriptionPostPhotos
-        })
+            // create a photo object for each uploaded photo
+            req.files.forEach(function (photo) {
+              let photoUp = new Photo({
+                fieldname: photo.fieldname,
+                originalname: photo.originalname,
+                encoding: photo.encoding,
+                mimetype: photo.mimetype,
+                destination: photo.destination,
+                filename: photo.filename,
+                path: photo.path,
+                size: photo.size,
+                author: newPostArg.author,
+                description: newPostArg[counter.toString()],
+                album: album._id,
+                post: post._id,
+                classCss: album.classForCss,
+                public: postPublicity
+              })
+              counter += 1
 
-        if (newPost.content.length < 1) {
-          // ERROR - Content is too short!
-          // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-          req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
-          res.redirect('/')
-          return
-        }
-
-        if (newPostArg.photocheck.toString() === 'publicvisible') {
-          newPost.public = true
-        }
-
-        // TODO: Once User can set if he wants his post to be public or not, add functionality here
-        var _idNewPost = newPost._id
-        Post.create(newPost).then(post => {
-          _idNewPost = post._id
-        })
-
-
-        // Logic for the upload of photos
-
-        let photoArgs = req.body
-        photoArgs.author = req.user.id
-        let counter = 1
-
-        req.files.forEach(function (item) {
-          let photoUp = new Photo({
-            fieldname: item.fieldname,
-            originalname: item.originalname,
-            encoding: item.encoding,
-            mimetype: item.mimetype,
-            destination: item.destination,
-            filename: item.filename,
-            path: item.path,
-            size: item.size,
-            author: photoArgs.author,
-            description: photoArgs[counter.toString()],
-            album: albumId,
-            post: _idNewPost,
-            classCss: classForCss
+              Photo.create(photoUp).then(photo => {
+                photo.prepareUploadSinglePhotos(photoUp.album)
+                photo.prepareUploadInPost(photoUp.post)
+              }
+              )
+            })
           })
 
-          counter += 1
-          if (photoArgs.photocheck.toString() === 'publicvisible') {
-            photoUp.public = true
-          } else {
-            photoUp.public = false
-          }
-
-          Photo.create(photoUp).then(photo => {
-            photo.prepareUploadSinglePhotos(photoUp.album)
-            photo.prepareUploadInPost(photoUp.post)
-          }
-          )
+          res.redirect('/')
         })
       })
-
-      res.redirect('/')
-    })
   }
 }
