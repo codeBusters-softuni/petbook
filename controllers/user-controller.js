@@ -2,6 +2,7 @@ const emailValidator = require('email-validator')  // module for validating emai
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const Category = mongoose.model('Category')
+const Like = mongoose.model('Like')
 
 module.exports = {
   registerGet: (req, res) => {
@@ -157,7 +158,20 @@ module.exports = {
         sentRequest: hasSentRequest,
         areFriends: areFriends
       }
-      res.render('user/profile', { profileUser: user, friendStatus: friendStatus })
+      // get the user's likes
+      let pawLikesPromise = Like.getUserLikes('Paw', user._id).then(pawCount => {
+        user.totalLikeCount = pawCount
+      })
+      let loveLikesPromise = Like.getUserLikes('Love', user._id).then(likeCount => {
+        user.totalLoveCount = likeCount
+      })
+      let dislikesLikesPromise = Like.getUserLikes('Dislike', user._id).then(dislikeCount => {
+        user.totalDislikeCount = dislikeCount
+      })
+      let promises = [pawLikesPromise, loveLikesPromise, dislikesLikesPromise]
+      Promise.all(promises).then(() => {
+        res.render('user/profile', { profileUser: user, friendStatus: friendStatus })
+      })
     })
   },
 
