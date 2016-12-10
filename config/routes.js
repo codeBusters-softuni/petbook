@@ -23,8 +23,7 @@ module.exports = (app) => {
 
   app.get('/category/:category', controllers.categoryController.showArticles)
   app.post('/user/:id/cancelFriendship', controllers.userController.cancelFriendship)
-  // app.get('/user/uploadPhotos', photoController.allGet)
-  app.get('/user/uploadPhotos', controllers.homeController.userOwnPhotosGet)  // allGet
+  app.get('/user/uploadPhotos', controllers.userController.userPhotosGet)
 
   app.get('/user/:id', controllers.userController.profilePageGet)  // must be below other user urls!
 

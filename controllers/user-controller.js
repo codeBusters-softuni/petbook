@@ -159,5 +159,15 @@ module.exports = {
       }
       res.render('user/profile', { profileUser: user, friendStatus: friendStatus })
     })
+  },
+
+  userPhotosGet: (req, res) => {
+    if (req.user) {
+      User.findById(req.user.id).populate('photos albums').then(user => {
+        res.render('user/uploadPhotos', { photos: user.photos, albums: user.albums })
+      })
+    } else {
+      res.render('index')
+    }
   }
 }
