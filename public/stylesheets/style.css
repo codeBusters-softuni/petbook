@@ -7479,3 +7479,14 @@ section>ul>#dislike{
   max-width: 200px;
   border: 1px solid #233a69;
 }
+
+.error-label {
+  width: 500px;
+  height: 850;
+  border: 1px solid #000;
+  font-size: 2em;
+  padding: 5px;
+}
+#error-label:hover {
+  color: deeppink;
+}

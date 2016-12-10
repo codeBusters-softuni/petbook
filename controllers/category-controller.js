@@ -10,8 +10,7 @@ module.exports = {
     let category = req.params.category.toLowerCase().capitalize()
 
     if (categories.indexOf(category) === -1) {
-      // ERROR - Category does not exist!
-      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      req.session.errorMsg = `Category ${category} does not exist!`
       res.render('index', { categories: categories })
       return
     }
@@ -26,8 +25,7 @@ module.exports = {
       // user is another category
       Category.findOne({ name: category }).then(cat => {
         if (!cat) {
-          // ERROR - category does not exist
-          // Something is wrong with the logic, as we validated that the category is in our constants categories
+          req.session.errorMsg = `Category ${category} does not exist!`
           res.render('index', { categories: categories })
           return
         }

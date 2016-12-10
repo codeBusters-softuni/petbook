@@ -21,7 +21,12 @@ module.exports = {
             Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
               postsToSee = Post.initializeForView(postsToSee)
               req.session.returnUrl = '/'
-              res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost, categories: categories })
+              let errorMsg = ''
+              if (req.session.errorMsg) {
+                errorMsg = req.session.errorMsg
+                delete req.session.errorMsg
+              }
+              res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost, categories: categories, errorMessage: errorMsg })
             })
           })
         })

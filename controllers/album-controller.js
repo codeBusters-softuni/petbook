@@ -30,14 +30,13 @@ module.exports = {
 
       Album.findOne({ name: newAlbum.name }).then(album => {
         if (album) {
-          // ERROR - Album already exists!
+          req.session.errorMsg = 'Album already exists!'
           res.redirect('/')
           return
         }
         Album.create(newAlbum).then(newAlbum => {
-          if (newPost.content.length < 1) {
-            // ERROR - Content is too short!
-            // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+          if (newPost.content.length < 3) {
+            req.session.erroMsg = "Your post's content must be longer than 3 characters!"
             req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
             res.redirect('/')
             return

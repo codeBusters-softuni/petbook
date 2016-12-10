@@ -39,9 +39,8 @@ module.exports = {
             content: newPostInfo.descriptionPostPhotos,
             public: postIsPublic
           })
-          if (newPost.content.length < 1) {
-            // ERROR - Content is too short!
-            // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+          if (newPost.content.length <= 2) {
+            req.session.errorMsg = 'Post content must be longer than 2 characters!'
             req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
             res.redirect('/')
             return

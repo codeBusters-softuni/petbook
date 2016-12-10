@@ -22,8 +22,7 @@ module.exports = {
       })
 
       if (newPost.content.length < 3) {
-        // ERROR - Content is too short!
-        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+        req.session.errorMsg = "Your post's content is too short! It must be longer than 3 characters."
         req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
         res.redirect('/')
         return
@@ -71,24 +70,22 @@ module.exports = {
 
   addComment: (req, res) => {
     let postId = req.params.id  // the post this comment is on
-    console.log(postId)
     let newComment = req.body
     newComment.author = req.user._id
 
     if (newComment.content.length < 2) {
-      // ERROR - Comment is too short!
-      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      req.session.errorMsg = 'Your comment is too short! All comments must be longer than 2 characters.'
       res.redirect('/')
       return
     }
 
     Post.findById(postId).then(post => {
       if (!post) {
-        // ERROR - No such Post exists, it was either deleted or the user is using something to send POST requests to the server
+        req.session.errorMsg = 'No such post exists.'
         res.redirect('/')
         return
       }
-      console.log(newComment)
+
       Comment_.create(newComment).then((newComment) => {
         post.addComment(newComment._id).then(() => {
           // Comment added!
@@ -111,6 +108,7 @@ module.exports = {
     Post.findById(postId).populate('likes').then(post => {
       if (!post) {
         // ERROR - Post with ID does not exist!
+        req.session.errorMsg = 'No such post exists.'
         res.redirect('/')
         return
       }
@@ -121,7 +119,6 @@ module.exports = {
       if (likeIndex !== -1) {
         // user has already liked this post
         if (post.likes[likeIndex].type === likeType) {
-          // User has already {likeType} this photo and is trying to again, ERROR!
           res.redirect('/')
           return
         } else {
@@ -163,7 +160,7 @@ module.exports = {
 
     Post.findById(postId).populate('likes').then(post => {
       if (!post) {
-        // ERROR - Post with ID does not exist!
+        req.session.errorMsg = 'No such post exists.'
         res.redirect('/')
         return
       }

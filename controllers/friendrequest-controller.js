@@ -19,11 +19,10 @@ module.exports = {
     // Validate given ID
     let receiverId = req.params.receiverId
     if (req.user.id === receiverId) {
-      // ERROR - You cannot friend yourself!
-      res.render('index', {categories: categories})
+      req.session.errorMsg = 'You cannot friend yourself!'
+      res.redirect('/')
       return
     } else if (req.user.hasFriend(receiverId)) {
-      // ERROR - User already has him as a friend
       res.render('index', {categories: categories})
       return
     }
@@ -87,8 +86,8 @@ module.exports = {
     let frReqId = req.params.id
     FriendRequest.findById(frReqId).populate('sender receiver').then(friendRequest => {
       if (!friendRequest) {
-        // ERROR - Invalid Friend Request ID
-        res.render('index', {categories: categories})
+        req.session.errorMsg = 'Invalid friend request!'
+        res.redirect('/')
         return
       }
       let sender = friendRequest.sender

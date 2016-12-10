@@ -18,23 +18,19 @@ module.exports = {
     console.log(candidateUser)
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
-      // ERROR - Email is invalid!
-      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      req.session.errorMsg = 'Your e-mail is invalid!'
       res.render('user/register', { user: candidateUser, categories: categories })
       return
     } else if (candidateUser.fullName.length < 3 || candidateUser.fullName.length > 20) {
-      // ERROR - Full name is of invalid length
-      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      req.session.errorMsg = 'Your full name has invalid length! It should be between 3 and 20 characters.'
       res.render('user/register', { user: candidateUser, categories: categories })
       return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
-      // ERROR - Password is of invalid length
-      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
       res.render('user/register', { user: candidateUser, categories: categories })
       return
     } else if (candidateUser.password !== candidateUser.confirmedPassword) {
-      // ERROR - Passwords do not match!
-      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+      req.session.errorMsg = 'Your passwords do not match!'
       res.render('user/register', { user: candidateUser, categories: categories })
       return
     }
@@ -43,9 +39,7 @@ module.exports = {
       .then(newUser => {
         req.logIn(newUser, function (err, newUser) {
           if (err) {
-            // req.session.errorMsg = 'Error while logging in after registration :('
-            // ERROR
-            // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+            req.session.errorMsg = 'Error while logging in after registration :('
             return
           }
 
@@ -56,9 +50,7 @@ module.exports = {
         console.log(err.message)
         // Error when saving the user
 
-        // req.session.errorMsg = 'Error while logging in after registration :('
-        // ERROR
-        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+        req.session.errorMsg = 'Error while logging in after registration :('
         res.redirect('/')
         return
       })
@@ -69,37 +61,31 @@ module.exports = {
 
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
-      // ERROR - Email is invalid!
-      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-      res.render('index', { user: candidateUser, categories: categories })
+      req.session.errorMsg = 'Your e-mail is invalid!'
+      res.redirect('/')
       return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
-      // ERROR - Password is of invalid length
-      // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-      res.render('index', { user: candidateUser, categories: categories })
+      req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
+      res.redirect('/')
       return
     }
 
     User.findOne({ email: candidateUser.email }).then(user => {
       if (!user) {
-        // ERROR - Such a user does not exist!
-        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-        res.render('index', { user: candidateUser, categories: categories })
+        req.session.errorMsg = 'Invalid e-mail/password.'
+        res.redirect('/')
         return
       }
 
       if (!user.authenticate(candidateUser.password)) {
-        // Error - Password is invalid!
-        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-        res.render('index', { user: candidateUser, categories: categories })
+        req.session.errorMsg = 'Invalid e-mail/password.'
+        res.redirect('/')
         return
       }
 
       req.logIn(user, function (err) {
         if (err) {
-          // req.session.errorMsg = 'Error while logging in :('
-          // ERROR
-          // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+          req.session.errorMsg = 'Error while logging in :('
           return
         }
 
@@ -125,12 +111,11 @@ module.exports = {
     let friendId = req.params.id
     User.findById(friendId).then(friend => {
       if (!friend) {
-        // ERROR - Friend does not exist!
-        res.render('index', { categories: categories })
+        req.session.errorMsg = 'Such a user does not exist.'
+        res.redirect('/')
         return
       } else if (!req.user.hasFriend(friendId) || !friend.hasFriend(req.user.id)) {
-        // ERROR - Users are not friends!
-        res.render('index', { categories: categories })
+        res.redirect('/')
         return
       }
       // remove friends
@@ -149,8 +134,7 @@ module.exports = {
     let userId = req.params.id
     User.findOne({ userId: userId }).then(user => {
       if (!user) {
-        // ERROR - Email is invalid!
-        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+        req.session.errorMsg = 'No such user exists.'
         res.redirect('/')
       }
       // find the relation between the users
