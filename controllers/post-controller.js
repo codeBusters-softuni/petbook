@@ -92,7 +92,12 @@ module.exports = {
       Comment_.create(newComment).then((newComment) => {
         post.addComment(newComment._id).then(() => {
           // Comment added!
-          res.redirect('/')
+          let returnUrl = '/'
+          if (req.session.returnUrl) {
+            returnUrl = req.session.returnUrl
+            delete req.session.returnUrl
+          }
+          res.redirect(returnUrl)
         })
       })
     })
