@@ -28,13 +28,13 @@
                 </div>
 
             </form>
-            {{#if this.user.hasRequest}}
-              <a href="/friendRequests/">You have a pending friend request!</a>
-            {{/if}}
+            
         </section>
 
         <nav class="col-xs-12 col-sm-5 col-lg-4  left-align">
-
+            {{#if this.user.hasRequest}}
+              <a href="/friendRequests/"><span class = "label label-success">You have a pending friend request!</span></a>
+            {{/if}}
             <ul class="cstm-menu-header">
                 <li><a href="/user/{{user.userId}}">{{user.fullName}}</a></li>
                 <li><a href="">Home</a></li>
