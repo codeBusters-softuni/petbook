@@ -828,7 +828,86 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 }
 
 
+/*style for profile page*/
 
+.profile-all-container{
+    margin: 0 auto;
+    margin-top: 20px;
+    overflow: hidden;
+    width: 80%;
+
+
+}
+
+.profile-pic-container{
+    display: inline-block!important;
+    float: left!important;
+    overflow: hidden!important;
+}
+
+.profile-content{
+    display: inline-block!important;
+    float: left!important;
+    width: 60%!important;
+    padding: 0!important;
+    bottom: 0!important;
+}
+
+.user-names{
+    margin-left: 0!important;
+}
+
+.user-names>p{
+    margin: 0!important;
+    padding: 3px 0 10px 10px!important;
+}
+
+.user-nav{
+    padding: 5px 30px!important;
+    margin: 0!important;
+
+}
+
+.user-nav>ul{
+    margin-bottom: 0!important;
+}
+
+.user-nav>ul>li{
+    border-radius: 5px;
+    margin-right: 1%;
+}
+
+.user-nav>ul>li>a{
+    color: #3b5998;
+}
+
+.large-profile-picture{
+    margin: 0 auto;
+
+}
+
+.profile-btns-total{
+    margin: 0 auto;
+    width: 85%;
+}
+
+.profile-btns-total>ul{
+    margin-top: 10px!important;
+    margin-bottom: 0px!important;
+    line-height: 0px!important;
+}
+
+.profile-btns-total>ul>li{
+    background-size: cover!important;
+    margin-left: 13%!important;
+}
+.profile-btns-total>ul>li:first-of-type{
+    margin-left: 0!important;
+}
+
+.user-info{
+    bottom:0!important;
+}
 
 /*Footer styling*/
 
