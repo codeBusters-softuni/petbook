@@ -4,7 +4,7 @@ const Album = mongoose.model('Album')
 const Post = mongoose.model('Post')
 const multer = require('multer')
 const photoUploadsPath = require('../config/constants').photoUploadsPath
-let savePhotos = multer({ dest: photoUploadsPath }).array('uploadedPhotos')
+let parseReqBody = multer({ dest: photoUploadsPath }).array('uploadedPhotos')
 
 module.exports = {
   allGet: (req, res) => {
@@ -22,11 +22,11 @@ module.exports = {
   // function that handles photo uploads on the newsfeed
   uploadPhotosPost: (req, res) => {
     let albumName = 'newsfeed-photos-' + req.user._id
-    
+
     // Try to find the user's album to add the picture to, otherwise create a new one
     Album.findOrCreateAlbum(albumName, req.user._id)  // custom function in Album.js
       .then(album => {
-        savePhotos(req, res, function () {  // middleware to parse the uploaded files to req.files and save them on the server
+        parseReqBody(req, res, function () {  // middleware to parse the uploaded files to req.files and save them on the server
           // logic for the post
           let newPostInfo = req.body
           let postIsPublic = newPostInfo.photocheck.toString() === 'publicvisible'

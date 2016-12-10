@@ -2,126 +2,71 @@ const mongoose = require('mongoose')
 const Post = mongoose.model('Post')
 const Comment_ = mongoose.model('Comment')
 const Like = mongoose.model('Like')
-
-
-// for uploading photo in post
-const Photo = require('mongoose').model('Photo');
-const Album = require('mongoose').model('Album');
-var formidable = require('formidable');
-var multer = require('multer');
+const Photo = require('mongoose').model('Photo')
+const Album = require('mongoose').model('Album')
+const multer = require('multer')
+const photoUploadsPath = require('../config/constants').photoUploadsPath
+let parseReqBody = multer({ dest: photoUploadsPath }).array('addPhotoToPost')
 
 module.exports = {
   addPost: (req, res) => {
-    var dest = __dirname.toString().split('\\');
-    dest[dest.length - 1] = "public";
-    dest = dest.join('\\');
-    var upload = multer({ dest: dest + '/uploads/' }).array('addPhotoToPost');
-
-    let albumArgs = req.body;
-    albumArgs.author = req.user.id;
-    // for uploading photo in post
-    var classForCss;
-    var albumUp = new Album();
-    var _idAlbum = albumUp._id;
-    var idThisNewPost;
-
-    Album.findOne({ name: "Your photos from NewsFeed" + " " + albumArgs.author }).then(album => {
-      if (!album) {
-        albumUp.name = "Your photos from NewsFeed" + " " + albumArgs.author;
-        albumUp.author = albumArgs.author;
-        albumUp.public = true;
-        albumUp.classCss = "Your-photos-from-NewsFeed-DbStyle";
-
-        Album.create(albumUp).then(newAlbum => {
-          newAlbum.prepareUploadAlbum();
-          _idAlbum = newAlbum._id;
-          classForCss = newAlbum.classCss;
-        });
-      }
-      else {
-        _idAlbum = album._id;
-        classForCss = album.classCss
-      }
-    }).then(() => {
-      upload(req, res, function () {
-
-        // logic for the post
-        var newPostArg = req.body
-        var newPost = new Post({
-          author: req.user._id,
-          category: req.user.category,
-          content: newPostArg.content
-        })
-        console.log(newPostArg.publicPost);
-
-        if (newPost.content.length < 3) {
-          // ERROR - Content is too short!
-          // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-          req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
-          res.redirect('/')
-          return
-        }
-
-        if (newPostArg.publicPost.toString() === "publicvisible") {
-          newPost.public = true;
-        }
-
-        // TODO: Once User can set if he wants his post to be public or not, add functionality here
-        var _idNewPost = newPost._id;
-        Post.create(newPost).then(post => {
-          _idNewPost = post._id;
-          idThisNewPost = _idNewPost;
-          // res.redirect('/')
-        })
-
-
-        //Logic for the upload of photos
-
-        let counter = 1
-
-        console.log(classForCss);
-
-        req.files.forEach(function (item) {
-
-          var photoUp = new Photo({
-            fieldname: item.fieldname,
-            originalname: item.originalname,
-            encoding: item.encoding,
-            mimetype: item.mimetype,
-            destination: item.destination,
-            filename: item.filename,
-            path: item.path,
-            size: item.size,
-            post: _idNewPost,
-            author: newPost.author,
-            album: _idAlbum,
-            classCss: classForCss,
-            description: newPostArg[counter.toString()]
-          });
-
-          counter += 1;
-          if (newPostArg.publicPost.toString() === "publicvisible") {
-            photoUp.public = true;
-          }
-          else {
-            photoUp.public = false;
-          }
-
-          Photo.create(photoUp).then(photo => {
-            photo.prepareUploadSinglePhotos(photoUp.album);
-            photo.prepareUploadInPost(photoUp.post);
-          }
-          )
-
-
-        });
-
+    parseReqBody(req, res, function () {
+      let albumName = 'newsfeed-photos-' + req.user._id
+      let newPostInfo = req.body
+      let postIsPublic = newPostInfo.publicPost.toString() === 'publicvisible'
+      let newPost = new Post({
+        author: req.user._id,
+        category: req.user.category,
+        content: newPostInfo.content,
+        public: postIsPublic
       })
 
-      res.redirect('/')
+      if (newPost.content.length < 3) {
+        // ERROR - Content is too short!
+        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
+        req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
+        res.redirect('/')
+        return
+      }
+
+      Album.findOrCreateAlbum(albumName, req.user._id)
+        .then((album) => {
+          let photoIndex = 1
+
+          // create a photo object for each uploaded photo
+          let photoUploadPromises = req.files.map(function (photo) {
+            return new Promise((resolve, reject) => {
+              let photoUp = new Photo({
+                fieldname: photo.fieldname,
+                originalname: photo.originalname,
+                encoding: photo.encoding,
+                mimetype: photo.mimetype,
+                destination: photo.destination,
+                filename: photo.filename,
+                path: photo.path,
+                size: photo.size,
+                author: req.user._id,
+                album: album._id,
+                classCss: album.classCss,
+                public: postIsPublic,
+                description: newPostInfo[photoIndex.toString()]
+              })
+
+              photoIndex += 1
+
+              Photo.create(photoUp).then(photo => {
+                resolve(photo._id)
+              })
+            })
+          })
+          Promise.all(photoUploadPromises).then(uploadedPhotos => {
+            newPostInfo.photos = uploadedPhotos
+            Post.create(newPost).then(post => {
+              res.redirect('/')
+            })
+          })
+        })
     })
-
-
   },
 
   addComment: (req, res) => {
