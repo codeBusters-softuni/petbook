@@ -103,7 +103,7 @@ userSchema.method({
     })
   },
 
-  removeFriend: function(friendId) {
+  removeFriend: function (friendId) {
     return new Promise((resolve, reject) => {
       this.friends.remove(friendId)
       this.save().then(() => {

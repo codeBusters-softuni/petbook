@@ -1,8 +1,6 @@
 const emailValidator = require('email-validator')  // module for validating email addresses
-const encryption = require('./../utilities/encryption')
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
-const Role = mongoose.model('Role')
 const Category = mongoose.model('Category')
 
 module.exports = {
@@ -142,7 +140,7 @@ module.exports = {
         return
       })
     })
-}
+  },
 
   profilePageGet: (req, res) => {
     let userId = req.params.id
@@ -159,7 +157,7 @@ module.exports = {
         sentRequest: hasSentRequest,
         areFriends: areFriends
       }
-      res.render('user/profile', {profileUser: user, friendStatus: friendStatus})
+      res.render('user/profile', { profileUser: user, friendStatus: friendStatus })
     })
   }
 }
