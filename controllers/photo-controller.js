@@ -4,7 +4,6 @@ const Album = mongoose.model('Album')
 const Post = mongoose.model('Post')
 const multer = require('multer')
 const photoUploadsPath = require('../config/constants').photoUploadsPath
-
 let savePhotos = multer({ dest: photoUploadsPath }).array('uploadedPhotos')
 
 module.exports = {
@@ -23,6 +22,7 @@ module.exports = {
   // function that handles photo uploads on the newsfeed
   uploadPhotosPost: (req, res) => {
     let albumName = 'newsfeed-photos-' + req.user._id
+    
     // Try to find the user's album to add the picture to, otherwise create a new one
     Album.findOrCreateAlbum(albumName, req.user._id)  // custom function in Album.js
       .then(album => {

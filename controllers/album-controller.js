@@ -8,34 +8,33 @@ let saveFiles = multer({ dest: photoUploadsPath }).array('uploadAlbum')
 
 module.exports = {
   uploadAlbum: (req, res) => {
-    let newPostInfo = req.body
-    let postIsPublic = newPostInfo.photocheckAlbum.toString() === 'publicvisible'
-    let cssClassName = newPostInfo.nameAlbum.replace(' ', '-') + '-DbStyle'
+    saveFiles(req, res, function () {
+      let newPostInfo = req.body
+      let postIsPublic = newPostInfo.photocheckAlbum.toString() === 'publicvisible'
+      let cssClassName = newPostInfo.nameAlbum.replace(' ', '-') + '-DbStyle'
 
-    let newPost = new Post({
-      author: req.user._id,
-      category: req.user.category,
-      content: newPostInfo.descriptionAlbum,
-      public: postIsPublic
-    })
+      let newPost = new Post({
+        author: req.user._id,
+        category: req.user.category,
+        content: newPostInfo.descriptionAlbum,
+        public: postIsPublic
+      })
 
-    let newAlbum = new Album({
-      name: newPostInfo.nameAlbum,
-      description: newPostInfo.descriptionAlbum,
-      author: req.user._id,
-      classCss: cssClassName,
-      public: postIsPublic
-    })
+      let newAlbum = new Album({
+        name: newPostInfo.nameAlbum,
+        description: newPostInfo.descriptionAlbum,
+        author: req.user._id,
+        classCss: cssClassName,
+        public: postIsPublic
+      })
 
-    Album.findOne({ name: newAlbum.name }).then(album => {
-      if (album) {
-        // ERROR - Album already exists!
-        res.redirect('/')
-        return
-      }
-      Album.create(newAlbum).then(newAlbum => {
-        newAlbum.prepareUploadAlbum()
-        saveFiles(req, res, function () {
+      Album.findOne({ name: newAlbum.name }).then(album => {
+        if (album) {
+          // ERROR - Album already exists!
+          res.redirect('/')
+          return
+        }
+        Album.create(newAlbum).then(newAlbum => {
           if (newPost.content.length < 1) {
             // ERROR - Content is too short!
             // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
