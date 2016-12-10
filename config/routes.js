@@ -1,6 +1,5 @@
 const controllers = require('./../controllers')
-const photoController = require('./../controllers/photo-controller');
-const albumController = require('./../controllers/album-controller');
+
 
 module.exports = (app) => {
   app.get('/', controllers.homeController.homePageGet)
@@ -41,7 +40,7 @@ module.exports = (app) => {
 
 
   // Upload single photos in default album
-  app.post('/photo/all/single', photoController.uploadPhotosPost)
+  app.post('/photo/all/single', controllers.photoController.uploadPhotosPost)
   // Upload album with photos
-  app.post('/photo/all/album', albumController.uploadAlbum)
+  app.post('/photo/all/album', controllers.albumController.uploadAlbum)
 }
