@@ -380,7 +380,7 @@ $(document).ready(function () {
 
     //get the unique classed of photos
     var photosDisplayed = $('#display-photos-in-selected-album .filter-wrap article');
-    // console.log(photosDisplayed);
+    console.log(photosDisplayed);
     var uniqueClasses = [];
     var access = true;
     for(var i = 2; i<photosDisplayed.length; i++){
