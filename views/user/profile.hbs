@@ -1,49 +1,191 @@
 <div class="wrapper">
-    <section id="profile-info">
-        <section id="large-profile-picture">
-            <!--profile picture example: <img src="{dir photo resize width: 300px}"/>-->
-        </section>
-        {{#if friendStatus.sentRequest}}
-        {{else if friendStatus.areFriends}}
-        <label class="add-friend">Friends</label>
-        <form method="POST" action="/friendRequest/{{profileUser.id}}/remove">
-          <input type="submit" id="remove-friend" class="button-with-plus remove-friend" value="Cancel Friendship">
-        </form>
-        {{else}}
-          {{#isSameUser this.user.id profileUser.id}} <!-- you can't friend REQ yourself!-->
-          {{else}}
-          <form method="POST" action="/friendRequest/{{profileUser.id}}/send">
-            <input type="submit" id="add-friend" class="button-with-plus add-friend" value="Send Friend Request">
-          </form>
-          {{/isSameUser}}
-        {{/if}}
+  <section id="profile-info">
+    <section id="large-profile-picture">
+      <!--profile picture example: <img src="{dir photo resize width: 300px}"/>-->
+    </section>
+    {{#if friendStatus.sentRequest}} {{else if friendStatus.areFriends}}
+    <label class="add-friend">Friends</label>
+    <form method="POST" action="/friendRequest/{{profileUser.id}}/remove">
+      <input type="submit" id="remove-friend" class="button-with-plus remove-friend" value="Cancel Friendship">
+    </form>
+    {{else}} {{#isSameUser this.user.id profileUser.id}}
+    <!-- you can't friend REQ yourself!-->
+    {{else}}
+    <form method="POST" action="/friendRequest/{{profileUser.id}}/send">
+      <input type="submit" id="add-friend" class="button-with-plus add-friend" value="Send Friend Request">
+    </form>
+    {{/isSameUser}} {{/if}}
+    <section>
+      <ul>
+        <li id="like">{{profileUser.totalLikeCount}}</li>
+        <li id="love">{{profileUser.totalLoveCount}}</li>
+        <li id="dislike">{{profileUser.totalDislikeCount}}</li>
+      </ul>
+    </section>
+    <section id="user-info">
+      profile info (age, city etc)
+    </section>
+  </section>
+  <section id="profile-content">
+    <header id="user-names">
+      <p><a href="#">{{profileUser.fullName}}</a></p>
+      <p>owner name</p>
+    </header>
+    <nav id="user-nav">
+      <ul>
+        <li id="user-profile-nav"><a href="/user/{{profileUser.id}}">Profile</a></li>
+        <li id="user-about-nav"><a href="/user/about">About</a></li>
+        <li id="user-photos-nav"><a href="/user/uploadPhotos">Photos</a></li>
+        <li id="user-groups-nav"><a href="/user/groups">Groups</a></li>
+      </ul>
+    </nav>
+    <!-- Here include addPost.hbs if url is user/id-->
+    {{#each posts}}
+    <section id="post-view">
+      <header>
         <section>
-            <ul>
-                <li id="like">{{profileUser.totalLikeCount}}</li>
-                <li id="love">{{profileUser.totalLoveCount}}</li>
-                <li id="dislike">{{profileUser.totalDislikeCount}}</li>
-            </ul>
+          <article>
+            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+            <a href="/user/{{author.userId}}">{{author.fullName}}</a>
+          </article>
+          <section>
+            <article>
+              {{dateStr}}
+            </article>
+
+          </section>
         </section>
-        <section id="user-info">
-            profile info (age, city etc)
+      </header>
+      <article id="post-content">
+        {{content}}
+      </article>
+
+      <article class="cntnr-photos row custom-gallery">
+        {{#each photos}}
+        <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+          <section class="photo-cntnr">
+            <div class="album-photo-content">
+              <img src="/uploads/{{this.filename}}" alt="">
+            </div>
+          </section>
+        </article>
+        {{/each}}
+      </article>
+
+      <footer class="preview-photo-thumbnail-footer post-btn-newsfeed">
+        {{#if ../this.user}}
+        <ul>
+          {{#hasPawed paws ../this.user._id}}
+          <form method="post" action="/post/{{id}}/removePaw">
+            {{!--SHOULD BE GREY--}}
+            <li>
+              <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+            </li>
+          </form>
+          <form method="post" action="/post/{{id}}/addLove">
+            <li>
+              <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
+            </li>
+          </form>
+          <form method="post" action="/post/{{id}}/addDislike">
+            <li>
+              <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}} Dislikes
+            </li>
+          </form>
+          {{else}} {{!--User has not pawed this post--}} {{#hasLoved loves ../this.user._id}}
+          <form method="post" action="/post/{{id}}/addPaw">
+            <li>
+              <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+            </li>
+          </form>
+          <form method="post" action="/post/{{id}}/removeLove">
+            {{!--SHOULD BE GREY--}}
+            <li>
+              <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
+            </li>
+          </form>
+          <form method="post" action="/post/{{id}}/addDislike">
+            <li>
+              <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}} Dislikes
+            </li>
+          </form>
+          {{else}} {{!--User has not loved this post--}} {{#hasDisliked dislikes ../this.user._id}}
+          <form method="post" action="/post/{{id}}/addPaw">
+            <li>
+              <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+            </li>
+          </form>
+          <form method="post" action="/post/{{id}}/addLove">
+            <li>
+              <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
+            </li>
+          </form>
+          <form method="post" action="/post/{{id}}/removeDislike>">
+            {{!--SHOULD BE GREY--}}
+            <li>
+              <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}} Dislikes
+            </li>
+          </form>
+          {{else}} {{!--User has not liked this post at all--}}
+          <form method="post" action="/post/{{id}}/addPaw">
+            <li>
+              <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+            </li>
+          </form>
+          <form method="post" action="/post/{{id}}/addLove">
+            <li>
+              <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
+            </li>
+          </form>
+          <form method="post" action="/post/{{id}}/addDislike">
+            <li>
+              <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}} Dislikes
+            </li>
+          </form>
+          {{/hasDisliked}} {{/hasLoved}} {{/hasPawed}}
+        </ul>
+        {{/if}}
+      </footer>
+      <section id="comment-view">
+        <!-- COMMENTS -->
+        {{#each comments}}
+        <section>
+          <article>
+            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+          </article>
+          <section>
+            <article>
+              {{author.fullName}}
+            </article>
+            <article>
+              {{dateStr}}
+            </article>
+          </section>
         </section>
+        <article id="comment-value">
+          {{content}}
+        </article>
+        {{/each}}
+        <!-- END OF COMMENTS -->
+      </section>
+      <section id="comments-form">
+        <section>
+          <article>
+            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+          </article>
+          <section id="add-comment">
+            <form method="post" action="/post/{{id}}/addComment">
+              <textarea id="profile-comment" name="content" rows="1" placeholder="Add a comment"></textarea>
+              <input type="submit" id="comment-btn" value="">
+            </form>
+          </section>
+        </section>
+      </section>
     </section>
-    <section id="profile-content">
-        <header id="user-names">
-            <p><a href="#">{{profileUser.fullName}}</a></p>
-            <p>owner name</p>
-        </header>
-        <nav id="user-nav">
-            <ul>
-                <li id="user-profile-nav"><a href="/user/{{profileUser.id}}">Profile</a></li>
-                <li id="user-about-nav"><a href="/user/about">About</a></li>
-                <li id="user-photos-nav"><a href="/user/uploadPhotos">Photos</a></li>
-                <li id="user-groups-nav"><a href="/user/groups">Groups</a></li>
-            </ul>
-        </nav>
-            <!-- Here include addPost.hbs if url is user/id-->
-        <main>
-            <!-- Here include post view, about, photo gallery or groups views -->
-        </main>
-    </section>
+    {{/each}}
+    <main>
+
+      <!-- Here include post view, about, photo gallery or groups views -->
+    </main>
+  </section>
 </div>

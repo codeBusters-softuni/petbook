@@ -1,4 +1,3 @@
-const User = require('mongoose').model('User')
 const Post = require('mongoose').model('Post')
 
 module.exports = {
