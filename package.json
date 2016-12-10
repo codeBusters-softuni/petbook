@@ -33,6 +33,16 @@
     "passport": "0.3.2",
     "passport-local": "1.0.0",
     "standard": "8.5.0",
-    "typings": "2.0.0"
+    "typings": "2.0.0",
+
+    "multer": "^1.1.0",
+    "multiparty": "^4.1.2",
+    "formidable": "^1.0.17"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.46",
+    "should": "~7.1.0",
+    "mocha": "~2.3.3",
+    "supertest": "~1.1.0"
   }
 }

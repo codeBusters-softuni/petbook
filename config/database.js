@@ -9,6 +9,7 @@ module.exports = (config) => {
   require('./../models/Category').initialize()
   require('./../models/User')
   require('./../models/Post')
+  require('./../models/Album')
   require('./../models/Photo')
   require('./../models/Comment')
   require('./../models/Tag')

@@ -1,10 +1,26 @@
 <div id="newsfeed-wrapper">
     <section id="add-post">
-        <form method="post" action="/post/add">
+        <form method="post" action="/post/add" enctype="multipart/form-data">
             <textarea id="profile-post" rows="2" name="content" placeholder="How are you doing?">{{failedPost.postContent}}</textarea>
             <article id="bottom-line-post">
-                <input type="button" name="add-photo" id="add-photo-btn" value=" " />
-                <input type="checkbox" name="public" id="make-public-checkbox" value="public"> Make my post public
+                <label for="addPhotoToPost">
+                    <section>
+                        <input type="file" name="addPhotoToPost" class="" id="" value="" multiple />
+                    </section>
+
+                </label>
+                <div>
+                    <input type="radio" name="publicPost" id="single-public"
+                           value="publicvisible" checked="checked">
+                    <label for="single-public">Is this album public?</label>
+                </div>
+                <div>
+                    <input type="radio" name="publicPost" id="single-category-friends"
+                           value="groupvisible">
+                    <label for="single-category">Or is it visible to your category and
+                        friends?</label>
+                </div>
+                <!--<input type="checkbox" name="publicPost" id="make-public-checkbox" value="public"> Make my post public-->
                 <input type="submit" class="button-with-plus post-btn" value="Post" />
             </article>
         </form>
@@ -23,13 +39,31 @@
                         <article>
                             {{dateStr}}
                         </article>
+
                     </section>
                 </section>
             </header>
             <article id="post-content">
                 {{content}}
             </article>
-            <footer>
+
+            <article class="cntnr-photos row custom-gallery">
+
+                {{#each photos}}
+                    <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+
+                        <section class="photo-cntnr">
+
+                            <div class="album-photo-content">
+                                <img src="/uploads/{{this.filename}}" alt="">
+                            </div>
+                        </section>
+                    </article>
+                {{/each}}
+
+            </article>
+
+            <footer class="preview-photo-thumbnail-footer post-btn-newsfeed">
                 {{#if ../this.user}}
                 <ul>
                     {{#hasPawed paws ../this.user._id}}
