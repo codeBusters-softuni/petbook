@@ -1,4 +1,5 @@
 const Post = require('mongoose').model('Post')
+const categories = require('../config/constants').categories
 
 module.exports = {
   homePageGet: (req, res) => {
@@ -20,13 +21,13 @@ module.exports = {
             Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
               postsToSee = Post.initializeForView(postsToSee)
               req.session.returnUrl = '/'
-              res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost })
+              res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost, categories: categories })
             })
           })
         })
       })
     } else {
-      res.render('index')
+      res.render('index', {categories: categories})
     }
   }
 }

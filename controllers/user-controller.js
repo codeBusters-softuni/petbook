@@ -4,6 +4,7 @@ const User = mongoose.model('User')
 const Category = mongoose.model('Category')
 const Like = mongoose.model('Like')
 const Post = mongoose.model('Post')
+const categories = require('../config/constants').categories
 
 module.exports = {
   registerGet: (req, res) => {
@@ -19,22 +20,22 @@ module.exports = {
     if (!emailValidator.validate(candidateUser.email)) {
       // ERROR - Email is invalid!
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-      res.render('user/register', candidateUser)
+      res.render('user/register', { user: candidateUser, categories: categories })
       return
     } else if (candidateUser.fullName.length < 3 || candidateUser.fullName.length > 20) {
       // ERROR - Full name is of invalid length
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-      res.render('user/register', candidateUser)
+      res.render('user/register', { user: candidateUser, categories: categories })
       return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
       // ERROR - Password is of invalid length
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-      res.render('user/register', candidateUser)
+      res.render('user/register', { user: candidateUser, categories: categories })
       return
     } else if (candidateUser.password !== candidateUser.confirmedPassword) {
       // ERROR - Passwords do not match!
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-      res.render('user/register', candidateUser)
+      res.render('user/register', { user: candidateUser, categories: categories })
       return
     }
     User  // function in the User.js model
@@ -70,12 +71,12 @@ module.exports = {
     if (!emailValidator.validate(candidateUser.email)) {
       // ERROR - Email is invalid!
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-      res.render('index', candidateUser)
+      res.render('index', { user: candidateUser, categories: categories })
       return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
       // ERROR - Password is of invalid length
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-      res.render('index', candidateUser)
+      res.render('index', { user: candidateUser, categories: categories })
       return
     }
 
@@ -83,14 +84,14 @@ module.exports = {
       if (!user) {
         // ERROR - Such a user does not exist!
         // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-        res.render('index', candidateUser)
+        res.render('index', { user: candidateUser, categories: categories })
         return
       }
 
       if (!user.authenticate(candidateUser.password)) {
         // Error - Password is invalid!
         // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-        res.render('index', candidateUser)
+        res.render('index', { user: candidateUser, categories: categories })
         return
       }
 
@@ -125,11 +126,11 @@ module.exports = {
     User.findById(friendId).then(friend => {
       if (!friend) {
         // ERROR - Friend does not exist!
-        res.render('index')
+        res.render('index', { categories: categories })
         return
       } else if (!req.user.hasFriend(friendId) || !friend.hasFriend(req.user.id)) {
         // ERROR - Users are not friends!
-        res.render('index')
+        res.render('index', { categories: categories })
         return
       }
       // remove friends
@@ -189,7 +190,7 @@ module.exports = {
               Promise.all(promises).then(() => {
                 req.session.returnUrl = req.originalUrl
                 console.log(req.originalUrl)
-                res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee })
+                res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
               })
             })
           })
@@ -200,7 +201,7 @@ module.exports = {
 
   userPhotosGet: (req, res) => {
     User.findById(req.user.id).populate('photos albums').then(user => {
-      res.render('user/uploadPhotos', { photos: user.photos, albums: user.albums })
+      res.render('user/uploadPhotos', { photos: user.photos, albums: user.albums, categories: categories })
     })
   }
 }

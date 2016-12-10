@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const FriendRequest = mongoose.model('FriendRequest')
 const User = mongoose.model('User')
-// TODO: Add Accept Friendship button in profile.hbs
+const categories = require('../config/constants')
+
 module.exports = {
   showRequests: (req, res) => {
     // remove the requests that are sent by the user
@@ -9,7 +10,7 @@ module.exports = {
       return !frReq.sender.equals(req.user.id)
     })
     FriendRequest.populate(receivedFriendRequests, { path: 'sender' }).then(reqs => {
-      res.render('user/friendRequests', { friendRequests: receivedFriendRequests })
+      res.render('user/friendRequests', { friendRequests: receivedFriendRequests, categories: categories })
     })
   },
 
@@ -19,11 +20,11 @@ module.exports = {
     let receiverId = req.params.receiverId
     if (req.user.id === receiverId) {
       // ERROR - You cannot friend yourself!
-      res.render('index')
+      res.render('index', {categories: categories})
       return
     } else if (req.user.hasFriend(receiverId)) {
       // ERROR - User already has him as a friend
-      res.render('index')
+      res.render('index', {categories: categories})
       return
     }
 
@@ -31,7 +32,7 @@ module.exports = {
       if (!user) {
         // ERROR - User does not exist
         // Something is wrong with the logic or the user is malicious
-        res.render('index')
+        res.render('index', {categories: categories})
         return
       } else if (user.hasFriend(req.user.id)) {
         // ERROR - User already has the logged in user as a friend
@@ -43,7 +44,7 @@ module.exports = {
       })
       if (potentialRequestIdx !== -1) {
         // ERROR, Such a request already exists!
-        res.render('index')
+        res.render('index', {categories: categories})
         return
       }
 
@@ -87,7 +88,7 @@ module.exports = {
     FriendRequest.findById(frReqId).populate('sender receiver').then(friendRequest => {
       if (!friendRequest) {
         // ERROR - Invalid Friend Request ID
-        res.render('index')
+        res.render('index', {categories: categories})
         return
       }
       let sender = friendRequest.sender

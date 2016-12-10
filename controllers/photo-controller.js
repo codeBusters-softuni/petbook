@@ -3,8 +3,11 @@ const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
 const Post = mongoose.model('Post')
 const multer = require('multer')
-const photoUploadsPath = require('../config/constants').photoUploadsPath
+const constants = require('../config/constants')
+const photoUploadsPath = constants.photoUploadsPath
 let parseReqBody = multer({ dest: photoUploadsPath }).array('uploadedPhotos')
+const categories = constants.categories
+
 
 module.exports = {
   allGet: (req, res) => {
@@ -16,7 +19,7 @@ module.exports = {
       return
     }
 
-    res.render('user/uploadPhotos')
+    res.render('user/uploadPhotos', {categories: categories})
   },
 
   // function that handles photo uploads on the newsfeed

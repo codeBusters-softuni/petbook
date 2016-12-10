@@ -12,7 +12,7 @@ module.exports = {
     if (categories.indexOf(category) === -1) {
       // ERROR - Category does not exist!
       // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
-      res.render('index')
+      res.render('index', { categories: categories })
       return
     }
 
@@ -20,7 +20,7 @@ module.exports = {
       // user is the same category
       Post.find({ category: req.user.category.id }).populate('author comments likes').then(posts => {
         posts = Post.initializeForView(posts)  // sorts the posts and splits their likes
-        res.render('user/newsfeed', { posts: posts, failedPost: req.session.failedPost })
+        res.render('user/newsfeed', { posts: posts, failedPost: req.session.failedPost, categories: categories })
       })
     } else {
       // user is another category
@@ -28,13 +28,13 @@ module.exports = {
         if (!cat) {
           // ERROR - category does not exist
           // Something is wrong with the logic, as we validated that the category is in our constants categories
-          res.render('index')
+          res.render('index', { categories: categories })
           return
         }
         Post.find({ public: true, category: cat.id }).populate('author comments likes').then(posts => {
           posts = Post.initializeForView(posts)  // sorts the posts and splits their likes
 
-          res.render('user/newsfeed', { posts: posts, failedPost: req.session.failedPost })
+          res.render('user/newsfeed', { posts: posts, failedPost: req.session.failedPost, categories: categories })
         })
       })
     }
