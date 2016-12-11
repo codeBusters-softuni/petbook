@@ -1,185 +1,200 @@
-<div id="newsfeed-wrapper">
-    <section id="add-post">
+<div id="newsfeed-wrapper" class="newsfeed-wrapper">
+    <section id="add-post" class="add-post">
         <form method="post" action="/post/add" enctype="multipart/form-data">
-            <textarea id="profile-post" rows="2" name="content" placeholder="How are you doing?">{{failedPost.postContent}}</textarea>
-            <article id="bottom-line-post">
+            <textarea id="profile-post" class="profile-post" rows="3" name="content"
+                      placeholder="How are you doing?">{{failedPost.postContent}}</textarea>
+            <article id="bottom-line-post" class="bottom-line-post">
                 <label for="addPhotoToPost">
                     <section>
-                        <input type="file" name="addPhotoToPost" class="" id="" value="" multiple />
+                        <input type="file" name="addPhotoToPost" class="" id="addPhotoToPost" value="" multiple/>
+                    </section>
+                    <section>
+                        <output id="result-photos-in-post">
+
+                        </output>
                     </section>
 
                 </label>
-                <div>
-                    <input type="radio" name="publicPost" id="single-public"
-                           value="publicvisible" checked="checked">
-                    <label for="single-public">Is this album public?</label>
-                </div>
-                <div>
-                    <input type="radio" name="publicPost" id="single-category-friends"
-                           value="groupvisible">
-                    <label for="single-category">Or is it visible to your category and
-                        friends?</label>
-                </div>
+
                 <!--<input type="checkbox" name="publicPost" id="make-public-checkbox" value="public"> Make my post public-->
-                <input type="submit" class="button-with-plus post-btn" value="Post" />
+
             </article>
+            <div>
+                <input type="radio" name="publicPost" id="single-public"
+                       value="publicvisible" checked="checked">
+                <label for="single-public">Is this post public?</label>
+            </div>
+            <div>
+                <input type="radio" name="publicPost" id="single-category-friends"
+                       value="groupvisible">
+                <label for="single-category">Or is it visible to your category and
+                    friends?</label>
+            </div>
+            <input type="submit" class="button-with-plus post-btn" value="Post"/>
         </form>
     </section>
     <main>
         <!-- Here post view -->
         {{#each posts}}
-        <section id="post-view">
-            <header>
-                <section>
-                    <article>
-                        <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
-                        <a href="/user/{{author.userId}}">{{author.fullName}}</a>
-                    </article>
+            <section id="post-view">
+                <header>
                     <section>
                         <article>
-                            {{dateStr}}
+                            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                            <a href="/user/{{author.userId}}">{{author.fullName}}</a>
                         </article>
+                        <section>
+                            <article>
+                                {{dateStr}}
+                            </article>
 
-                    </section>
-                </section>
-            </header>
-            <article id="post-content">
-                {{content}}
-            </article>
-
-            <article class="cntnr-photos row custom-gallery">
-
-                {{#each photos}}
-                    <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-
-                        <section class="photo-cntnr">
-
-                            <div class="album-photo-content">
-                                <img src="/uploads/{{this.filename}}" alt="">
-                            </div>
                         </section>
-                    </article>
-                {{/each}}
-
-            </article>
-
-            <footer class="preview-photo-thumbnail-footer post-btn-newsfeed">
-                {{#if ../this.user}}
-                <ul>
-                    {{#hasPawed paws ../this.user._id}}
-                    <form method="post" action="/post/{{id}}/removePaw">
-                    {{!--SHOULD BE GREY--}}
-                        <li>
-                            <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
-                        </li>
-                    </form>
-                    <form method="post" action="/post/{{id}}/addLove">
-                        <li>
-                            <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
-                        </li>
-                    </form>
-                    <form method="post" action="/post/{{id}}/addDislike">
-                        <li>
-                            <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}} Dislikes
-                        </li>
-                    </form>
-                    {{else}}
-                    {{!--User has not pawed this post--}}
-                    {{#hasLoved loves ../this.user._id}}
-                         <form method="post" action="/post/{{id}}/addPaw">
-                        <li>
-                            <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
-                        </li>
-                    </form>
-                    <form method="post" action="/post/{{id}}/removeLove">
-                    {{!--SHOULD BE GREY--}}
-                        <li>
-                            <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
-                        </li>
-                    </form>
-                    <form method="post" action="/post/{{id}}/addDislike">
-                        <li>
-                            <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}} Dislikes
-                        </li>
-                    </form>
-                    {{else}}
-                    {{!--User has not loved this post--}}
-                    {{#hasDisliked dislikes ../this.user._id}}
-                         <form method="post" action="/post/{{id}}/addPaw">
-                        <li>
-                            <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
-                        </li>
-                    </form>
-                    <form method="post" action="/post/{{id}}/addLove">
-                        <li>
-                            <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
-                        </li>
-                    </form>
-                    <form method="post" action="/post/{{id}}/removeDislike>">
-                    {{!--SHOULD BE GREY--}}
-                        <li>
-                            <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}} Dislikes
-                        </li>
-                    </form>
-                    {{else}}
-                    {{!--User has not liked this post at all--}}
-                    <form method="post" action="/post/{{id}}/addPaw">
-                        <li>
-                            <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
-                        </li>
-                    </form>
-                    <form method="post" action="/post/{{id}}/addLove">
-                        <li>
-                            <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
-                        </li>
-                    </form>
-                    <form method="post" action="/post/{{id}}/addDislike">
-                        <li>
-                            <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}} Dislikes
-                        </li>
-                    </form>
-                    {{/hasDisliked}}
-                    {{/hasLoved}}
-                    {{/hasPawed}}
-                </ul>
-                {{/if}}
-            </footer>
-            <section id="comment-view">
-                <!-- COMMENTS -->
-                {{#each comments}}
-                <section>
-                    <article>
-                        <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
-                    </article>
-                    <section>
-                        <article>
-                            {{author.fullName}}
-                        </article>
-                        <article>
-                            {{dateStr}}
-                        </article>
                     </section>
-                </section>
-                <article id="comment-value">
+                </header>
+                <article id="post-content">
                     {{content}}
                 </article>
-                {{/each}}
-                <!-- END OF COMMENTS -->
-            </section>
-            <section id="comments-form">
-                <section>
-                    <article>
-                        <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
-                    </article>
-                    <section id="add-comment">
-                        <form method="post" action="/post/{{id}}/addComment">
-                            <textarea id="profile-comment" name="content" rows="1" placeholder="Add a comment"></textarea>
-                            <input type="submit" id="comment-btn" value="">
-                        </form>
+
+                <article class="cntnr-photos row custom-gallery">
+
+                    {{#each photos}}
+                        <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+
+                            <section class="photo-cntnr">
+
+                                <div class="album-photo-content">
+                                    <img src="/uploads/{{this.filename}}" alt="">
+                                </div>
+                            </section>
+                        </article>
+                    {{/each}}
+
+                </article>
+
+                <footer class="preview-photo-thumbnail-footer post-btn-newsfeed">
+                    {{#if ../this.user}}
+                        <ul>
+                            {{#hasPawed paws ../this.user._id}}
+                                <form method="post" action="/post/{{id}}/removePaw">
+                                    {{!--SHOULD BE GREY--}}
+                                    <li>
+                                        <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                    </li>
+                                </form>
+                                <form method="post" action="/post/{{id}}/addLove">
+                                    <li>
+                                        <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
+                                    </li>
+                                </form>
+                                <form method="post" action="/post/{{id}}/addDislike">
+                                    <li>
+                                        <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}}
+                                        Dislikes
+                                    </li>
+                                </form>
+                            {{else}}
+                            {{!--User has not pawed this post--}}
+                                {{#hasLoved loves ../this.user._id}}
+                                    <form method="post" action="/post/{{id}}/addPaw">
+                                        <li>
+                                            <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                        </li>
+                                    </form>
+                                    <form method="post" action="/post/{{id}}/removeLove">
+                                        {{!--SHOULD BE GREY--}}
+                                        <li>
+                                            <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
+                                        </li>
+                                    </form>
+                                    <form method="post" action="/post/{{id}}/addDislike">
+                                        <li>
+                                            <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}}
+                                            Dislikes
+                                        </li>
+                                    </form>
+                                {{else}}
+                                {{!--User has not loved this post--}}
+                                    {{#hasDisliked dislikes ../this.user._id}}
+                                        <form method="post" action="/post/{{id}}/addPaw">
+                                            <li>
+                                                <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                            </li>
+                                        </form>
+                                        <form method="post" action="/post/{{id}}/addLove">
+                                            <li>
+                                                <input type="submit" id="love" class="btn" value="">{{loves.length}}
+                                                Loves
+                                            </li>
+                                        </form>
+                                        <form method="post" action="/post/{{id}}/removeDislike>">
+                                            {{!--SHOULD BE GREY--}}
+                                            <li>
+                                                <input type="submit" id="dislike" class="btn"
+                                                       value="">{{dislikes.length}} Dislikes
+                                            </li>
+                                        </form>
+                                    {{else}}
+                                    {{!--User has not liked this post at all--}}
+                                        <form method="post" action="/post/{{id}}/addPaw">
+                                            <li>
+                                                <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                            </li>
+                                        </form>
+                                        <form method="post" action="/post/{{id}}/addLove">
+                                            <li>
+                                                <input type="submit" id="love" class="btn" value="">{{loves.length}}
+                                                Loves
+                                            </li>
+                                        </form>
+                                        <form method="post" action="/post/{{id}}/addDislike">
+                                            <li>
+                                                <input type="submit" id="dislike" class="btn"
+                                                       value="">{{dislikes.length}} Dislikes
+                                            </li>
+                                        </form>
+                                    {{/hasDisliked}}
+                                {{/hasLoved}}
+                            {{/hasPawed}}
+                        </ul>
+                    {{/if}}
+                </footer>
+                <section id="comment-view">
+                    <!-- COMMENTS -->
+                    {{#each comments}}
+                        <section>
+                            <article>
+                                <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                            </article>
+                            <section>
+                                <article>
+                                    {{author.fullName}}
+                                </article>
+                                <article>
+                                    {{dateStr}}
+                                </article>
+                            </section>
+                        </section>
+                        <article id="comment-value">
+                            {{content}}
+                        </article>
+                    {{/each}}
+                    <!-- END OF COMMENTS -->
+                </section>
+                <section id="comments-form">
+                    <section>
+                        <article>
+                            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                        </article>
+                        <section id="add-comment">
+                            <form method="post" action="/post/{{id}}/addComment">
+                                <textarea id="profile-comment" name="content" rows="1"
+                                          placeholder="Add a comment"></textarea>
+                                <input type="submit" id="comment-btn" value="">
+                            </form>
+                        </section>
                     </section>
                 </section>
             </section>
-        </section>
         {{/each}}
         <!--end post view-->
     </main>
