@@ -836,7 +836,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     /*border-radius: 5px;*/
     border: 1px solid rgba(59, 89, 152, 0.4);
     box-shadow: 2px 2px 1px rgba(59, 89, 152, 0.3);
-    background: rgba(240, 248, 255, 0.7)!important;
+    background: rgba(233, 235, 238, 0.5)!important;
     padding: 20px!important;
 
 }
@@ -847,17 +847,18 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     /*border-radius: 5px;*/
     outline: none;
     margin-bottom: 2%;
+    border: 1px solid rgba(59, 89, 152, 0.4)
 }
 
 .profile-post:focus{
-    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-    border: 1px solid rgba(81, 203, 238, 1);
+    box-shadow: 0 0 10px rgba(59, 89, 152, 0.4);
+    border: 1px solid rgba(59, 89, 152, 0.4);
 }
 
 .bottom-line-post{
     padding: 10px!important;
     /*border-radius: 5px;*/
-    border: 1px solid rgba(59, 89, 152, 0.4);
+    border: 1px solid rgba(240, 248, 255, 0.7);
 }
 
 .bottom-line-post>section{
