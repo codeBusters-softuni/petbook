@@ -1,16 +1,16 @@
 <div id="newsfeed-wrapper" class="newsfeed-wrapper">
     <section id="add-post" class="add-post">
         <form method="post" action="/post/add" enctype="multipart/form-data">
-            <textarea id="profile-post" class="profile-post" rows="3" name="content"
+            <textarea id="profile-post" class="profile-post" rows="2" name="content"
                       placeholder="How are you doing?">{{failedPost.postContent}}</textarea>
             <article id="bottom-line-post" class="bottom-line-post">
                 <label for="addPhotoToPost">
-                    <section>
+                    <section class="add-photo-post">
                         <input type="file" name="addPhotoToPost" class="" id="addPhotoToPost" value="" multiple/>
                     </section>
 
                 </label>
-                <section>
+                <section class="">
                     <output id="result-photos-in-post">
 
                     </output>
@@ -19,18 +19,26 @@
                 <!--<input type="checkbox" name="publicPost" id="make-public-checkbox" value="public"> Make my post public-->
 
             </article>
-            <div>
-                <input type="radio" name="publicPost" id="single-public"
-                       value="publicvisible" checked="checked">
-                <label for="single-public">Is this post public?</label>
-            </div>
-            <div>
-                <input type="radio" name="publicPost" id="single-category-friends"
-                       value="groupvisible">
-                <label for="single-category">Or is it visible to your category and
-                    friends?</label>
-            </div>
-            <input type="submit" class="button-with-plus post-btn" value="Post"/>
+            <article class="bottom-bottom-line-post">
+                <section class="radio-btns-container">
+                    <div>
+                        <input type="radio" name="publicPost" id="single-public"
+                               value="publicvisible" checked="checked">
+                        <label for="single-public">Is this post public?</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="publicPost" id="single-category-friends"
+                               value="groupvisible">
+                        <label for="single-category-friends">Or is it visible to your category and
+                            friends?</label>
+                    </div>
+                </section>
+                <section>
+                    <input type="submit" class="post-btn btn-cstm-style" value="Post"/>
+                </section>
+            </article>
+
+
         </form>
     </section>
     <main>
