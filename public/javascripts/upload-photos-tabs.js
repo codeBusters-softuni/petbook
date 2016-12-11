@@ -1,66 +1,3 @@
-// show thumbnail photos when upload from post
-function createPhotoHTMLinPost() {
-    var output = document.getElementById("result-photos-in-post");
-
-    var picFile = event.target;
-
-    var article = document.createElement("article");
-    article.className += "pic-container-article-in-post col-xs-12 col-sm-5 col-md-4";
-    var section = document.createElement("section");
-
-    section.className += " photo-cntnr";
-    // section.innerHTML = "<a href='#' class='close remove_pict'>&times;</a>";
-    article.appendChild(section);
-
-    var div = document.createElement("div");
-    div.className += "album-photo-content";
-    section.appendChild(div);
-    photoIndex += 1;
-    div.innerHTML = "<img class='' src='" + picFile.result + "'" + "title='" + photoIndex + "'/>"
-
-    var textarea = document.createElement("textarea");
-    textarea.className += "cstm-input-register-style input-cstm-style";
-    textarea.setAttribute("placeholder", "Say something about this photo...");
-    textarea.setAttribute("name", photoIndex.toString() ); //  the photo's unique index, used to pair it with it's description
-    textarea.setAttribute("rows", "3");
-    textarea.setAttribute("cols", "30");
-    section.appendChild(textarea);
-
-
-    output.insertBefore(article, null);
-}
-
-function showPhotoInPost() {
-    console.log("Yes")
-    var picContainerArticle = document.getElementsByClassName('pic-container-article-in-post');
-    for (var i = picContainerArticle.length - 1; i >= 0; i--) {
-        if (picContainerArticle[i] && picContainerArticle[i].parentNode) {
-            picContainerArticle[i].parentNode.removeChild(picContainerArticle[i]);
-
-        }
-    }
-
-    var files = event.target.files; //FileList object
-    for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-
-        if (!file.type.match('image')) { // only pictures should be read
-            continue;
-        }
-
-        var picReader = new FileReader();
-
-        picReader.addEventListener("load", createPhotoHTMLinPost);
-        picReader.readAsDataURL(file);  // Read the image
-    }
-}
-
-$(document).ready(function () {
-    var filesInputInPost = document.getElementById("addPhotoToPost");
-    console.log("Yes")
-    filesInputInPost.addEventListener("change", showPhotoInPost);
-})
-
 // Javascript used to load the photos and change tabs in the user's photos tab
 var photoIndex = 0
 
@@ -86,7 +23,7 @@ function createPhotoHTML(event) {  // picReader.addEventListener("load",function
     var textarea = document.createElement("textarea");
     textarea.className += "cstm-input-register-style input-cstm-style";
     textarea.setAttribute("placeholder", "Say something about this photo...");
-    textarea.setAttribute("name", photoIndex.toString() ); //  the photo's unique index, used to pair it with it's description
+    textarea.setAttribute("name", photoIndex.toString()); //  the photo's unique index, used to pair it with it's description
     textarea.setAttribute("rows", "3");
     textarea.setAttribute("cols", "30");
     section.appendChild(textarea);
@@ -121,10 +58,10 @@ function showPhoto(event) {
 
 function switchTab(index) {
     var filesInput = "";
-    if(index == 2){
+    if (index == 2) {
         filesInput = document.getElementById("uploadPhotos");
     }
-    else{
+    else {
         filesInput = document.getElementById("uploadAlbum");
     }
 
@@ -135,6 +72,8 @@ function switchTab(index) {
 
 //add active section in add picture in album page
 $(document).ready(function () {
+
+
     var title = $('#upload-photos'),
         activeTitle = $('#upload-photos>h2'),
         content = $('#upload-photos>ul>li'),
@@ -147,54 +86,58 @@ $(document).ready(function () {
         titleContainer = $(this).find('>h2');
     });
 
-    titleContainer.on('click', function () {
-        titleIndex = $(this).index();
-        picContainer.removeAttr("id");
+    if (titleContainer.length > 0) {
 
-        activeTitle.eq(titleIndex).addClass('active-title')
-            .siblings().removeClass('active-title');
 
-        content.eq(titleIndex)
-            .addClass('active-section')
-            .siblings().removeClass('active-section');
+        titleContainer.on('click', function () {
+            titleIndex = $(this).index();
+            picContainer.removeAttr("id");
 
-        picContainer.eq(titleIndex - 1).attr("id", "result");
-        // remove the loaded pictures
-        var picContainerArticle = document.getElementsByClassName('pic-container-article');
-        for (var i = picContainerArticle.length - 1; i >= 0; i--) {
-            if (picContainerArticle[i] && picContainerArticle[i].parentNode) {
-                picContainerArticle[i].parentNode.removeChild(picContainerArticle[i]);
-            }
-        }
+            activeTitle.eq(titleIndex).addClass('active-title')
+                .siblings().removeClass('active-title');
 
-        switchTab(titleIndex);
+            content.eq(titleIndex)
+                .addClass('active-section')
+                .siblings().removeClass('active-section');
 
-        var sendbtn = "";
-        var browsePhotos = "";
-        if(titleIndex-1==1){
-            checker = $('#check-before-send');
-            sendbtn = $('#publish-photos');
-        }
-        else if(titleIndex-1==0) {
-            checker = $('#check-before-send-album');
-            sendbtn = $('#publish-album');
-        }
-        browsePhotos = $('.add-photo-button');
-
-        sendbtn.attr("disabled", "disabled");
-        checker.on('click', function () {
-            if (this.checked) {
-                sendbtn.removeAttr('disabled');
-                checker.attr("disabled", "disabled");
-                browsePhotos.css("display", "none");
-                if (titleIndex == 2) {
-                    fieldsetArea.eq(0).attr("disabled", "disabled");
-                } else {
-                    fieldsetArea.eq(1).attr("disabled", "disabled");
+            picContainer.eq(titleIndex - 1).attr("id", "result");
+            // remove the loaded pictures
+            var picContainerArticle = document.getElementsByClassName('pic-container-article');
+            for (var i = picContainerArticle.length - 1; i >= 0; i--) {
+                if (picContainerArticle[i] && picContainerArticle[i].parentNode) {
+                    picContainerArticle[i].parentNode.removeChild(picContainerArticle[i]);
                 }
             }
+
+            switchTab(titleIndex);
+
+            var sendbtn = "";
+            var browsePhotos = "";
+            if (titleIndex - 1 == 1) {
+                checker = $('#check-before-send');
+                sendbtn = $('#publish-photos');
+            }
+            else if (titleIndex - 1 == 0) {
+                checker = $('#check-before-send-album');
+                sendbtn = $('#publish-album');
+            }
+            browsePhotos = $('.add-photo-button');
+
+            sendbtn.attr("disabled", "disabled");
+            checker.on('click', function () {
+                if (this.checked) {
+                    sendbtn.removeAttr('disabled');
+                    checker.attr("disabled", "disabled");
+                    browsePhotos.css("display", "none");
+                    if (titleIndex == 2) {
+                        fieldsetArea.eq(0).attr("disabled", "disabled");
+                    } else {
+                        fieldsetArea.eq(1).attr("disabled", "disabled");
+                    }
+                }
+            });
         });
-    });
+    }
 });
 
 //add active section in tab Photos in uploadPhotos view
@@ -209,48 +152,57 @@ $(document).ready(function () {
         tabContainer = $(this).find('h2.photos-tabs');
     });
 
-    tabContainer.on('click', function () {
-        tabIndex = $(this).index();
+    if (tabContainer.length > 0) {
 
-        activeTab.eq(tabIndex).addClass('active-tab')
-            .siblings().removeClass('active-tab');
 
-        contentTabs.eq(tabIndex)
-            .addClass('active-tab-section')
-            .siblings().removeClass('active-tab-section');
-    });
+        tabContainer.on('click', function () {
+            tabIndex = $(this).index();
+
+            activeTab.eq(tabIndex).addClass('active-tab')
+                .siblings().removeClass('active-tab');
+
+            contentTabs.eq(tabIndex)
+                .addClass('active-tab-section')
+                .siblings().removeClass('active-tab-section');
+        });
+    }
 });
 
 
 // filter photos by album
 
 $(document).ready(function () {
-    function filterHide(el){
-        for (var i = 0; i < el.length; ++i){
+    function filterHide(el) {
+        for (var i = 0; i < el.length; ++i) {
             el[i].style.display = 'none';
         }
     }
-    function filterShow(el){
-        for (var i = 0; i < el.length; ++i){
+
+    function filterShow(el) {
+        for (var i = 0; i < el.length; ++i) {
             el[i].style.display = 'block';
         }
     }
-    function filterMask(){
+
+    function filterMask() {
         var mask = document.getElementById('filter-mask');
         mask.className = 'filter-mask';
-        setTimeout(function(){ mask.className = '' }, 1000);
+        setTimeout(function () {
+            mask.className = ''
+        }, 1000);
     }
 
     //get the unique classed of photos
     var photosDisplayed = $('#display-photos-in-selected-album .filter-wrap article');
     var uniqueClasses = [];
     var access = true;
-    for(var i = 2; i < photosDisplayed.length; i++) {
-        var attributeClass = photosDisplayed[i].getAttribute('class').split(' ');;
-        var classNeeded = attributeClass[attributeClass.length-1];
+    for (var i = 2; i < photosDisplayed.length; i++) {
+        var attributeClass = photosDisplayed[i].getAttribute('class').split(' ');
+        ;
+        var classNeeded = attributeClass[attributeClass.length - 1];
 
-        for(var k = 0; k<uniqueClasses.length; k++){
-            if(uniqueClasses[k].toString() === classNeeded.toString()){
+        for (var k = 0; k < uniqueClasses.length; k++) {
+            if (uniqueClasses[k].toString() === classNeeded.toString()) {
                 access = false;
                 break;
             }
@@ -263,29 +215,40 @@ $(document).ready(function () {
     }
 
 
-
     var filterVars = uniqueClasses; // define filter categories here
     var filterItems = document.querySelectorAll('.filter-wrap .filter-item');
-    for (var i = 0; i < filterVars.length; i++){
+    for (var i = 0; i < filterVars.length; i++) {
 
         var querySelector = '.filter-wrap .' + filterVars[i].toString();
 
         window['btn' + filterVars[i]] = document.getElementById(filterVars[i]);
         window['get' + filterVars[i]] = document.querySelectorAll(querySelector);
-        window['btn' + filterVars[i]].onclick = (function(i){
-            return function(){
+        window['btn' + filterVars[i]].onclick = (function (i) {
+            return function () {
                 filterMask();
-                setTimeout(function(){
+                setTimeout(function () {
                     filterHide(filterItems);
                     filterShow(window['get' + filterVars[i]]);
                 }, 500);
             }
         }(i));
     }
-    document.getElementById('filter-all').onclick = function(){
-        filterMask();
-        setTimeout(function(){ filterShow(filterItems); }, 500);
+
+    var albumPhotoFilter = $('#filter-all');
+
+    if (albumPhotoFilter.length>0) {
+
+
+        albumPhotoFilter.onclick(function () {
+            filterMask();
+            setTimeout(function () {
+                filterShow(filterItems);
+            }, 500);
+        });
     }
+    // document.getElementById('filter-all').onclick = function () {
+    //
+    // }
 })
 
 
