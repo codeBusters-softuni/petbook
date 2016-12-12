@@ -7,22 +7,9 @@ const multer = require('multer')
 const constants = require('../config/constants')
 const photoUploadsPath = constants.photoUploadsPath
 let parseReqBody = multer({ dest: photoUploadsPath }).array('uploadedPhotos')
-const categories = constants.categories
 
 
 module.exports = {
-  allGet: (req, res) => {
-    if (!req.user) {
-      let returnUrl = '/user/uploadPhotos'
-      req.session.returnUrl = returnUrl
-
-      res.redirect('/user/login')
-      return
-    }
-
-    res.render('user/uploadPhotos', { categories: categories })
-  },
-
   // function that handles photo uploads on the newsfeed
   uploadPhotosPost: (req, res) => {
     let albumName = 'newsfeed-photos-' + req.user._id
@@ -77,6 +64,31 @@ module.exports = {
           })
         })
       })
+  },
+
+  deletePhoto: (req, res) => {
+    let photoId = req.params.id
+    
+    Photo.findById(photoId).then(photo => {
+      if (!photo) {
+        req.session.errorMsg = 'No such photo exists.'
+        res.redirect('/')
+        return
+      } else if (!photo.author.equals(req.user._id)) {
+        req.session.errorMsg = 'You do not have permission to delete that photo!'
+        res.redirect('/')
+        return
+      }
+
+      photo.remove().then(() => {
+        let returnUrl = '/'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+        res.redirect(returnUrl)
+      })
+    })
   },
 
   addLike: (req, res) => {

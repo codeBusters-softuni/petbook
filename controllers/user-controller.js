@@ -4,6 +4,7 @@ const User = mongoose.model('User')
 const Category = mongoose.model('Category')
 const Like = mongoose.model('Like')
 const Post = mongoose.model('Post')
+const Photo = mongoose.model('Photo')
 const categories = require('../config/constants').categories
 const userRegisterHbs = 'user/register/register'
 const userRegisterLayoutHbs = 'user/register/register-layout'
@@ -17,6 +18,9 @@ module.exports = {
 
   registerPost: (req, res) => {
     let candidateUser = req.body
+    if (!candidateUser.ownerName) {
+      candidateUser.ownerName = 'nobody'
+    }
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
       let errorMessage = 'Your e-mail is invalid!'
@@ -189,8 +193,27 @@ module.exports = {
   },
 
   userPhotosGet: (req, res) => {
-    User.findById(req.user.id).populate('photos albums').then(user => {
-      res.render('user/uploadPhotos', { photos: user.photos, albums: user.albums, categories: categories })
-    })
+    let userId = req.params.id  // userId in the User model
+    if (userId === req.user.userId.toString()) {
+      // load the page with the ability to upload photos/albums
+      User.findById(req.user.id).populate('photos albums').then(user => {
+        Photo.initializeForView(user.photos).then(photos => {
+          req.session.returnUrl = req.originalUrl
+          res.render('user/uploadPhotos', { photos: photos, albums: user.albums, categories: categories })
+        })
+      })
+    } else {
+      User.findOne({ userId: userId }).populate('photos albums').then(user => {
+        if (!user) {
+          req.session.errorMsg = 'No such user exists!'
+          res.redirect('/')
+          return
+        }
+        Photo.initializeForView(user.photos).then(photos => {
+          req.session.returnUrl = req.originalUrl
+          res.render('user/viewPhotos', { profileUser: user, photos: photos, albums: user.albums, categories: categories })
+        })
+      })
+    }
   }
 }

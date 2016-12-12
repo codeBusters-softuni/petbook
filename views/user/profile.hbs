@@ -59,13 +59,13 @@
     </section>
     <section id="profile-content" class="profile-content">
         <header id="user-names" class="user-names">
-            <p><a href="#">{{profileUser.fullName}}</a></p>
-            <p>owner name</p>
+            <p><a href="/user/{{profileUser.userId}}">{{profileUser.fullName}}</a></p>
+            <p>Owned by <strong>{{profileUser.ownerName}}</strong></p>
         </header>
         <nav id="user-nav"class="user-nav">
             <ul>
                 <li id="user-about-nav"><a href="/user/about">About</a></li>
-                <li id="user-photos-nav"><a href="/user/uploadPhotos">Photos</a></li>
+                <li id="user-photos-nav"><a href="/user/{{profileUser.userId}}/photos">Photos</a></li>
             </ul>
         </nav>
         <!-- Here include addPost.hbs if url is user/id-->

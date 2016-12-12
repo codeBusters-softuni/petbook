@@ -56,6 +56,17 @@ postSchema.pre('save', true, function (next, done) {
   }
 })
 
+postSchema.post('save', function (post) {
+  const Photo = mongoose.model('Photo')
+  // add the post to each Photo object
+  post.photos.forEach(photo => {
+    Photo.findById(photo).then(photo => {
+      photo.post = post._id
+      photo.save()
+    })
+  })
+})
+
 postSchema.method({
   addComment: function (commentId) {
     return new Promise((resolve, reject) => {

@@ -1,12 +1,12 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
 
-function initializeForView (photos) {
+function initializeForView(photos) {
   // this function initializes an array of posts to be ready to be sent to a view
   // Splits the post's likes array into arrays of paws, loves and dislikes so that we can handle it properly in the view
   const Photo = mongoose.model('Photo')
   return new Promise((resolve, reject) => {
-    Photo.populate(photos, {path: 'likes'}).then(() => {
+    Photo.populate(photos, { path: 'likes' }).then(() => {
       photos = photos.map(photo => {
         photo.splitLikes()
         return photo
@@ -29,6 +29,7 @@ let photoSchema = mongoose.Schema(
     author: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     public: { type: Boolean, required: true, default: true },
     description: { type: String, default: '' },
+    post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
     likes: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Like', default: [] }],
     album: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Album' },
     date: { type: Date, default: Date.now() },
@@ -39,6 +40,11 @@ let photoSchema = mongoose.Schema(
 
 // Fills the dateStr field with a pretty string representation of the date the photo was created
 photoSchema.pre('save', true, function (next, done) {
+  if (!this.isNew) {
+    next()
+    done()
+    return
+  }
   let User = mongoose.model('User')
   let Album = mongoose.model('Album')
 
@@ -77,6 +83,43 @@ photoSchema.pre('save', true, function (next, done) {
   })
 
   Promise.all([datePromise, userPromise, albumPromise]).then(() => {
+    next()
+    done()
+  })
+})
+
+photoSchema.pre('remove', true, function (next, done) {
+  let User = mongoose.model('User')
+  let Album = mongoose.model('Album')
+  let Post = mongoose.model('Post')
+
+
+  let userPromise = new Promise((resolve, reject) => {
+    User.findById(this.author).then(user => {
+      user.photos.remove(this.id)
+      user.save().then(() => {
+        resolve()
+      })
+    })
+  })
+  let albumPromise = new Promise((resolve, reject) => {
+    Album.findById(this.album).then(album => {
+      album.photos.remove(this.id)
+      album.save().then(() => {
+        resolve()
+      })
+    })
+  })
+  let postPromise = new Promise((resolve, reject) => {
+    Post.findById(this.post).then(post => {
+      post.photos.remove(this.id)
+      post.save().then(() => {
+        resolve()
+      })
+    })
+  })
+
+  Promise.all([albumPromise, postPromise, userPromise]).then(() => {
     next()
     done()
   })
