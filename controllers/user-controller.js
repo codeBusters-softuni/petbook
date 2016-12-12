@@ -193,10 +193,25 @@ module.exports = {
   },
 
   userPhotosGet: (req, res) => {
-    User.findById(req.user.id).populate('photos albums').then(user => {
-      Photo.initializeForView(user.photos).then(photos => {
-        res.render('user/uploadPhotos', { photos: photos, albums: user.albums, categories: categories })
+    let userId = req.params.id  // userId in the User model
+    if (userId === req.user.userId.toString()) {
+      // load the page with the ability to upload photos/albums
+      User.findById(req.user.id).populate('photos albums').then(user => {
+        Photo.initializeForView(user.photos).then(photos => {
+          res.render('user/uploadPhotos', { photos: photos, albums: user.albums, categories: categories })
+        })
       })
-    })
+    } else {
+      User.findOne({userId: userId}).populate('photos albums').then(user => {
+        if (!user) {
+          req.session.errorMsg = 'No such user exists!'
+          res.redirect('/')
+          return
+        }
+        Photo.initializeForView(user.photos).then(photos => {
+          res.render('user/viewPhotos', { profileUser: user, photos: photos, albums: user.albums, categories: categories })
+        })
+      })
+    }
   }
 }
