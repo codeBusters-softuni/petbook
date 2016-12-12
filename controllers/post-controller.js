@@ -35,15 +35,7 @@ module.exports = {
           // create a photo object for each uploaded photo
           let photoUploadPromises = req.files.map(function (photo) {
             return new Promise((resolve, reject) => {
-              let photoUp = new Photo({
-                fieldname: photo.fieldname,
-                originalname: photo.originalname,
-                encoding: photo.encoding,
-                mimetype: photo.mimetype,
-                destination: photo.destination,
-                filename: photo.filename,
-                path: photo.path,
-                size: photo.size,
+              let photoUp = Object.assign(photo, {
                 author: req.user._id,
                 album: album._id,
                 classCss: album.classCss,
