@@ -40,7 +40,6 @@ module.exports.findOrCreateAlbum = (albumName, potentialAuthor) => {
         })
 
         Album.create(newAlbum).then(newAlbum => {
-          newAlbum.prepareUploadAlbum()
           resolve(newAlbum)
         })
       } else {
