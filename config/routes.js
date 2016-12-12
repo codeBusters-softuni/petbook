@@ -37,13 +37,13 @@ module.exports = (app) => {
   app.post(/post\/(.+)\/add(.{3,7})/, controllers.postController.addLike)
   // Dislike a post
   app.post(/post\/(.+)\/remove(.{3,7})/, controllers.postController.removeLike)
-  // Like a photo
-  app.post(/photo\/(.+)\/add(.{3,7})/)
-  // Dislike a photo
-  app.post(/photo\/(.+)\/remove(.{3,7})/)
 
   // Upload single photos in default album
   app.post('/photo/all/single', controllers.photoController.uploadPhotosPost)
   // Upload album with photos
   app.post('/photo/all/album', controllers.albumController.uploadAlbum)
+  // Like a photo
+  app.post(/photo\/(.+)\/add(.{3,7})/, controllers.photoController.addLike)
+  // Dislike a photo
+  app.post(/photo\/(.+)\/remove(.{3,7})/, controllers.photoController.removeLike)
 }
