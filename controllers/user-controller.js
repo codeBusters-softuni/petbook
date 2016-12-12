@@ -20,24 +20,24 @@ module.exports = {
     console.log(candidateUser)
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
-      req.session.errorMsg = 'Your e-mail is invalid!'
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
+      let errorMessage = 'Your e-mail is invalid!'
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
       return
     } else if (candidateUser.fullName.length < 3 || candidateUser.fullName.length > 20) {
-      req.session.errorMsg = 'Your full name has invalid length! It should be between 3 and 20 characters.'
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
+      let errorMessage = 'Your full name has invalid length! It should be between 3 and 20 characters.'
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
       return
     } else if (candidateUser.ownerName.length < 3 || candidateUser.ownerName.length > 20) {
-      req.session.errorMsg = "Your owner's name has invalid length! It should be between 3 and 20 characters."
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
+      let errorMessage = "Your owner's name has invalid length! It should be between 3 and 20 characters."
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
       return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
-      req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
+      let errorMessage = 'Your password has invalid length! It should be between 4 and 20 characters.'
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
       return
     } else if (candidateUser.password !== candidateUser.confirmedPassword) {
-      req.session.errorMsg = 'Your passwords do not match!'
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
+      let errorMessage = 'Your passwords do not match!'
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
       return
     }
     User  // function in the User.js model
