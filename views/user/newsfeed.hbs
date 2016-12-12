@@ -71,13 +71,32 @@
                 <article class="cntnr-photos row custom-gallery">
 
                     {{#each photos}}
-                        <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                        <article class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
                             <section class="photo-cntnr">
 
                                 <div class="album-photo-content">
                                     <img src="/uploads/{{this.filename}}" alt="">
                                 </div>
+                                <footer class="preview-photo-thumbnail-footer">
+                                    <ul>
+                                        <form action="">
+                                            <li>
+                                                <input type="submit" id="paw" class="" value=""><label>4</label>
+                                            </li>
+                                        </form>
+                                        <form action="">
+                                            <li>
+                                                <input type="submit" id="love" class="" value=""><label>15000</label>
+                                            </li>
+                                        </form>
+                                        <form action="">
+                                            <li>
+                                                <input type="submit" id="dislike" class="" value=""><label>0</label>
+                                            </li>
+                                        </form>
+                                    </ul>
+                                </footer>
                             </section>
                         </article>
                     {{/each}}

@@ -237,18 +237,11 @@ $(document).ready(function () {
     var albumPhotoFilter = $('#filter-all');
 
     if (albumPhotoFilter.length>0) {
-
-
-        albumPhotoFilter.onclick(function () {
+        document.getElementById('filter-all').onclick = function(){
             filterMask();
-            setTimeout(function () {
-                filterShow(filterItems);
-            }, 500);
-        });
+            setTimeout(function(){ filterShow(filterItems); }, 500);
+        }
     }
-    // document.getElementById('filter-all').onclick = function () {
-    //
-    // }
 })
 
 

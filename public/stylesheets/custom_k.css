@@ -718,6 +718,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     background: linear-gradient(to bottom, rgba(59, 89, 152, 0), rgba(59, 89, 152, 0.2));
     padding: 0;
 
+
 }
 
 .photo-cntnr:hover .preview-photo-thumbnail-footer {
@@ -731,6 +732,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 .preview-photo-thumbnail-footer ul {
     padding: 0 5%;
+    list-style-type: none;
     /*    text-align: center;*/
 }
 
