@@ -118,7 +118,7 @@ module.exports = {
         }
       } else {
         // User is liking this photo for the first time
-        Like.create({ type: likeType, author: req.user._id}).then(like => {
+        Like.create({ type: likeType, author: req.user._id }).then(like => {
           photo.addLike(like._id).then(() => {
             let returnUrl = '/'
             if (req.session.returnUrl) {
@@ -130,6 +130,50 @@ module.exports = {
           })
         })
       }
+    })
+  },
+
+  removeLike: (req, res) => {
+    // regex is: /photo\/(.+)\/remove(.{3,7})/
+    let photoId = req.params[0]
+    let likeType = req.params[1]
+    let userId = req.user._id
+
+    Photo.findById(photoId).populate('likes').then(photo => {
+      if (!photo) {
+        req.session.errorMsg = 'No such photo exists.'
+        res.redirect('/')
+        return
+      }
+      // Get the index of the user's like
+      let likeIndex = photo.likes.findIndex(like => {
+        return like.author.equals(userId)
+      })
+
+      if (likeIndex === -1) {
+        // ERROR - User has not liked this at all
+        res.redirect('/')
+        return
+      } else if (photo.likes[likeIndex].type !== likeType) {
+        // ERROR - example: User is trying to unPaw a post he has LOVED
+        res.redirect('/')
+        return
+      }
+
+      let likeId = photo.likes[likeIndex]._id
+      Like.findByIdAndRemove(likeId)
+
+      photo.removeLike(likeId).then(() => {
+        // Like is removed!
+        let returnUrl = '/'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+
+        res.redirect(returnUrl)
+        return
+      })
     })
   }
 }
