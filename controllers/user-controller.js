@@ -5,11 +5,13 @@ const Category = mongoose.model('Category')
 const Like = mongoose.model('Like')
 const Post = mongoose.model('Post')
 const categories = require('../config/constants').categories
+const userRegisterHbs = 'user/register/register'
+const userRegisterLayoutHbs = 'user/register/register-layout'
 
 module.exports = {
   registerGet: (req, res) => {
     Category.find({}).then(categories => {
-      res.render('user/register', { categories: categories })
+      res.render(userRegisterHbs, { categories: categories, layout: userRegisterLayoutHbs })
     })
   },
 
@@ -19,19 +21,19 @@ module.exports = {
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
       req.session.errorMsg = 'Your e-mail is invalid!'
-      res.render('user/register', { user: candidateUser, categories: categories })
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
       return
     } else if (candidateUser.fullName.length < 3 || candidateUser.fullName.length > 20) {
       req.session.errorMsg = 'Your full name has invalid length! It should be between 3 and 20 characters.'
-      res.render('user/register', { user: candidateUser, categories: categories })
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
       return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
       req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
-      res.render('user/register', { user: candidateUser, categories: categories })
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
       return
     } else if (candidateUser.password !== candidateUser.confirmedPassword) {
       req.session.errorMsg = 'Your passwords do not match!'
-      res.render('user/register', { user: candidateUser, categories: categories })
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
       return
     }
     User  // function in the User.js model
