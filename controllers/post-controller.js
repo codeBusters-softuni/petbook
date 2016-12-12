@@ -165,26 +165,25 @@ module.exports = {
         // ERROR - User has not liked this at all
         res.redirect('/')
         return
-      } else {
-        if (post.likes[likeIndex].type !== likeType) {
-          // ERROR - example: User is trying to unPAW a post he has LOVED
-          res.redirect('/')
-          return
-        }
-        let likeId = post.likes[likeIndex]._id
-        post.removeLike(likeId).then(() => {
-          // Like is removed!
-          let returnUrl = '/'
-          if (req.session.returnUrl) {
-            returnUrl = req.session.returnUrl
-            delete req.session.returnUrl
-          }
-
-          res.redirect(returnUrl)
-          return
-        })
-        Like.findByIdAndRemove(likeId)
+      } else if (post.likes[likeIndex].type !== likeType) {
+        // ERROR - example: User is trying to unPAW a post he has LOVED
+        res.redirect('/')
+        return
       }
+      let likeId = post.likes[likeIndex]._id
+      Like.findByIdAndRemove(likeId)
+
+      post.removeLike(likeId).then(() => {
+        // Like is removed!
+        let returnUrl = '/'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+
+        res.redirect(returnUrl)
+        return
+      })
     })
   }
 }
