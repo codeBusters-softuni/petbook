@@ -1,5 +1,5 @@
 module.exports ={
-    learnMoreGet: (req, res) => {
-        res.render('learnmore')
+    faqGet: (req, res) => {
+        res.render('faq')
     }
 }
