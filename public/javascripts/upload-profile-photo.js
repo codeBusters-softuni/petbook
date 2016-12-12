@@ -1,5 +1,6 @@
 // show thumbnail photos when upload from post
 $(document).ready(function () {
+
     uploadProfilePhoto();
 })
 
@@ -21,6 +22,8 @@ function createProfilePhotoHTML() {
     photoIndex += 1;
     div.innerHTML = "<img class='' src='" + picFile.result + "'" + "title='" + photoIndex + "'/>"
     output.insertBefore(article, null);
+    var uploadButton = $('#upload-profile-pic');
+    uploadButton.css("display", "block")
 }
 
 function showProfilePhoto() {
@@ -48,8 +51,9 @@ function showProfilePhoto() {
 }
 
 function uploadProfilePhoto() {
+
     var fileInputPhoto = document.getElementById('addProfilePhoto');
-    console.log("Yes")
+    // console.log("Yes")
     if (fileInputPhoto != null) {
         fileInputPhoto.addEventListener("change", showProfilePhoto);
     }

@@ -940,6 +940,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     margin-right: 3px;
     padding: 4px;
     box-shadow: 1px 1px 1px 1px #A9A9A9;
+    display: none;
 }
 
 
@@ -975,6 +976,10 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 .add-profile-photo-button{
     width: 12%!important;
+}
+
+.pic-container-article-in-post>section{
+    margin-bottom: 0;
 }
 
 .user-names{
