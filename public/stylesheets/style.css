@@ -7250,12 +7250,12 @@ section>ul>#dislike{
 
 #user-nav>ul>li{
   display: inline-block;
-  padding: 5px;
-  border: 1px solid #bababa;
+  /*padding: 5px;*/
+  /*border: 1px solid #bababa;*/
 }
 
 #user-nav>ul>li:hover{
-  background: #f4f4f4;
+  /*background: #f4f4f4;*/
   cursor: pointer;
 }
 
