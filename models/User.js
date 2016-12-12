@@ -11,11 +11,10 @@ let userSchema = mongoose.Schema(
     salt: { type: String, required: true },
     fullName: { type: String, required: true },
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }],
-    owner: { type: String },
+    ownerName: { type: String },
     profilePic: { type: mongoose.Schema.Types.ObjectId, ref: 'Photo' },
-    //  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }], let's try what it's like to not hold the user's posts
-    photos: [{type: mongoose.Schema.Types.ObjectId, ref:'Photo'}],
-    albums: [{type: mongoose.Schema.Types.ObjectId, ref:'Album'}],
+    photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
+    albums: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Album' }],
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     pendingFriendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FriendRequest' }]
@@ -124,14 +123,12 @@ const User = mongoose.model('User', userSchema)
 
 module.exports = User
 
-module.exports.register = function (fullName, email, password, category) {
+module.exports.register = function (fullName, email, ownerName, password, category) {
   // registers a new user
   return new Promise((resolve, reject) => {
     // See if a user with the given email already exists
     User.findOne({ email: email }).then(potentialUser => {
       if (potentialUser) {
-        // ERROR
-        // TODO: Attach an error message to req.session.errorMsg which will be displayed in the HTML
         let err = Error(`User with the email ${email} already exists!`)
         reject(err)
         return
@@ -154,6 +151,7 @@ module.exports.register = function (fullName, email, password, category) {
                 let newUser = {
                   fullName: fullName,
                   email: email,
+                  ownerName: ownerName,
                   password: encryption.hashPassword(password, salt),
                   salt: salt,
                   roles: [role.id],

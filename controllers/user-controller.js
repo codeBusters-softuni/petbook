@@ -27,6 +27,10 @@ module.exports = {
       req.session.errorMsg = 'Your full name has invalid length! It should be between 3 and 20 characters.'
       res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
       return
+    } else if (candidateUser.ownerName.length < 3 || candidateUser.ownerName.length > 20) {
+      req.session.errorMsg = "Your owner's name has invalid length! It should be between 3 and 20 characters."
+      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
+      return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
       req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
       res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs })
@@ -37,7 +41,7 @@ module.exports = {
       return
     }
     User  // function in the User.js model
-      .register(candidateUser.fullName, candidateUser.email, candidateUser.password, candidateUser.category)
+      .register(candidateUser.fullName, candidateUser.email, candidateUser.ownerName, candidateUser.password, candidateUser.category)
       .then(newUser => {
         req.logIn(newUser, function (err, newUser) {
           if (err) {
@@ -52,7 +56,7 @@ module.exports = {
         console.log(err.message)
         // Error when saving the user
 
-        req.session.errorMsg = 'Error while logging in after registration :('
+        req.session.errorMsg = err.message
         res.redirect('/')
         return
       })
