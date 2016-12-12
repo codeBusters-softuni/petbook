@@ -62,6 +62,9 @@ function showPhotoInPost() {
 function uploadPhotosFromPost() {
     var filesInputInPost = document.getElementById('addPhotoToPost');
     console.log("Yes")
-    filesInputInPost.addEventListener("change", showPhotoInPost);
+    if (filesInputInPost!=null){
+        filesInputInPost.addEventListener("change", showPhotoInPost);
+    }
+
 }
 
