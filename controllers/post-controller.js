@@ -59,7 +59,7 @@ module.exports = {
             })
           })
           Promise.all(photoUploadPromises).then(uploadedPhotos => {
-            newPostInfo.photos = uploadedPhotos
+            newPost.photos = uploadedPhotos
             Post.create(newPost).then(post => {
               res.redirect('/')
             })
