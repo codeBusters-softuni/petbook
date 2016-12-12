@@ -44,16 +44,21 @@
     <main>
         <!-- Here post view -->
         {{#each posts}}
-            <section id="post-view">
+            <section id="post-view" class="post-view">
                 <header>
                     <section>
-                        <article>
+                        <article class="profile-image-container">
+                            <img src="/images/no-profile-photo.jpg" alt="">
                             <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
-                            <a href="/user/{{author.userId}}">{{author.fullName}}</a>
+
                         </article>
                         <section>
-                            <article>
-                                {{dateStr}}
+                            <article class="name-date-container">
+                                <a href="/user/{{author.userId}}">{{author.fullName}}</a>
+                                <span>
+                                    {{dateStr}}
+                                </span>
+
                             </article>
 
                         </section>
