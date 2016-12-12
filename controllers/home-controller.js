@@ -3,6 +3,8 @@ const categories = require('../config/constants').categories
 
 module.exports = {
   homePageGet: (req, res) => {
+    let errorMsg = ''
+
     if (req.user) {
       // load all the articles that the user should see
       Post.find({ category: req.user.category }).then(categoryPosts => {
@@ -21,7 +23,6 @@ module.exports = {
             Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
               postsToSee = Post.initializeForView(postsToSee)
               req.session.returnUrl = '/'
-              let errorMsg = ''
               if (req.session.errorMsg) {
                 errorMsg = req.session.errorMsg
                 delete req.session.errorMsg
@@ -32,7 +33,11 @@ module.exports = {
         })
       })
     } else {
-      res.render('index', {categories: categories})
+      if (req.session.errorMsg) {
+        errorMsg = req.session.errorMsg
+        delete req.session.errorMsg
+      }
+      res.render('index', { categories: categories, errorMessage: errorMsg })
     }
   }
 }
