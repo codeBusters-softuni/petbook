@@ -4,6 +4,7 @@ const User = mongoose.model('User')
 const Category = mongoose.model('Category')
 const Like = mongoose.model('Like')
 const Post = mongoose.model('Post')
+const Photo = mongoose.model('Photo')
 const categories = require('../config/constants').categories
 const userRegisterHbs = 'user/register/register'
 const userRegisterLayoutHbs = 'user/register/register-layout'
@@ -190,7 +191,9 @@ module.exports = {
 
   userPhotosGet: (req, res) => {
     User.findById(req.user.id).populate('photos albums').then(user => {
-      res.render('user/uploadPhotos', { photos: user.photos, albums: user.albums, categories: categories })
+      Photo.initializeForView(user.photos).then(photos => {
+        res.render('user/uploadPhotos', { photos: photos, albums: user.albums, categories: categories })
+      })
     })
   }
 }
