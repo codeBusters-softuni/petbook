@@ -12,15 +12,21 @@ let albumSchema = mongoose.Schema(
   }
 )
 
-albumSchema.pre('save', true, function (next, done) {
-  let User = mongoose.model('User')
-  User.findById(this.author).then(user => {
-    user.albums.push(this.id)
-    user.save().then(() => {
-      next()
-      done()
+albumSchema.method({
+  addToUser: function () {
+    return new Promise((resolve, reject) => {
+      let User = mongoose.model('User')
+      User.findById(this.author).then(user => {
+        if (!user) {
+          reject(Error(`No user with ID ${this.author} exists!`))
+        }
+        user.albums.push(this.id)
+        user.save().then(() => {
+          resolve(user)
+        })
+      })
     })
-  })
+  }
 })
 
 const Album = mongoose.model('Album', albumSchema)
@@ -40,7 +46,9 @@ module.exports.findOrCreateAlbum = (albumName, potentialAuthor) => {
         })
 
         Album.create(newAlbum).then(newAlbum => {
-          resolve(newAlbum)
+          newAlbum.addToUser().then(() => {
+            resolve(newAlbum)
+          })
         })
       } else {
         resolve(album)

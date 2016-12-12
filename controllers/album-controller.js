@@ -41,6 +41,7 @@ module.exports = {
             res.redirect('/')
             return
           }
+          newAlbum.addToUser()
 
           // the newAlbumInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
           let photoIndex = 1
