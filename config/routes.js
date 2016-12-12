@@ -42,6 +42,8 @@ module.exports = (app) => {
   app.post('/photo/all/single', controllers.photoController.uploadPhotosPost)
   // Upload album with photos
   app.post('/photo/all/album', controllers.albumController.uploadAlbum)
+  // Delete a photo
+  app.post('/photo/:id/delete', controllers.photoController.deletePhoto)
   // Like a photo
   app.post(/photo\/(.+)\/add(.{3,7})/, controllers.photoController.addLike)
   // Dislike a photo

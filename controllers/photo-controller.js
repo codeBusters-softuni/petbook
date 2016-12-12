@@ -66,6 +66,31 @@ module.exports = {
       })
   },
 
+  deletePhoto: (req, res) => {
+    let photoId = req.params.id
+    
+    Photo.findById(photoId).then(photo => {
+      if (!photo) {
+        req.session.errorMsg = 'No such photo exists.'
+        res.redirect('/')
+        return
+      } else if (!photo.author.equals(req.user._id)) {
+        req.session.errorMsg = 'You do not have permission to delete that photo!'
+        res.redirect('/')
+        return
+      }
+
+      photo.remove().then(() => {
+        let returnUrl = '/'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+        res.redirect(returnUrl)
+      })
+    })
+  },
+
   addLike: (req, res) => {
     // TODO: Add liketype validation
     // regex is: /photo\/(.+)\/add(.{3,7})/

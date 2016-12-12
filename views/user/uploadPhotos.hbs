@@ -21,7 +21,9 @@
                     <header class="preview-photo-thumbnail-header">
                       <div>
                         <a href="" class="edit-custom-button fa fa-pencil-square-o"></a>
-                        <a href="" class="delete-custom-button fa fa-trash-o"></a>
+                        <form method="POST" action="/photo/{{_id}}/delete">
+                          <input type="submit" class="delete-custom-button fa fa-trash-o" value="">
+                        </form>
                       </div>
                     </header>
                     <div class="album-photo-content">
@@ -146,7 +148,9 @@
                           <header class="preview-photo-thumbnail-header">
                             <div>
                               <a href="" class="edit-custom-button fa fa-pencil-square-o"></a>
-                              <a href="" class="delete-custom-button fa fa-trash-o"></a>
+                              <form method="POST" action="/photo/{{_id}}/delete">
+                                <input type="submit" class="delete-custom-button fa fa-trash-o" value="">
+                              </form>
                             </div>
                           </header>
                           <div class="album-photo-content">
