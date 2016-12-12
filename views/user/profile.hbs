@@ -29,8 +29,8 @@
     </section>
     <section id="profile-content" class="profile-content">
         <header id="user-names" class="user-names">
-            <p><a href="#">{{profileUser.fullName}}</a></p>
-            <p>owner name</p>
+            <p><a href="/user/{{profileUser.userId}}">{{profileUser.fullName}}</a></p>
+            <p>Owned by <strong>{{profileUser.ownerName}}</strong></p>
         </header>
         <nav id="user-nav"class="user-nav">
             <ul>

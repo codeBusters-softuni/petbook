@@ -18,6 +18,9 @@ module.exports = {
 
   registerPost: (req, res) => {
     let candidateUser = req.body
+    if (!candidateUser.ownerName) {
+      candidateUser.ownerName = 'nobody'
+    }
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
       let errorMessage = 'Your e-mail is invalid!'
