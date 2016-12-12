@@ -196,11 +196,10 @@ $(document).ready(function () {
     var photosDisplayed = $('#display-photos-in-selected-album .filter-wrap article');
     var uniqueClasses = [];
     var access = true;
-    for (var i = 2; i < photosDisplayed.length; i++) {
+    for (var i = 1; i < photosDisplayed.length; i++) {
         var attributeClass = photosDisplayed[i].getAttribute('class').split(' ');
-        ;
         var classNeeded = attributeClass[attributeClass.length - 1];
-
+        console.log(classNeeded)
         for (var k = 0; k < uniqueClasses.length; k++) {
             if (uniqueClasses[k].toString() === classNeeded.toString()) {
                 access = false;
@@ -216,6 +215,7 @@ $(document).ready(function () {
 
 
     var filterVars = uniqueClasses; // define filter categories here
+    console.log(filterVars)
     var filterItems = document.querySelectorAll('.filter-wrap .filter-item');
     for (var i = 0; i < filterVars.length; i++) {
 
