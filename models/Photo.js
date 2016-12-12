@@ -29,6 +29,7 @@ let photoSchema = mongoose.Schema(
     author: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     public: { type: Boolean, required: true, default: true },
     description: { type: String, default: '' },
+    post: {type: mongoose.Schema.Types.ObjectId, ref: 'Post'},
     likes: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Like', default: [] }],
     album: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Album' },
     date: { type: Date, default: Date.now() },
