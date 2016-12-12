@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
 const Post = mongoose.model('Post')
+const Like = mongoose.model('Like')
 const multer = require('multer')
 const constants = require('../config/constants')
 const photoUploadsPath = constants.photoUploadsPath
@@ -19,7 +20,7 @@ module.exports = {
       return
     }
 
-    res.render('user/uploadPhotos', {categories: categories})
+    res.render('user/uploadPhotos', { categories: categories })
   },
 
   // function that handles photo uploads on the newsfeed
@@ -76,5 +77,59 @@ module.exports = {
           })
         })
       })
+  },
+
+  addLike: (req, res) => {
+    // TODO: Add liketype validation
+    // regex is: /photo\/(.+)\/add(.{3,7})/
+    let photoId = req.params[0]
+    let likeType = req.params[1]
+    let userId = req.user._id
+    Photo.findById(photoId).populate('likes').then(photo => {
+      if (!photo) {
+        // ERROR - Photo with ID does not exist!
+        req.session.errorMsg = 'No such photo exists.'
+        res.redirect('/')
+        return
+      }
+      let likeIndex = photo.likes.findIndex(like => {
+        return like.author.equals(userId)
+      })
+
+      if (likeIndex !== -1) {
+        // user has already liked this photo
+        if (photo.likes[likeIndex].type === likeType) {
+          // user is editing the HTML
+          res.redirect('/')
+          return
+        } else {
+          // User is un-liking this photo and giving it a {likeType}
+          // so we simply change the name of this like
+          photo.likes[likeIndex].type = likeType
+          photo.likes[likeIndex].save().then(() => {
+            let returnUrl = '/'
+            if (req.session.returnUrl) {
+              returnUrl = req.session.returnUrl
+              delete req.session.returnUrl
+            }
+            res.redirect(returnUrl)
+            // Success!
+          })
+        }
+      } else {
+        // User is liking this photo for the first time
+        Like.create({ type: likeType, author: req.user._id}).then(like => {
+          photo.addLike(like._id).then(() => {
+            let returnUrl = '/'
+            if (req.session.returnUrl) {
+              returnUrl = req.session.returnUrl
+              delete req.session.returnUrl
+            }
+
+            res.redirect(returnUrl)
+          })
+        })
+      }
+    })
   }
 }
