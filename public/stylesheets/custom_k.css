@@ -1019,6 +1019,38 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     bottom:0!important;
 }
 
+/*post view style*/
+.profile-image-container{
+    width: 45px!important;
+    height: 45px!important;
+}
+
+.profile-image-container img{
+    width: 100%;
+}
+.name-date-container{
+    line-height: inherit!important;
+}
+.name-date-container>a{
+    display: inline-block;
+}
+
+.name-date-container>span{
+    display: block;
+}
+
+.post-view{
+    padding:20px!important;
+}
+
+.post-view>header{
+    padding: 10px;
+}
+
+.post-view>header>section{
+    padding:10px;
+}
+
 /*Footer styling*/
 
 #cstm-stl-ftr {
