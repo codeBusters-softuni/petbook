@@ -27,7 +27,12 @@ module.exports = {
         classCss: cssClassName,
         public: postIsPublic
       })
-
+      if (newPost.content.length < 3) {
+        req.session.erroMsg = "Your post's content must be longer than 3 characters!"
+        req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
+        res.redirect('/')
+        return
+      }
       Album.findOne({ name: newAlbum.name }).then(album => {
         if (album) {
           req.session.errorMsg = 'Album already exists!'
@@ -35,12 +40,6 @@ module.exports = {
           return
         }
         Album.create(newAlbum).then(newAlbum => {
-          if (newPost.content.length < 3) {
-            req.session.erroMsg = "Your post's content must be longer than 3 characters!"
-            req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
-            res.redirect('/')
-            return
-          }
           newAlbum.addToUser()
 
           // the newAlbumInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
