@@ -164,22 +164,22 @@ module.exports = {
           Post.populate(postsToSee, 'author comments likes photos').then(() => {
             // populate each comment's author. Must be done after the initial populate
             Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
-              postsToSee = Post.initializeForView(postsToSee)
-              // get the user's likes
-              let pawLikesPromise = Like.getUserLikes('Paw', user._id).then(pawCount => {
-                user.totalLikeCount = pawCount
-              })
-              let loveLikesPromise = Like.getUserLikes('Love', user._id).then(likeCount => {
-                user.totalLoveCount = likeCount
-              })
-              let dislikesLikesPromise = Like.getUserLikes('Dislike', user._id).then(dislikeCount => {
-                user.totalDislikeCount = dislikeCount
-              })
-              let promises = [pawLikesPromise, loveLikesPromise, dislikesLikesPromise]
-              Promise.all(promises).then(() => {
-                req.session.returnUrl = req.originalUrl
-                console.log(req.originalUrl)
-                res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
+              postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
+                // get the user's likes
+                let pawLikesPromise = Like.getUserLikes('Paw', user._id).then(pawCount => {
+                  user.totalLikeCount = pawCount
+                })
+                let loveLikesPromise = Like.getUserLikes('Love', user._id).then(likeCount => {
+                  user.totalLoveCount = likeCount
+                })
+                let dislikesLikesPromise = Like.getUserLikes('Dislike', user._id).then(dislikeCount => {
+                  user.totalDislikeCount = dislikeCount
+                })
+                let promises = [pawLikesPromise, loveLikesPromise, dislikesLikesPromise]
+                Promise.all(promises).then(() => {
+                  req.session.returnUrl = req.originalUrl
+                  res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
+                })
               })
             })
           })

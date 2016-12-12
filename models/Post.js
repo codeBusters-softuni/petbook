@@ -2,18 +2,28 @@ const moment = require('moment')
 const mongoose = require('mongoose')
 
 function initializeForView (posts) {
+  const Photo = mongoose.model('Photo')
   // this function initializes an array of posts to be ready to be sent to a view
   // Splits the post's likes array into arrays of paws, loves and dislikes so that we can handle it properly in the view
-  posts = posts.map(post => {
-    post.splitLikes()
-    return post
-  })
-  // Sort the posts in descending date order. (Newest ones first!)
-  posts.sort((a, b) => {
-    return b.date - a.date
-  })
+  return new Promise((resolve, reject) => {
+    posts = posts.map(post => {
+      return new Promise((resolve, reject) => {
+        post.splitLikes()
+        Photo.initializeForView(post.photos).then(photos => {
+          post.photos = photos
+        })
+        resolve(post)
+      })
+    })
+    Promise.all(posts).then(posts => {
+      // Sort the posts in descending date order. (Newest ones first!)
+      posts.sort((a, b) => {
+        return b.date - a.date
+      })
 
-  return posts
+      resolve(posts)
+    })
+  })
 }
 
 let postSchema = mongoose.Schema(

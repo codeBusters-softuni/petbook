@@ -1,6 +1,22 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
 
+function initializeForView (photos) {
+  // this function initializes an array of posts to be ready to be sent to a view
+  // Splits the post's likes array into arrays of paws, loves and dislikes so that we can handle it properly in the view
+  const Photo = mongoose.model('Photo')
+  return new Promise((resolve, reject) => {
+    Photo.populate(photos, {path: 'likes'}).then(() => {
+      photos = photos.map(photo => {
+        photo.splitLikes()
+        return photo
+      })
+
+      resolve(photos)
+    })
+  })
+}
+
 let photoSchema = mongoose.Schema(
   {
     fieldname: { type: String, required: true },
@@ -97,3 +113,4 @@ photoSchema.method({
 const Photo = mongoose.model('Photo', photoSchema)
 
 module.exports = Photo
+module.exports.initializeForView = initializeForView
