@@ -142,7 +142,7 @@ module.exports = {
 
   profilePageGet: (req, res) => {
     let userId = req.params.id
-    User.findOne({ userId: userId }).then(user => {
+    User.findOne({ userId: userId }).populate('profilePic').then(user => {
       if (!user) {
         req.session.errorMsg = 'No such user exists.'
         res.redirect('/')
@@ -186,22 +186,24 @@ module.exports = {
       }).then(postsToSee => {
         Post.populate(postsToSee, 'author comments likes photos').then(() => {
           // populate each comment's author. Must be done after the initial populate
-          Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
-            postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
-              // get the user's likes
-              let pawLikesPromise = Like.getUserLikes('Paw', user._id).then(pawCount => {
-                user.totalLikeCount = pawCount
-              })
-              let loveLikesPromise = Like.getUserLikes('Love', user._id).then(likeCount => {
-                user.totalLoveCount = likeCount
-              })
-              let dislikesLikesPromise = Like.getUserLikes('Dislike', user._id).then(dislikeCount => {
-                user.totalDislikeCount = dislikeCount
-              })
-              let promises = [pawLikesPromise, loveLikesPromise, dislikesLikesPromise]
-              Promise.all(promises).then(() => {
-                req.session.returnUrl = req.originalUrl
-                res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
+          Post.populate(postsToSee, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
+            Post.populate(postsToSee, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
+              postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
+                // get the user's likes
+                let pawLikesPromise = Like.getUserLikes('Paw', user._id).then(pawCount => {
+                  user.totalLikeCount = pawCount
+                })
+                let loveLikesPromise = Like.getUserLikes('Love', user._id).then(likeCount => {
+                  user.totalLoveCount = likeCount
+                })
+                let dislikesLikesPromise = Like.getUserLikes('Dislike', user._id).then(dislikeCount => {
+                  user.totalDislikeCount = dislikeCount
+                })
+                let promises = [pawLikesPromise, loveLikesPromise, dislikesLikesPromise]
+                Promise.all(promises).then(() => {
+                  req.session.returnUrl = req.originalUrl
+                  res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
+                })
               })
             })
           })
@@ -243,7 +245,7 @@ module.exports = {
       res.redirect('/')
     }
 
-    User.find({ fullName: { $regex: searchValue, $options: 'i' } }).populate('category').then(users => {
+    User.find({ fullName: { $regex: searchValue, $options: 'i' } }).populate('category profilePic').then(users => {
       // attach a friendStatus object to each user, displaying thier relationship with the user doing the search
       users = users.map(user => {
         let areFriends = req.user.friends.indexOf(user.id) !== -1

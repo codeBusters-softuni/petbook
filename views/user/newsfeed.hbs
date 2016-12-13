@@ -48,7 +48,11 @@
                 <header>
                     <section>
                         <article class="profile-image-container">
-                            <img src="/images/no-profile-photo.jpg" alt="">
+                            {{#if author.profilePic}}
+                              <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                            {{else}}
+                              <img src="/images/no-profile-photo.jpg" alt="">
+                            {{/if}}
                             <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
 
                         </article>
@@ -259,7 +263,11 @@
                     {{#each comments}}
                         <section>
                             <article>
-                                <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                              {{#if author.profilePic}}
+                                  <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                                {{else}}
+                                  <img src="/images/no-profile-photo.jpg" alt="">
+                                {{/if}}
                             </article>
                             <section>
                                 <article>
@@ -279,7 +287,11 @@
                 <section id="comments-form">
                     <section>
                         <article>
-                            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                            {{#if ../this.user.profilePic}}
+                              <img src="/uploads/{{../this.user.profilePic.filename}}" alt="">
+                            {{else}}
+                              <img src="/images/no-profile-photo.jpg" alt="">
+                            {{/if}}
                         </article>
                         <section id="add-comment">
                             <form method="post" action="/post/{{id}}/addComment">

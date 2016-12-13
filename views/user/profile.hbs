@@ -1,7 +1,11 @@
 <div class="wrapper profile-all-container">
     <section id="profile-info" class="profile-pic-container">
         <section id="large-profile-picture" class="large-profile-picture">
-                <img src="/images/no-profile-photo.jpg" alt="">
+          {{#if profileUser.profilePic}}
+            <img src="/uploads/{{profileUser.profilePic.filename}}" alt="">
+          {{else}}
+            <img src="/images/no-profile-photo.jpg" alt="">
+          {{/if}}
         </section>
         {{#if friendStatus.sentRequest}}
         <span class="add-friend">Friend request pending</span>
@@ -78,7 +82,11 @@
                 <header>
                     <section>
                         <article>
-                            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                            {{#if author.profilePic}}
+                              <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                            {{else}}
+                              <img src="/images/no-profile-photo.jpg" alt="">
+                            {{/if}}
                             <a href="/user/{{author.userId}}">{{author.fullName}}</a>
                         </article>
                         <section>
@@ -271,7 +279,11 @@
                     {{#each comments}}
                         <section>
                             <article>
-                                <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                                {{#if author.profilePic}}
+                                  <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                                {{else}}
+                                  <img src="/images/no-profile-photo.jpg" alt="">
+                                {{/if}}
                             </article>
                             <section>
                                 <article>
@@ -291,7 +303,11 @@
                 <section id="comments-form">
                     <section>
                         <article>
-                            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
+                            {{#if ../this.user.profilePic}}
+                              <img src="/uploads/{{../this.user.profilePic.filename}}" alt="">
+                            {{else}}
+                              <img src="/images/no-profile-photo.jpg" alt="">
+                            {{/if}}
                         </article>
                         <section id="add-comment">
                             <form method="post" action="/post/{{id}}/addComment">

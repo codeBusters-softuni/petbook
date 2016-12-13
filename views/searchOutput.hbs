@@ -5,7 +5,11 @@
             <section>
                 <article class="">
                   <a href="/user/{{userId}}">
-                    <img src="/images/no-profile-photo.jpg" alt="" class="profile-image-for-search">
+                    {{#if profilePic}}
+                      <img src="/uploads/{{profilePic.filename}}" alt="" class="profile-image-for-search">
+                    {{else}}
+                      <img src="/images/no-profile-photo.jpg" alt="" class="profile-image-for-search">
+                    {{/if}}
                   </a>
                 </article>
             </section>

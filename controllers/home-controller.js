@@ -13,7 +13,7 @@ module.exports = {
         let friendPostsPromises = []
         user.friends.forEach(friend => {
           friendPostsPromises.push(new Promise((resolve, reject) => {
-            Post.find({author: friend}).then(posts => {
+            Post.find({ author: friend }).then(posts => {
               resolve(posts)
             }).catch(err => reject(err))
           }))
@@ -42,14 +42,17 @@ module.exports = {
 
               Post.populate(postsToSee, 'author comments likes photos').then(() => {
                 // populate each comment's author. Must be done after the initial populate
-                Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
-                  postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
-                    req.session.returnUrl = '/'
-                    if (req.session.errorMsg) {
-                      errorMsg = req.session.errorMsg
-                      delete req.session.errorMsg
-                    }
-                    res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost, categories: categories, errorMessage: errorMsg })
+                Post.populate(postsToSee, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
+                  Post.populate(postsToSee, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
+                    postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
+                      req.session.returnUrl = '/'
+                      if (req.session.errorMsg) {
+                        errorMsg = req.session.errorMsg
+                        delete req.session.errorMsg
+                      }
+                      console.log(postsToSee[0].comments[0].author)
+                      res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost, categories: categories, errorMessage: errorMsg })
+                    })
                   })
                 })
               })
@@ -66,6 +69,6 @@ module.exports = {
     }
   },
   learnMoreGet: (req, res) => {
-    res.render('learnMore', {categories: categories})
+    res.render('learnMore', { categories: categories })
   }
 }
