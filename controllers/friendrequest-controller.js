@@ -23,7 +23,7 @@ module.exports = {
       res.redirect('/')
       return
     } else if (req.user.hasFriend(receiverId)) {
-      res.render('index', {categories: categories})
+      res.render('index', { categories: categories })
       return
     }
 
@@ -31,7 +31,7 @@ module.exports = {
       if (!user) {
         // ERROR - User does not exist
         // Something is wrong with the logic or the user is malicious
-        res.render('index', {categories: categories})
+        res.render('index', { categories: categories })
         return
       } else if (user.hasFriend(req.user.id)) {
         // ERROR - User already has the logged in user as a friend
@@ -43,7 +43,7 @@ module.exports = {
       })
       if (potentialRequestIdx !== -1) {
         // ERROR, Such a request already exists!
-        res.render('index', {categories: categories})
+        res.render('index', { categories: categories })
         return
       }
 

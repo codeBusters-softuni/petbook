@@ -153,37 +153,47 @@ module.exports = {
         sentRequest: hasSentRequest,
         areFriends: areFriends
       }
-      // load all the articles that the user should see
-      Post.find({ category: req.user.category, author: user._id }).then(categoryPosts => {
-        Post.find({ public: true, author: user._id }).then(publicPosts => {
-          // save the public posts that are not already in the category posts
-          publicPosts = publicPosts.filter((item) => {  // for every public post
-            return categoryPosts.findIndex((post) => {  // get his index in categoryPosts
-              return post._id.equals(item._id)          // using _id comparison
-            }) === -1                                   // if it's -1, it's not in categoryPosts, so its left publicPosts
+      new Promise((resolve, reject) => {
+        if (areFriends) {
+          // if they're friends, the user should see all the posts
+          Post.find({ author: user._id }).then(userPosts => {
+            resolve(userPosts)
           })
-          // join the two arrays
-          let postsToSee = categoryPosts.concat(publicPosts)
-
-          Post.populate(postsToSee, 'author comments likes photos').then(() => {
-            // populate each comment's author. Must be done after the initial populate
-            Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
-              postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
-                // get the user's likes
-                let pawLikesPromise = Like.getUserLikes('Paw', user._id).then(pawCount => {
-                  user.totalLikeCount = pawCount
-                })
-                let loveLikesPromise = Like.getUserLikes('Love', user._id).then(likeCount => {
-                  user.totalLoveCount = likeCount
-                })
-                let dislikesLikesPromise = Like.getUserLikes('Dislike', user._id).then(dislikeCount => {
-                  user.totalDislikeCount = dislikeCount
-                })
-                let promises = [pawLikesPromise, loveLikesPromise, dislikesLikesPromise]
-                Promise.all(promises).then(() => {
-                  req.session.returnUrl = req.originalUrl
-                  res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
-                })
+        } else {
+          // load all the articles that the user should see
+          Post.find({ category: req.user.category, author: user._id }).then(categoryPosts => {
+            Post.find({ public: true, author: user._id }).then(publicPosts => {
+              // save the public posts that are not already in the category posts
+              publicPosts = publicPosts.filter((item) => {  // for every public post
+                return categoryPosts.findIndex((post) => {  // get his index in categoryPosts
+                  return post._id.equals(item._id)          // using _id comparison
+                }) === -1                                   // if it's -1, it's not in categoryPosts, so its left publicPosts
+              })
+              // join the two arrays
+              let postsToSee = categoryPosts.concat(publicPosts)
+              resolve(postsToSee)
+            })
+          })
+        }
+      }).then(postsToSee => {
+        Post.populate(postsToSee, 'author comments likes photos').then(() => {
+          // populate each comment's author. Must be done after the initial populate
+          Post.populate(postsToSee, { path: 'comments.author', model: 'User' }).then(() => {
+            postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
+              // get the user's likes
+              let pawLikesPromise = Like.getUserLikes('Paw', user._id).then(pawCount => {
+                user.totalLikeCount = pawCount
+              })
+              let loveLikesPromise = Like.getUserLikes('Love', user._id).then(likeCount => {
+                user.totalLoveCount = likeCount
+              })
+              let dislikesLikesPromise = Like.getUserLikes('Dislike', user._id).then(dislikeCount => {
+                user.totalDislikeCount = dislikeCount
+              })
+              let promises = [pawLikesPromise, loveLikesPromise, dislikesLikesPromise]
+              Promise.all(promises).then(() => {
+                req.session.returnUrl = req.originalUrl
+                res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
               })
             })
           })
