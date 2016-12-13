@@ -38,7 +38,7 @@
     max-width: 250px;
     border: 2px solid #233a69;
     padding: 5px;
-    background: url("./../images/no-profile-photo.jpg");
+    /*background: url("./../images/no-profile-photo.jpg");*/
 }
 
 .button-with-plus{
@@ -286,7 +286,7 @@ section>ul>#dislike{
 }
 
 #comments-form>section>article{
-    background: url("./../images/no-profile-photo-small.jpg");
+    /*background: url("./../images/no-profile-photo-small.jpg");*/
     width: 30px;
     height: 30px;
 }

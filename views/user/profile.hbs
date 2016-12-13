@@ -6,7 +6,7 @@
         </header>
         <nav id="user-nav"class="user-nav">
             <ul>
-                <li id="user-photos-nav"><span>Click to see your photos</span><a href="/user/{{profileUser.userId}}/photos" class="profile-btn-cstm-style">Photos of you</a></li>
+                <li id="user-photos-nav"><a href="/user/{{profileUser.userId}}/photos" class="profile-btn-cstm-style">Photos of you</a></li>
             </ul>
         </nav>
     </section>
@@ -78,17 +78,6 @@
         </section>
     </section>
     <section id="profile-content" class="profile-content col-xs-12 col-sm-12 col-md-8 col-lg-8">
-        <!--<section class="header-container">-->
-            <!--<header id="user-names" class="user-names">-->
-                <!--<p><a href="/user/{{profileUser.userId}}">{{profileUser.fullName}}</a></p>-->
-                <!--<p>Owned by <strong>{{profileUser.ownerName}}</strong></p>-->
-            <!--</header>-->
-            <!--<nav id="user-nav"class="user-nav">-->
-                <!--<ul>-->
-                    <!--<li id="user-photos-nav"><span>Click to see your photos</span><a href="/user/{{profileUser.userId}}/photos" class="profile-btn-cstm-style">Photos of you</a></li>-->
-                <!--</ul>-->
-            <!--</nav>-->
-        <!--</section>-->
 
         <!-- Here include addPost.hbs if url is user/id-->
         {{#each posts}}

@@ -50,7 +50,7 @@ module.exports = {
                         errorMsg = req.session.errorMsg
                         delete req.session.errorMsg
                       }
-                      console.log(postsToSee[0].comments[0].author)
+                      // console.log(postsToSee[0].comments[0].author)
                       res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost, categories: categories, errorMessage: errorMsg })
                     })
                   })

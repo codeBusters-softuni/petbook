@@ -788,7 +788,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     -moz-transition-property: none;
     -o-transition-property: none;
     transition-property: none;
-    background: linear-gradient(to bottom, rgba(250, 250, 250, 1), rgba(59, 89, 152, 0.2));
+    background: linear-gradient(to bottom, rgba(250, 250, 250, 1), rgba(233, 235, 238, 0.9), rgba(250, 250, 250, 0.5));
 }
 
 .post-btn-newsfeed ul {
@@ -1017,6 +1017,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 .user-nav > ul {
     margin-bottom: 0 !important;
+    margin-top: 10px;
 }
 
 .user-nav > ul > li {
@@ -1029,12 +1030,12 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     color: #3b5998;
 }
 
-.user-nav span{
-    display: block;
-    margin-bottom: 2%;
-    color: #3b5998;
-    font-style: italic;
-}
+/*.user-nav span{*/
+    /*display: block;*/
+    /*margin-bottom: 2%;*/
+    /*color: #3b5998;*/
+    /*font-style: italic;*/
+/*}*/
 
 
 .profile-btn-cstm-style {
@@ -1061,7 +1062,8 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 .large-profile-picture {
     margin: 0 auto;
-
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .large-profile-picture > img {
@@ -1097,11 +1099,16 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 }
 
 /*post view style*/
+.contain-profile-image-container{
+    display: inline-block;
+    float: left;
+}
+
 .profile-image-container {
     width: 45px !important;
     height: 45px !important;
-    display: inline-block;
-    float: left;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .profile-image-container img {
@@ -1150,6 +1157,12 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 
 /*style fot the search output page*/
+.photo-container-for-search {
+    display: table-cell;
+    vertical-align: middle;
+    width: 145px;
+    height: 145px;
+}
 
 .container-search-output{
     background: rgba(233, 235, 238, 0.5);
