@@ -1,5 +1,17 @@
-<div class="wrapper profile-all-container">
-    <section id="profile-info" class="profile-pic-container">
+<div class="wrapper profile-all-container row">
+    <section class="header-container col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <header id="user-names" class="user-names">
+            <p><a href="/user/{{profileUser.userId}}">{{profileUser.fullName}}</a></p>
+            <p>Owned by <strong>{{profileUser.ownerName}}</strong></p>
+        </header>
+        <nav id="user-nav"class="user-nav">
+            <ul>
+                <li id="user-photos-nav"><span>Click to see your photos</span><a href="/user/{{profileUser.userId}}/photos" class="profile-btn-cstm-style">Photos of you</a></li>
+            </ul>
+        </nav>
+    </section>
+
+    <section id="profile-info" class="profile-pic-container col-xs-12 col-sm-12 col-md-4 col-lg-4">
         <section id="large-profile-picture" class="large-profile-picture">
                 <img src="/images/no-profile-photo.jpg" alt="">
         </section>
@@ -24,6 +36,8 @@
             </ul>
         </section>
         <section id="user-info" class="user-info">
+
+            <!--if user open it's own profile page-->
 
             <form method="post" action="" enctype="multipart/form-data">
                 <article id="bottom-line-post" class="bottom-line-post add-profile-photo-area">
@@ -52,25 +66,24 @@
 
 
             </form>
-
-
-
         </section>
     </section>
-    <section id="profile-content" class="profile-content">
-        <header id="user-names" class="user-names">
-            <p><a href="/user/{{profileUser.userId}}">{{profileUser.fullName}}</a></p>
-            <p>Owned by <strong>{{profileUser.ownerName}}</strong></p>
-        </header>
-        <nav id="user-nav"class="user-nav">
-            <ul>
-                <li id="user-about-nav"><a href="/user/about" class="profile-btn-cstm-style">About</a></li>
-                <li id="user-photos-nav"><a href="/user/{{profileUser.userId}}/photos" class="profile-btn-cstm-style">Photos</a></li>
-            </ul>
-        </nav>
+    <section id="profile-content" class="profile-content col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <!--<section class="header-container">-->
+            <!--<header id="user-names" class="user-names">-->
+                <!--<p><a href="/user/{{profileUser.userId}}">{{profileUser.fullName}}</a></p>-->
+                <!--<p>Owned by <strong>{{profileUser.ownerName}}</strong></p>-->
+            <!--</header>-->
+            <!--<nav id="user-nav"class="user-nav">-->
+                <!--<ul>-->
+                    <!--<li id="user-photos-nav"><span>Click to see your photos</span><a href="/user/{{profileUser.userId}}/photos" class="profile-btn-cstm-style">Photos of you</a></li>-->
+                <!--</ul>-->
+            <!--</nav>-->
+        <!--</section>-->
+
         <!-- Here include addPost.hbs if url is user/id-->
         {{#each posts}}
-            <section id="post-view">
+            <section id="post-view" class="post-view-profile-view">
                 <header>
                     <section>
                         <article>

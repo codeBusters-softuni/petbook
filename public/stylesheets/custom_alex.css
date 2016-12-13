@@ -19,15 +19,15 @@
     align-items: center;
     flex-direction: column;
     align-self: flex-start;
-    width: 350px;
-    max-width: 350px;
+    /*width: 350px;*/
+    /*max-width: 350px;*/
     padding: 10px;
     background: #f4f4f4;
 }
 
 #profile-content{
     flex: 2;
-    width: 100%;
+    /*width: 100%;*/
     max-width: 100%;
     padding: 10px 0 0 10px;
 }
