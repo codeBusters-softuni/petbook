@@ -1,7 +1,7 @@
 <div class="wrapper profile-all-container">
     <section id="profile-info" class="profile-pic-container">
         <section id="large-profile-picture" class="large-profile-picture">
-            <!--profile picture example: <img src="{dir photo resize width: 300px}"/>-->
+                <img src="/images/no-profile-photo.jpg" alt="">
         </section>
         {{#if friendStatus.sentRequest}} {{else if friendStatus.areFriends}}
             <label class="add-friend">Friends</label>
@@ -24,7 +24,37 @@
             </ul>
         </section>
         <section id="user-info" class="user-info">
-            profile info (age, city etc)
+
+            <form method="post" action="" enctype="multipart/form-data">
+                <article id="bottom-line-post" class="bottom-line-post add-profile-photo-area">
+                    <label for="addProfilePhoto" class="add-profile-photo-button">
+                        <section class="add-profile-photo add-photo-post">
+                            <input type="file" name="addProfilePhoto" class="" id="addProfilePhoto" value=""/>
+
+                        </section>
+
+                    </label>
+                    <span>Change your profile photo</span>
+                    <section class="">
+                        <output id="result-profile-photo">
+
+                        </output>
+                    </section>
+                    <section class="bottom-bottom-line-post">
+                        <input type="submit" id="upload-profile-pic" class="post-btn btn-cstm-style" value="Upload"/>
+                    </section>
+                    <!--<input type="checkbox" name="publicPost" id="make-public-checkbox" value="public"> Make my post public-->
+
+                </article>
+                <!--<article class="bottom-bottom-line-post">-->
+                    <!---->
+                <!--</article>-->
+
+
+            </form>
+
+
+
         </section>
     </section>
     <section id="profile-content" class="profile-content">
@@ -34,8 +64,8 @@
         </header>
         <nav id="user-nav"class="user-nav">
             <ul>
-                <li id="user-about-nav"><a href="/user/about">About</a></li>
-                <li id="user-photos-nav"><a href="/user/{{profileUser.userId}}/photos">Photos</a></li>
+                <li id="user-about-nav"><a href="/user/about" class="profile-btn-cstm-style">About</a></li>
+                <li id="user-photos-nav"><a href="/user/{{profileUser.userId}}/photos" class="profile-btn-cstm-style">Photos</a></li>
             </ul>
         </nav>
         <!-- Here include addPost.hbs if url is user/id-->
@@ -61,7 +91,7 @@
 
                 <article class="cntnr-photos row custom-gallery">
                     {{#each photos}}
-                        <article class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                        <article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <section class="photo-cntnr">
                                 <div class="album-photo-content">
                                     <img src="/uploads/{{this.filename}}" alt="">
@@ -73,18 +103,17 @@
                                             <form method="post" action="/photo/{{id}}/removePaw">
                                                 {{!--SHOULD BE GREY--}}
                                                 <li>
-                                                    <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                                    <input type="submit" id="paw" class="btn" value="">{{paws.length}}
                                                 </li>
                                             </form>
                                             <form method="post" action="/photo/{{id}}/addLove">
                                                 <li>
-                                                    <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
+                                                    <input type="submit" id="love" class="btn" value="">{{loves.length}}
                                                 </li>
                                             </form>
                                             <form method="post" action="/photo/{{id}}/addDislike">
                                                 <li>
                                                     <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}}
-                                                    Dislikes
                                                 </li>
                                             </form>
                                         {{else}}
@@ -92,19 +121,18 @@
                                             {{#hasLoved loves ../../this.user._id}}
                                                 <form method="post" action="/photo/{{id}}/addPaw">
                                                     <li>
-                                                        <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                                        <input type="submit" id="paw" class="btn" value="">{{paws.length}}
                                                     </li>
                                                 </form>
                                                 <form method="post" action="/photo/{{id}}/removeLove">
                                                     {{!--SHOULD BE GREY--}}
                                                     <li>
-                                                        <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
+                                                        <input type="submit" id="love" class="btn" value="">{{loves.length}}
                                                     </li>
                                                 </form>
                                                 <form method="post" action="/photo/{{id}}/addDislike">
                                                     <li>
                                                         <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}}
-                                                        Dislikes
                                                     </li>
                                                 </form>
                                             {{else}}
@@ -112,39 +140,37 @@
                                                 {{#hasDisliked dislikes ../../this.user._id}}
                                                     <form method="post" action="/photo/{{id}}/addPaw">
                                                         <li>
-                                                            <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                                            <input type="submit" id="paw" class="btn" value="">{{paws.length}}
                                                         </li>
                                                     </form>
                                                     <form method="post" action="/photo/{{id}}/addLove">
                                                         <li>
                                                             <input type="submit" id="love" class="btn" value="">{{loves.length}}
-                                                            Loves
                                                         </li>
                                                     </form>
                                                     <form method="post" action="/photo/{{id}}/removeDislike>">
                                                         {{!--SHOULD BE GREY--}}
                                                         <li>
                                                             <input type="submit" id="dislike" class="btn"
-                                                                  value="">{{dislikes.length}} Dislikes
+                                                                  value="">{{dislikes.length}}
                                                         </li>
                                                     </form>
                                                 {{else}}
                                                 {{!--User has not liked this post at all--}}
                                                     <form method="post" action="/photo/{{id}}/addPaw">
                                                         <li>
-                                                            <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                                            <input type="submit" id="paw" class="btn" value="">{{paws.length}}
                                                         </li>
                                                     </form>
                                                     <form method="post" action="/photo/{{id}}/addLove">
                                                         <li>
                                                             <input type="submit" id="love" class="btn" value="">{{loves.length}}
-                                                            Loves
                                                         </li>
                                                     </form>
                                                     <form method="post" action="/photo/{{id}}/addDislike">
                                                         <li>
                                                             <input type="submit" id="dislike" class="btn"
-                                                                  value="">{{dislikes.length}} Dislikes
+                                                                  value="">{{dislikes.length}}
                                                         </li>
                                                     </form>
                                                 {{/hasDisliked}}

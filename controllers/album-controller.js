@@ -11,7 +11,7 @@ module.exports = {
     saveFiles(req, res, function () {
       let newPostInfo = req.body
       let postIsPublic = newPostInfo.photocheckAlbum.toString() === 'publicvisible'
-      let cssClassName = newPostInfo.nameAlbum.replace(' ', '-') + '-DbStyle'
+      let cssClassName = newPostInfo.nameAlbum.replace(/\s+/g, '-') + '-DbStyle'
 
       let newPost = new Post({
         author: req.user._id,

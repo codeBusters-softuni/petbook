@@ -718,7 +718,6 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     background: linear-gradient(to bottom, rgba(59, 89, 152, 0), rgba(59, 89, 152, 0.2));
     padding: 0;
 
-
 }
 
 .photo-cntnr:hover .preview-photo-thumbnail-footer {
@@ -795,7 +794,6 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     width: 50%;
 }
 
-
 /*style for filtering album photos*/
 .filter-mask {
     position: absolute;
@@ -833,20 +831,20 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 }
 
 /*style for the newsfeed*/
-.newsfeed-wrapper{
-    margin-top: 1%!important;
+.newsfeed-wrapper {
+    margin-top: 1% !important;
 }
 
-.add-post{
+.add-post {
     /*border-radius: 5px;*/
     border: 1px solid rgba(59, 89, 152, 0.4);
     box-shadow: 2px 2px 1px rgba(59, 89, 152, 0.3);
-    background: rgba(233, 235, 238, 0.5)!important;
-    padding: 20px!important;
+    background: rgba(233, 235, 238, 0.5) !important;
+    padding: 20px !important;
 
 }
 
-.profile-post{
+.profile-post {
     resize: none;
     padding: 15px;
     /*border-radius: 5px;*/
@@ -855,23 +853,23 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     border: 1px solid rgba(59, 89, 152, 0.4)
 }
 
-.profile-post:focus{
+.profile-post:focus {
     box-shadow: 0 0 10px rgba(59, 89, 152, 0.4);
     border: 1px solid rgba(59, 89, 152, 0.4);
 }
 
-.bottom-line-post{
-    padding: 10px!important;
+.bottom-line-post {
+    padding: 10px !important;
     /*border-radius: 5px;*/
     border: 1px solid rgba(240, 248, 255, 0.7);
 }
 
-.bottom-line-post>section{
+.bottom-line-post > section {
     overflow: hidden;
 }
 
-.bottom-line-post>label{
-    margin-bottom:0;
+.bottom-line-post > label {
+    margin-bottom: 0;
     width: 4%;
     position: relative;
 }
@@ -884,11 +882,12 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     background-repeat: no-repeat;
     cursor: pointer;
 
-/*for camera button to move*/
+    /*for camera button to move*/
     background-position: center;
     width: 35px;
     transition: all 0.2s ease-in-out;
 }
+
 .add-photo-post:hover {
     background-size: 35px 35px;
 }
@@ -898,159 +897,273 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     padding: 15%;
 }
 
-#result-photos-in-post{
+#result-photos-in-post {
     padding-top: 0;
 }
-#result-photos-in-post section{
-    margin-bottom:0;
+
+#result-photos-in-post section {
+    margin-bottom: 0;
 }
 
-#result-photos-in-post article{
+#result-photos-in-post article {
     padding-top: 10px;
 }
 
-.bottom-bottom-line-post{
+.bottom-bottom-line-post {
     margin-top: 2%;
     overflow: hidden;
 }
 
-.radio-btns-container{
+.radio-btns-container {
     float: left;
     width: 70%;
 }
 
-.radio-btns-container div{
+.radio-btns-container div {
     font-style: italic;
     color: #3b5998;
 }
 
-.radio-btns-container input[type="radio"]{
+.radio-btns-container input[type="radio"] {
     margin-right: 2%;
 }
 
-.bottom-bottom-line-post input[type="submit"]{
+.bottom-bottom-line-post input[type="submit"] {
     margin-top: 2.1%;
+    margin-bottom: 2px;
     border: none;
     border-radius: 2px;
-    font-size:15px;
+    font-size: 15px;
     width: 70px;
     margin-right: 3px;
     padding: 4px;
     box-shadow: 1px 1px 1px 1px #A9A9A9;
+    /*display: none;*/
 }
-
 
 /*style for profile page*/
 
-.profile-all-container{
+.profile-all-container {
     margin: 0 auto;
     margin-top: 20px;
     overflow: hidden;
     width: 80%;
 
-
 }
 
-.profile-pic-container{
-    display: inline-block!important;
-    float: left!important;
-    overflow: hidden!important;
+.profile-pic-container {
+    display: inline-block !important;
+    float: left !important;
+    overflow: hidden !important;
 }
 
-.profile-content{
-    display: inline-block!important;
-    float: left!important;
-    width: 60%!important;
-    padding: 0!important;
-    bottom: 0!important;
+.profile-content {
+    display: inline-block !important;
+    float: left !important;
+    width: 60% !important;
+    padding: 0 !important;
+    bottom: 0 !important;
 }
 
-.user-names{
-    margin-left: 0!important;
-}
-
-.user-names>p{
-    margin: 0!important;
-    padding: 3px 0 10px 10px!important;
-}
-
-.user-nav{
-    padding: 5px 30px!important;
-    margin: 0!important;
-
-}
-
-.user-nav>ul{
-    margin-bottom: 0!important;
-}
-
-.user-nav>ul>li{
-    border-radius: 5px;
-    margin-right: 1%;
-}
-
-.user-nav>ul>li>a{
+.add-profile-photo-area > span {
+    font-style: italic;
     color: #3b5998;
 }
 
-.large-profile-picture{
+.add-profile-photo-button {
+    width: 12% !important;
+}
+
+#upload-profile-pic {
+    display: none;
+}
+
+.pic-container-article-in-post > section {
+    margin-bottom: 0;
+}
+
+.user-names {
+    margin-left: 0 !important;
+}
+
+.user-names > p {
+    margin: 0 !important;
+    padding: 3px 0 10px 10px !important;
+}
+
+.user-nav {
+    padding: 5px 30px !important;
+    margin: 0 !important;
+
+}
+
+.user-nav > ul {
+    margin-bottom: 0 !important;
+}
+
+.user-nav > ul > li {
+    border-radius: 5px;
+    margin-right: 1%;
+    text-align: center!important;
+}
+
+.user-nav > ul > li > a {
+    color: #3b5998;
+}
+
+
+.profile-btn-cstm-style {
+    display: inline-block;
+    border: 1px solid #3b5998;
+    border-radius: 2px;
+    padding: 5px;
+    width: 80px;
+    background-color: #E8E8E8;
+    color: #3b5998;
+    font-weight: bold;
+    font-size: 15px;
+    transition: background 0.4s ease-in-out;
+    box-shadow: 1px 1px 1px 1px #A9A9A9;
+}
+
+.profile-btn-cstm-style:hover {
+    background-color: #3b5998;
+    color: aliceblue;
+    text-decoration: none;
+    box-shadow: 1px 1px 1px 1px #A9A9A9;
+}
+
+.large-profile-picture {
     margin: 0 auto;
 
 }
 
-.profile-btns-total{
+.large-profile-picture > img {
+    width: 100%
+}
+
+.profile-btns-total {
     margin: 0 auto;
     width: 85%;
 }
 
-.profile-btns-total>ul{
-    margin-top: 10px!important;
-    margin-bottom: 0px!important;
-    line-height: 0px!important;
+.profile-btns-total > ul {
+    margin-top: 10px !important;
+    margin-bottom: 0px !important;
+    line-height: 0px !important;
 }
 
-.profile-btns-total>ul>li{
-    background-size: cover!important;
-    margin-left: 13%!important;
-}
-.profile-btns-total>ul>li:first-of-type{
-    margin-left: 0!important;
+.profile-btns-total > ul > li {
+    padding: 0px!important;
+    border: none!important;
+    background-size: cover !important;
+    margin-left: 13% !important;
+
 }
 
-.user-info{
-    bottom:0!important;
+.profile-btns-total > ul > li:first-of-type {
+    margin-left: 0 !important;
+}
+
+
+.user-info {
+    bottom: 0 !important;
 }
 
 /*post view style*/
-.profile-image-container{
-    width: 45px!important;
-    height: 45px!important;
+.profile-image-container {
+    width: 45px !important;
+    height: 45px !important;
 }
 
-.profile-image-container img{
+.profile-image-container img {
     width: 100%;
 }
-.name-date-container{
-    line-height: inherit!important;
+
+.name-date-container {
+    line-height: inherit !important;
 }
-.name-date-container>a{
+
+.name-date-container > a {
     display: inline-block;
 }
 
-.name-date-container>span{
+.name-date-container > span {
     display: block;
 }
 
-.post-view{
-    padding:20px!important;
+.post-view {
+    padding: 20px !important;
 }
 
-.post-view>header{
+.post-view > header {
     padding: 10px;
 }
 
-.post-view>header>section{
-    padding:10px;
+.post-view > header > section {
+    padding: 10px;
+}
+
+
+/*style fot the search output page*/
+
+.container-search-output{
+    background: rgba(233, 235, 238, 0.5);
+    border: 1px solid rgba(59, 89, 152, 0.4);
+    box-shadow: 2px 2px 1px rgba(59, 89, 152, 0.3);
+    margin: 15px 0;
+    padding: 15px;
+    overflow: hidden;
+
+}
+
+.container-search-output>section {
+    float: left;
+    width:30%;
+}
+
+
+
+.container-info-search{
+    width: 45%!important;
+}
+
+.container-info-search>article{
+    margin: 8% auto;
+}
+
+.container-search-output>section:last-of-type {
+    float: right;
+    width: 20%!important;
+}
+
+.info-for-user{
+    padding-left: 0!important;
+    margin-left: 10px;
+    margin-bottom: 0!important;
+}
+
+.info-for-user>li{
+    list-style-type: none;
+    margin-bottom: 10px;
+
+}
+
+.profile-image-for-search{
+    width:100%;
+}
+
+.btns-container-friend-unfriend button{
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.become-friends:hover{
+    background-color: rgba(100,149,237, 0.2)
+ }
+
+.already-friends-unfriend:hover{
+    background-color: rgba(255,0,0, 0.2)
 }
 
 /*Footer styling*/

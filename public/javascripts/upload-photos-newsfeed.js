@@ -35,7 +35,7 @@ function createPhotoHTMLinPost() {
 }
 
 function showPhotoInPost() {
-    console.log("Yes")
+    // console.log("Yes")
     var picContainerArticle = document.getElementsByClassName('pic-container-article-in-post');
     for (var i = picContainerArticle.length - 1; i >= 0; i--) {
         if (picContainerArticle[i] && picContainerArticle[i].parentNode) {
@@ -61,7 +61,10 @@ function showPhotoInPost() {
 
 function uploadPhotosFromPost() {
     var filesInputInPost = document.getElementById('addPhotoToPost');
-    console.log("Yes")
-    filesInputInPost.addEventListener("change", showPhotoInPost);
+    // console.log("Yes")
+    if (filesInputInPost!=null){
+        filesInputInPost.addEventListener("change", showPhotoInPost);
+    }
+
 }
 
