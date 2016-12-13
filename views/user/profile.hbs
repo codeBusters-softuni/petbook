@@ -3,7 +3,13 @@
         <section id="large-profile-picture" class="large-profile-picture">
                 <img src="/images/no-profile-photo.jpg" alt="">
         </section>
-        {{#if friendStatus.sentRequest}} {{else if friendStatus.areFriends}}
+        {{#if friendStatus.sentRequest}}
+        <span class="add-friend">Friend request pending</span>
+        <form method="POST" action="/friendRequest/{{friendStatus.friendRequest._id}}/remove">
+          <input type="submit" id="remove-friend" class="btn-cstm-style rgstr-btn already-friends-unfriend"
+                    value="Cancel request">
+        </form> 
+        {{else if friendStatus.areFriends}}
             <label class="add-friend">Friends</label>
             <form method="POST" action="/user/{{profileUser.id}}/cancelFriendship">
                 <input type="submit" id="remove-friend" class="button-with-plus remove-friend"

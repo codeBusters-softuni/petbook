@@ -58,13 +58,17 @@ userSchema.method({
     })
   },
 
-  hasSentRequest: function (userId) {
+  getFriendRequestTo: function (userId) {
     // friendRequests msut be populated!
-    // returns a boolean indicating if the user has sent a friend request to the given user
+    // returns the friend request if it exists, otherwise returns false
     let friendReqIndex = this.pendingFriendRequests.findIndex(frReq => {
       return frReq.receiver.equals(userId)
     })
-    return friendReqIndex !== -1
+    if (friendReqIndex === -1) {
+      return false
+    } else {
+      return this.pendingFriendRequests[friendReqIndex]
+    }
   },
 
   hasFriendRequest: function () {
