@@ -82,7 +82,6 @@ module.exports = {
   },
 
   declineRequest: (req, res) => {
-    // TODO: Delete the request from both user and the request itself
     let frReqId = req.params.id
     FriendRequest.findById(frReqId).populate('sender receiver').then(friendRequest => {
       if (!friendRequest) {

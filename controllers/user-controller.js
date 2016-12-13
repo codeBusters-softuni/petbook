@@ -133,7 +133,7 @@ module.exports = {
 
       Promise.all([cancelFriendPromise, cancelFriendPromise2]).then(() => {
         // Success - Attach message
-        res.redirect('user/newsfeed')
+        res.redirect('/')
         return
       })
     })

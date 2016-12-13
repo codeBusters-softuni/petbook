@@ -5,7 +5,7 @@
         </section>
         {{#if friendStatus.sentRequest}} {{else if friendStatus.areFriends}}
             <label class="add-friend">Friends</label>
-            <form method="POST" action="/friendRequest/{{profileUser.id}}/remove">
+            <form method="POST" action="/user/{{profileUser.id}}/cancelFriendship">
                 <input type="submit" id="remove-friend" class="button-with-plus remove-friend"
                        value="Cancel Friendship">
             </form>

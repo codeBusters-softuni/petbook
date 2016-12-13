@@ -20,7 +20,7 @@ module.exports = (app) => {
       next()
     }
   })
-
+  app.post('/search', controllers.userController.userSearchPost)
   app.get('/category/:category', controllers.categoryController.showArticles)
   app.post('/user/:id/cancelFriendship', controllers.userController.cancelFriendship)
   app.get('/user/:id/photos', controllers.userController.userPhotosGet)
