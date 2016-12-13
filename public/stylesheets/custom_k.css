@@ -1129,7 +1129,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 }
 
 .container-info-search>article{
-    margin: 8% auto;
+    margin: 0% auto;
 }
 
 .container-search-output>section:last-of-type {
@@ -1146,14 +1146,47 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 .info-for-user>li{
     list-style-type: none;
     margin-bottom: 10px;
+    color: #3b5998;
 
+}
+
+.info-for-user>li span{
+    display: inline-block;
+    width: 30%;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.info-for-user>li .owner-name{
+    text-align: left;
+    padding-left: 2px;
+}
+
+.info-for-user .user-name{
+    font-size: 20px;
+    font-weight: bolder;
+
+}
+.info-for-user a {
+    color: #3b5998;
+    transition: all 0.2s ease-in-out;
+    /*padding: 2px 5px;*/
+}
+
+
+.info-for-user a:hover{
+    background-color: #224285;
+    color: aliceblue;
+    text-decoration: none;
+    padding: 2px 5px;
+    border-radius: 3px;
 }
 
 .profile-image-for-search{
     width:100%;
 }
 
-.btns-container-friend-unfriend button{
+.btns-container-friend-unfriend input{
     font-size: 15px;
     margin-bottom: 10px;
 }
@@ -1165,6 +1198,8 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 .already-friends-unfriend:hover{
     background-color: rgba(255,0,0, 0.2)
 }
+
+
 
 /*Footer styling*/
 

@@ -14,21 +14,22 @@
                     <ul class="info-for-user">
                         <li>
                             <!--when click - goes to profile-->
-                            <a href="/user/{{userId}}">{{fullName}}</a>
-                        </li>
-                        <li>
-                            <span>Owner: {{ownerName}}</span>
-                        </li>
-                        <li>
-                            <span>Email: </span>
-                            <!--when click - goes to profile-->
-                            <a href="/user/{{userId}}">{{email}}</a>
+                            <a href="/user/{{userId}}" class="user-name">{{fullName}}</a>
                         </li>
                         <li>
                             <span>Category: </span>
                             <!--when click - new search and display all from that category-->
                             <a href="#">{{category.name}}</a>
                         </li>
+                        <li>
+                            <span>Owner: </span><span class="owner-name"> {{ownerName}}</span>
+                        </li>
+                        <li>
+                            <span>Email: </span>
+                            <!--when click - goes to profile-->
+                            <a href="/user/{{userId}}">{{email}}</a>
+                        </li>
+
                     </ul>
                 </article>
             </section>
@@ -43,7 +44,7 @@
                     <!-- you can't friend REQ yourself!-->
                 {{else}}
                     <form method="POST" action="/friendRequest/{{_id}}/send">
-                        <input type="submit" id="add-friend" class="btn-cstm-style rgstr-btn become-friends" value="Send Friend Request">
+                        <input type="submit" id="add-friend" class="btn-cstm-style rgstr-btn become-friends" value="Add friend" title="Send friend request">
                     </form>
                 {{/isSameUser}} {{/if}}
             </section>
