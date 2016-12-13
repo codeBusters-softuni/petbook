@@ -12,7 +12,6 @@ module.exports = (config) => {
   require('./../models/Album')
   require('./../models/Photo')
   require('./../models/Comment')
-  require('./../models/Tag')
   require('./../models/Like')
   require('./../models/FriendRequest')
 }

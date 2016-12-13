@@ -24,3 +24,4 @@ module.exports.getUserLikes = (likeType, authorId) => {
     })
   })
 }
+module.exports.likeIsValid = likeValidator

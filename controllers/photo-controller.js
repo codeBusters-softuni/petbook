@@ -6,6 +6,7 @@ const Like = mongoose.model('Like')
 const multer = require('multer')
 const constants = require('../config/constants')
 const photoUploadsPath = constants.photoUploadsPath
+const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like
 let parseReqBody = multer({ dest: photoUploadsPath }).array('uploadedPhotos')
 
 
@@ -131,10 +132,14 @@ module.exports = {
   },
 
   addLike: (req, res) => {
-    // TODO: Add liketype validation
     // regex is: /photo\/(.+)\/add(.{3,7})/
     let photoId = req.params[0]
     let likeType = req.params[1]
+    if (!likeIsValid(likeType)) {
+      req.session.errorMsg = `${likeType} is not a valid type of like!`
+      res.redirect('/')
+      return
+    }
     let userId = req.user._id
     Photo.findById(photoId).populate('likes').then(photo => {
       if (!photo) {
@@ -188,6 +193,11 @@ module.exports = {
     // regex is: /photo\/(.+)\/remove(.{3,7})/
     let photoId = req.params[0]
     let likeType = req.params[1]
+    if (!likeIsValid(likeType)) {
+      req.session.errorMsg = `${likeType} is not a valid type of like!`
+      res.redirect('/')
+      return
+    }
     let userId = req.user._id
 
     Photo.findById(photoId).populate('likes').then(photo => {
