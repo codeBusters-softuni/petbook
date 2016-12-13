@@ -138,6 +138,42 @@ userSchema.method({
         resolve(this)
       })
     })
+  },
+
+  getLikesCount: function () {
+    // Get all the likes that the user has received and split them by their type
+    const Post = mongoose.model('Post')
+    const Photo = mongoose.model('Photo')
+    return new Promise((resolve, reject) => {
+      let postLikes = []
+      let postPromise = new Promise((resolve, reject) => {
+        Post.find({author: this._id}).populate('likes').then(posts => {
+          posts.forEach(post => {
+            postLikes.push.apply(postLikes, post.likes)
+          })
+          resolve()
+        })
+      })
+
+      let photoLikes = []
+      let photoPromise = new Promise((resolve, reject) => {
+        Photo.find({author: this._id}).populate('likes').then(photos => {
+          photos.forEach(photo => {
+            photoLikes.push.apply(photoLikes, photo.likes)
+          })
+          resolve()
+        })
+      })
+
+      Promise.all([postPromise, photoPromise]).then(() => {
+        // merge all the likes into one array
+        let receivedLikes = photoLikes.concat(postLikes)
+        this.receivedPawsCount = receivedLikes.filter(like => { return like.type === 'Paw' }).length
+        this.receivedLovesCount = receivedLikes.filter(like => { return like.type === 'Love' }).length
+        this.receivedDislikesCount = receivedLikes.filter(like => { return like.type === 'Dislike' }).length
+        resolve(this)
+      })
+    })
   }
 })
 
