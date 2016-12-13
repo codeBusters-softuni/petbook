@@ -64,5 +64,8 @@ module.exports = {
       }
       res.render('index', { categories: categories, errorMessage: errorMsg })
     }
+  },
+  learnMoreGet: (req, res) => {
+    res.render('learnMore')
   }
 }

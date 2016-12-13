@@ -11,7 +11,6 @@
    }
  */
 const homeController = require('./home-controller')
-const faqController = require('./faq-controller')
 const userController = require('./user-controller')
 const postController = require('./post-controller')
 const categoryController = require('./category-controller')
@@ -22,7 +21,6 @@ const friendRequestController = require('./friendrequest-controller')
 module.exports = {
   userController,
   homeController,
-  faqController,
   postController,
   categoryController,
   friendRequestController,
