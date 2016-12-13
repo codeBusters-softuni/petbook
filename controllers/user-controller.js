@@ -189,18 +189,7 @@ module.exports = {
           Post.populate(postsToSee, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
             Post.populate(postsToSee, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
               postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
-                // get the user's likes
-                let pawLikesPromise = Like.getUserLikes('Paw', user._id).then(pawCount => {
-                  user.totalLikeCount = pawCount
-                })
-                let loveLikesPromise = Like.getUserLikes('Love', user._id).then(likeCount => {
-                  user.totalLoveCount = likeCount
-                })
-                let dislikesLikesPromise = Like.getUserLikes('Dislike', user._id).then(dislikeCount => {
-                  user.totalDislikeCount = dislikeCount
-                })
-                let promises = [pawLikesPromise, loveLikesPromise, dislikesLikesPromise]
-                Promise.all(promises).then(() => {
+                user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user
                   req.session.returnUrl = req.originalUrl
                   res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
                 })
