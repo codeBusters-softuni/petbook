@@ -19,9 +19,24 @@ let isSameUser = function (userId, userId2, options) {
   }
 }
 
+// Join an array of categories to return a string. Ex: ['cat', 'dog', 'parrot'] => cats, dogs and parrots
+let joinCategoriesString = function (arr) {
+  // make the categories plural
+  arr = arr.map((category) => {
+    return category + 's'
+  })
+  let resultString = arr.join(', ')
+  let lastCommaIdx = resultString.lastIndexOf(',')
+  if (lastCommaIdx !== -1) {
+    resultString = resultString.substr(0, lastCommaIdx) + ' and ' + resultString.substr(lastCommaIdx + 1)
+  }
+  return resultString
+}
+
 handlebars.registerHelper({
   hasPawed: hasLiked,
   hasDisliked: hasLiked,
   hasLoved: hasLiked,
-  isSameUser: isSameUser
+  isSameUser: isSameUser,
+  joinCategoriesString: joinCategoriesString
 })
