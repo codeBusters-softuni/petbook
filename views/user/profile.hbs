@@ -39,37 +39,26 @@
             </ul>
         </section>
         <section id="user-info" class="user-info">
-
+            {{#isSameUser this.user.id profileUser.id}}
             <form method="post" action="" enctype="multipart/form-data">
                 <article id="bottom-line-post" class="bottom-line-post add-profile-photo-area">
                     <label for="addProfilePhoto" class="add-profile-photo-button">
                         <section class="add-profile-photo add-photo-post">
                             <input type="file" name="addProfilePhoto" class="" id="addProfilePhoto" value=""/>
-
                         </section>
 
                     </label>
                     <span>Change your profile photo</span>
                     <section class="">
                         <output id="result-profile-photo">
-
                         </output>
                     </section>
                     <section class="bottom-bottom-line-post">
                         <input type="submit" id="upload-profile-pic" class="post-btn btn-cstm-style" value="Upload"/>
                     </section>
-                    <!--<input type="checkbox" name="publicPost" id="make-public-checkbox" value="public"> Make my post public-->
-
                 </article>
-                <!--<article class="bottom-bottom-line-post">-->
-                    <!---->
-                <!--</article>-->
-
-
             </form>
-
-
-
+            {{/isSameUser}}
         </section>
     </section>
     <section id="profile-content" class="profile-content">
