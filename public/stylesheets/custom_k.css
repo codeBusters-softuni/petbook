@@ -1104,6 +1104,68 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     padding: 10px;
 }
 
+
+/*style fot the search output page*/
+
+.container-search-output{
+    background: rgba(233, 235, 238, 0.5);
+    border: 1px solid rgba(59, 89, 152, 0.4);
+    box-shadow: 2px 2px 1px rgba(59, 89, 152, 0.3);
+    margin: 15px 0;
+    padding: 15px;
+    overflow: hidden;
+
+}
+
+.container-search-output>section {
+    float: left;
+    width:30%;
+}
+
+
+
+.container-info-search{
+    width: 45%!important;
+}
+
+.container-info-search>article{
+    margin: 8% auto;
+}
+
+.container-search-output>section:last-of-type {
+    float: right;
+    width: 20%!important;
+}
+
+.info-for-user{
+    padding-left: 0!important;
+    margin-left: 10px;
+    margin-bottom: 0!important;
+}
+
+.info-for-user>li{
+    list-style-type: none;
+    margin-bottom: 10px;
+
+}
+
+.profile-image-for-search{
+    width:100%;
+}
+
+.btns-container-friend-unfriend button{
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.become-friends:hover{
+    background-color: rgba(100,149,237, 0.2)
+ }
+
+.already-friends-unfriend:hover{
+    background-color: rgba(255,0,0, 0.2)
+}
+
 /*Footer styling*/
 
 #cstm-stl-ftr {
