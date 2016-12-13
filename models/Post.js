@@ -34,11 +34,9 @@ let postSchema = mongoose.Schema(
     dateStr: { type: String, default: '' },
     public: { type: Boolean, required: true, default: false },
     likes: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Like', default: [] }],
-    tags: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Tag', default: [] }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Comment', default: [] }],
     category: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Category' },
-
-    photos: [{ type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Photo', default: [] }],
+    photos: [{ type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Photo', default: [] }]
   }
 )
 
