@@ -57,8 +57,12 @@ module.exports = {
     let frReqId = req.params.id
     FriendRequest.findById(frReqId).populate('sender receiver').then(friendRequest => {
       if (!friendRequest) {
-        // ERROR - No such friend request exists!
-        res.render('index')
+        req.session.errorMsg = 'No such friend request exists!'
+        res.redirect('/')
+        return
+      } else if (!friendRequest.receiver.equals(req.used._id)) {
+        req.session.errorMsg = 'You do not have permission to accept that request!'
+        res.redirect('/')
         return
       }
       let sender = friendRequest.sender
@@ -86,6 +90,10 @@ module.exports = {
     FriendRequest.findById(frReqId).populate('sender receiver').then(friendRequest => {
       if (!friendRequest) {
         req.session.errorMsg = 'Invalid friend request!'
+        res.redirect('/')
+        return
+      } else if (!(friendRequest.receiver.equals(req.user._id) || friendRequest.sender.equals(req.user._id))) {
+        req.session.errorMsg = 'You do not have permission to decline that request!'
         res.redirect('/')
         return
       }

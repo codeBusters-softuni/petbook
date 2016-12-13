@@ -30,6 +30,7 @@ module.exports = (app) => {
   app.post('/friendRequest/:receiverId/send', controllers.friendRequestController.sendRequest)
   app.post('/friendRequest/:id/accept', controllers.friendRequestController.acceptRequest)
   app.post('/friendRequest/:id/decline', controllers.friendRequestController.declineRequest)
+  app.post('/friendRequest/:id/remove', controllers.friendRequestController.declineRequest)
   app.get('/friendRequests', controllers.friendRequestController.showRequests)
 
   app.post('/post/add', controllers.postController.addPost)

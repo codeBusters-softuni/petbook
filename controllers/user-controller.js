@@ -5,6 +5,7 @@ const Category = mongoose.model('Category')
 const Like = mongoose.model('Like')
 const Post = mongoose.model('Post')
 const Photo = mongoose.model('Photo')
+const FriendRequest = mongoose.model('FriendRequest')
 const categories = require('../config/constants').categories
 const userRegisterHbs = 'user/register/register'
 const userRegisterLayoutHbs = 'user/register/register-layout'
@@ -146,12 +147,19 @@ module.exports = {
         req.session.errorMsg = 'No such user exists.'
         res.redirect('/')
       }
+
       // find the relation between the users
       let areFriends = req.user.friends.indexOf(user.id) !== -1
-      let hasSentRequest = req.user.hasSentRequest(user.id)
+      let friendRequestId = req.user.getFriendRequestTo(user.id)
+      let hasSentRequest = Boolean(friendRequestId)
+      let receivedFriendRequestId = req.user.getFriendRequestFrom(user.id)
+      let hasReceivedRequest = Boolean(receivedFriendRequestId)
       let friendStatus = {
         sentRequest: hasSentRequest,
-        areFriends: areFriends
+        areFriends: areFriends,
+        friendRequest: friendRequestId,
+        receivedRequest: hasReceivedRequest,
+        receivedFriendRequest: receivedFriendRequestId
       }
       new Promise((resolve, reject) => {
         if (areFriends) {
@@ -239,10 +247,16 @@ module.exports = {
       // attach a friendStatus object to each user, displaying thier relationship with the user doing the search
       users = users.map(user => {
         let areFriends = req.user.friends.indexOf(user.id) !== -1
-        let hasSentRequest = req.user.hasSentRequest(user.id)
+        let friendRequestId = req.user.getFriendRequestTo(user.id)
+        let hasSentRequest = Boolean(friendRequestId)
+        let receivedFriendRequestId = req.user.getFriendRequestFrom(user.id)
+        let hasReceivedRequest = Boolean(receivedFriendRequestId)
         let friendStatus = {
           sentRequest: hasSentRequest,
-          areFriends: areFriends
+          areFriends: areFriends,
+          friendRequest: friendRequestId,
+          receivedRequest: hasReceivedRequest,
+          receivedFriendRequest: receivedFriendRequestId
         }
         user.friendStatus = friendStatus
         return user
