@@ -66,6 +66,6 @@ module.exports = {
     }
   },
   learnMoreGet: (req, res) => {
-    res.render('learnMore')
+    res.render('learnMore', {categories: categories})
   }
 }
