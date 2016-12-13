@@ -39,19 +39,28 @@
                     <input type="submit" id="remove-friend" class="btn-cstm-style rgstr-btn already-friends-unfriend"
                               value="Cancel request">
                   </form>
+                {{else if friendStatus.receivedRequest}}
+                  <form method="POST" action="/friendRequest/{{friendStatus.receivedFriendRequest._id}}/accept">
+                    <input type="submit" class="button-with-plus add-friend" value="Accept Friendship">
+                  </form>
+                  <form method="POST" action="/friendRequest/{{friendStatus.receivedFriendRequest._id}}/decline">
+                    <input type="submit" class="button-with-plus remove-friend" value="Decline Friendship">
+                  </form>
                 {{else if friendStatus.areFriends}}
                     <label class="add-friend">Friends</label>
                     <form method="POST" action="/user/{{_id}}/cancelFriendship">
                         <input type="submit" id="remove-friend" class="btn-cstm-style rgstr-btn already-friends-unfriend"
                               value="Cancel Friendship">
                     </form>
-                {{else}} {{#isSameUser ../this.user.id profileUser.id}}
-                    <!-- you can't friend REQ yourself!-->
-                {{else}}
-                    <form method="POST" action="/friendRequest/{{_id}}/send">
-                        <input type="submit" id="add-friend" class="btn-cstm-style rgstr-btn become-friends" value="Send Friend Request">
-                    </form>
-                {{/isSameUser}} {{/if}}
+                {{else}} 
+                  {{#isSameUser ../this.user.id profileUser.id}}
+                      <!-- you can't friend REQ yourself!-->
+                  {{else}}
+                      <form method="POST" action="/friendRequest/{{_id}}/send">
+                          <input type="submit" id="add-friend" class="btn-cstm-style rgstr-btn become-friends" value="Send Friend Request">
+                      </form>
+                  {{/isSameUser}} 
+                {{/if}}
             </section>
         </section>
     </article>

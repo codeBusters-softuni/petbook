@@ -57,12 +57,24 @@ userSchema.method({
       })
     })
   },
-
   getFriendRequestTo: function (userId) {
     // friendRequests msut be populated!
     // returns the friend request if it exists, otherwise returns false
     let friendReqIndex = this.pendingFriendRequests.findIndex(frReq => {
       return frReq.receiver.equals(userId)
+    })
+    if (friendReqIndex === -1) {
+      return false
+    } else {
+      return this.pendingFriendRequests[friendReqIndex]
+    }
+  },
+
+  getFriendRequestFrom: function (userId) {
+    // friendRequests msut be populated!
+    // returns the friend request if it exists, otherwise returns false
+    let friendReqIndex = this.pendingFriendRequests.findIndex(frReq => {
+      return frReq.sender.equals(userId)
     })
     if (friendReqIndex === -1) {
       return false

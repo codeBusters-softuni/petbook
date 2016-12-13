@@ -152,10 +152,14 @@ module.exports = {
       let areFriends = req.user.friends.indexOf(user.id) !== -1
       let friendRequestId = req.user.getFriendRequestTo(user.id)
       let hasSentRequest = Boolean(friendRequestId)
+      let receivedFriendRequestId = req.user.getFriendRequestFrom(user.id)
+      let hasReceivedRequest = Boolean(receivedFriendRequestId)
       let friendStatus = {
         sentRequest: hasSentRequest,
         areFriends: areFriends,
-        friendRequest: friendRequestId
+        friendRequest: friendRequestId,
+        receivedRequest: hasReceivedRequest,
+        receivedFriendRequest: receivedFriendRequestId
       }
       new Promise((resolve, reject) => {
         if (areFriends) {
@@ -245,10 +249,14 @@ module.exports = {
         let areFriends = req.user.friends.indexOf(user.id) !== -1
         let friendRequestId = req.user.getFriendRequestTo(user.id)
         let hasSentRequest = Boolean(friendRequestId)
+        let receivedFriendRequestId = req.user.getFriendRequestFrom(user.id)
+        let hasReceivedRequest = Boolean(receivedFriendRequestId)
         let friendStatus = {
           sentRequest: hasSentRequest,
           areFriends: areFriends,
-          friendRequest: friendRequestId
+          friendRequest: friendRequestId,
+          receivedRequest: hasReceivedRequest,
+          receivedFriendRequest: receivedFriendRequestId
         }
         user.friendStatus = friendStatus
         return user
