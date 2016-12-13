@@ -22,11 +22,11 @@
     </section>
     {{#if this.user}}
         <section class="col-xs-12 col-sm-6 col-md-4 col-lg-4 left-align">
-            <form class="form-inline">
+            <form class="form-inline" method="POST" action="/search/">
                 <div class="form-group">
                     <label class="sr-only" for="">Search Field</label>
-                    <input type="text" class="input-cstm-style search-cstm" id="" placeholder="Search...">
-                    <button type="submit" class="btn btn-secondary sign-in-log-out">Search</button>
+                    <input type="text" class="input-cstm-style search-cstm" id="" name="searchValue" placeholder="Search for other pets...">
+                    <input type="submit" class="btn btn-secondary sign-in-log-out" value="Search">
                 </div>
 
             </form>

@@ -225,5 +225,29 @@ module.exports = {
         })
       })
     }
+  },
+
+  userSearchPost: (req, res) => {
+    let searchValue = req.body.searchValue
+    if (!searchValue) {
+      // ERROR - You cannot search for nothing
+      req.session.errorMsg = "Sorry, we couldn't understand this search. Please try saying this another way."
+      res.redirect('/')
+    }
+
+    User.find({ fullName: { $regex: searchValue, $options: 'i' } }).populate('category').then(users => {
+      // attach a friendStatus object to each user, displaying thier relationship with the user doing the search
+      users = users.map(user => {
+        let areFriends = req.user.friends.indexOf(user.id) !== -1
+        let hasSentRequest = req.user.hasSentRequest(user.id)
+        let friendStatus = {
+          sentRequest: hasSentRequest,
+          areFriends: areFriends
+        }
+        user.friendStatus = friendStatus
+        return user
+      })
+      res.render('searchOutput', { users: users })
+    })
   }
 }
