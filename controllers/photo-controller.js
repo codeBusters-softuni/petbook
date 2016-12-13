@@ -66,9 +66,48 @@ module.exports = {
       })
   },
 
+  uploadProfilePhoto: (req, res) => {
+    let parseProfilePhoto = multer({ dest: photoUploadsPath }).single('addProfilePhoto')
+    let albumName = 'profile-photos-' + req.user._id
+    // create or find said album
+    Album.findOrCreateAlbum(albumName, req.user._id) // custom function in Album.js
+      .then(album => {
+        parseProfilePhoto(req, res, function () {
+          console.log(req.file)
+          if (!req.file) {
+            res.redirect('/')
+          }
+
+          let photo = req.file
+          let profilePhoto = Object.assign(photo, {
+            // merge the photo's metadata and the data tied with the server
+            author: req.user._id,
+            album: album._id,
+            classCss: album.classForCss,
+            public: true
+          })
+
+          Photo.create(profilePhoto).then(photo => {
+            req.user.updateProfilePicture(photo._id).then(() => {
+              let newPost = new Post({
+                author: req.user._id,
+                category: req.user.category._id,
+                content: 'I updated my profile picture!',
+                public: true,
+                photos: [photo._id]
+              })
+              Post.create(newPost).then(() => {
+                res.redirect(`/user/${req.user.userId}`)
+              })
+            })
+          })
+        })
+      })
+  },
+
   deletePhoto: (req, res) => {
     let photoId = req.params.id
-    
+
     Photo.findById(photoId).then(photo => {
       if (!photo) {
         req.session.errorMsg = 'No such photo exists.'

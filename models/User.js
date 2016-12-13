@@ -129,6 +129,15 @@ userSchema.method({
 
   hasFriend: function (friendId) {
     return this.friends.indexOf(friendId) !== -1
+  },
+
+  updateProfilePicture: function (photoId) {
+    return new Promise((resolve, reject) => {
+      this.profilePic = photoId
+      this.save(() => {
+        resolve(this)
+      })
+    })
   }
 })
 

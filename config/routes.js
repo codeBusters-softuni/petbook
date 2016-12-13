@@ -40,6 +40,7 @@ module.exports = (app) => {
   // Dislike a post
   app.post(/post\/(.+)\/remove(.{3,7})/, controllers.postController.removeLike)
 
+  app.post('/photo/profile', controllers.photoController.uploadProfilePhoto)
   // Upload single photos in default album
   app.post('/photo/all/single', controllers.photoController.uploadPhotosPost)
   // Upload album with photos
