@@ -57,7 +57,7 @@ module.exports = {
                 author: newPost.author,
                 description: newPostInfo[photoIndex.toString()],
                 album: album._id,
-                classCss: album.classForCss,
+                classCss: album.classCss,
                 public: postIsPublic
               })
 

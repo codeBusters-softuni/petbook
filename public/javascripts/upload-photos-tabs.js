@@ -194,9 +194,9 @@ $(document).ready(function () {
 
     //get the unique classed of photos
     var photosDisplayed = $('#display-photos-in-selected-album .filter-wrap article');
-    var uniqueClasses = [];
+    var uniqueClasses = []; //CSS3 doesn't support ID selectors that start with a digit - check is needed whed cssClass is assigned
     var access = true;
-    for (var i = 1; i < photosDisplayed.length; i++) {
+    for (var i = 0; i < photosDisplayed.length; i++) {
         var attributeClass = photosDisplayed[i].getAttribute('class').split(' ');
         var classNeeded = attributeClass[attributeClass.length - 1];
         // console.log(classNeeded)

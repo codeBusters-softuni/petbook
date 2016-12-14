@@ -24,7 +24,7 @@ module.exports = {
       }
       let newPostInfo = req.body
       let postIsPublic = newPostInfo.photocheckAlbum.toString() === 'publicvisible'
-      let cssClassName = newPostInfo.nameAlbum.replace(/\s+/g, '-') + '-DbStyle'
+      let cssClassName = newPostInfo.nameAlbum.replace(/\s+/g, '-').replace(/\d+/g, 'abc') + '-DbStyle'  //CSS3 doesn't support ID selectors that start with a digit
 
       let newPost = new Post({
         author: req.user._id,
