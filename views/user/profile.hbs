@@ -8,8 +8,14 @@
                 </ul>
                 <div id="user-nav" class="user-nav">
                     <ul>
-                        <li id="user-photos-nav"><a href="/user/{{profileUser.userId}}/photos" class="profile-btn-cstm-style">Photos
-                            of you</a></li>
+                        <li id="user-photos-nav"><a href="/user/{{profileUser.userId}}/photos" class="profile-btn-cstm-style">
+                        {{#isSameUser this.user.id profileUser.id}}
+                          Photos of you
+                        {{else}}
+                          Photos of {{profileUser.fullName}}
+                        {{/isSameUser}}
+                          </a>
+                        </li>
                     </ul>
                 </div>
             </div>
