@@ -59,11 +59,16 @@
 
                                 </article>
                             </div>
-                            <article class="name-date-container">
-                                <a href="/user/{{author.userId}}">{{author.fullName}}</a>
-                                <span>
-                                    {{dateStr}}
-                                </span>
+                            <article class="name-date-container ">
+                                <ul class="info-for-user">
+                                    <li>
+                                        <a href="/user/{{author.userId}}">{{author.fullName}}</a>
+                                    </li>
+                                    <li>
+                                        <span>{{dateStr}}</span>
+                                    </li>
+                                </ul>
+
 
                             </article>
                         </section>

@@ -36,7 +36,7 @@
     width: 250px;
     height: 250px;
     max-width: 250px;
-    border: 2px solid #233a69;
+    /*border: 2px solid #233a69;*/
     padding: 5px;
     /*background: url("./../images/no-profile-photo.jpg");*/
 }
