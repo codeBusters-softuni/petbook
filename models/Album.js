@@ -37,12 +37,14 @@ module.exports.findOrCreateAlbum = (albumName, potentialAuthor) => {
   return new Promise((resolve, reject) => {
     Album.findOne({ name: albumName }).then(album => {
       if (!album) {
+        let cssClassName = albumName.replace(/\s+/g, '-') + '-DbStyle'
+
         // create the new album
         let newAlbum = new Album({
           name: albumName,
           author: potentialAuthor,
           public: true,
-          classCss: 'Your-photos-from-NewsFeed-DbStyle'
+          classCss: cssClassName
         })
 
         Album.create(newAlbum).then(newAlbum => {

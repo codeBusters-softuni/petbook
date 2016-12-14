@@ -101,7 +101,7 @@ module.exports = {
             // merge the photo's metadata and the data tied with the server
             author: req.user._id,
             album: album._id,
-            classCss: album.classForCss,
+            classCss: album.classCss,
             public: true
           })
 
