@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const FriendRequest = mongoose.model('FriendRequest')
 const User = mongoose.model('User')
-const categories = require('../config/constants')
+const categories = require('../config/constants').categories
 
 module.exports = {
   showRequests: (req, res) => {
