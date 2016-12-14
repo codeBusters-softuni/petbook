@@ -1,20 +1,64 @@
-<div id="newsfeed-wrapped">
-  <main>
+<div id="search-output-all">
     {{#each friendRequests}}
-    <section id="post-view">
-      <article>
-        <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
-        <a href="/user/{{sender.userId}}">{{sender.fullName}}</a>
-      </article>
-      <article id="post-content">
-        <form method="POST" action="/friendRequest/{{id}}/accept">
-          <input type="submit" class="button-with-plus add-friend" value="Accept Friendship">
-        </form>
-        <form method="POST" action="/friendRequest/{{id}}/decline">
-          <input type="submit" class="button-with-plus remove-friend" value="Decline Friendship">
-        </form>
-      </article>
-    </section>
+        <article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <section class="container-search-output">
+
+                <section>
+                    <div class="img-container-for-center">
+                        <div>
+                            <article class="photo-container-for-search">
+                                <a href="/user/{{sender.userId}}">
+                                    {{#if profilePic}}
+                                        <img src="/uploads/{{profilePic.filename}}" alt=""
+                                             class="profile-image-for-search">
+                                    {{else}}
+                                        <img src="/images/no-profile-photo.jpg" alt="" class="profile-image-for-search">
+                                    {{/if}}
+                                </a>
+                            </article>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section class="container-info-search">
+                    <article>
+                        <ul class="info-for-user">
+                            <li>
+                                <a href="/user/{{sender.userId}}">{{sender.fullName}}</a>
+                            </li>
+                            <li>
+                                <span>Category: </span>
+                                <!--when click - new search and display all from that category-->
+                                <!--<a href="#">{{category.name}}</a>-->
+                            </li>
+                            <li>
+                                <!--<span>Owner: </span><span class="owner-name"> {{ownerName}}</span>-->
+                            </li>
+                            <li>
+                                <span>Email: </span>
+                                <!--when click - goes to profile-->
+                                <!--<a href="/user/{{userId}}">{{email}}</a>-->
+                            </li>
+
+                        </ul>
+
+                    </article>
+                </section>
+
+                <section class="btns-container-friend-unfriend">
+                    <form method="POST" action="/friendRequest/{{id}}/accept">
+                        <input type="submit" class="btn-cstm-style rgstr-btn become-friends"
+                               value="Accept Friendship" title="Accept Friendship">
+                    </form>
+                    <form method="POST" action="/friendRequest/{{id}}/decline">
+                        <input type="submit" class="btn-cstm-style rgstr-btn already-friends-unfriend"
+                               value="Decline Friendship" title="Decline Friendship">
+                    </form>
+                </section>
+
+
+            </section>
+        </article>
     {{/each}}
-  </main>
 </div>
