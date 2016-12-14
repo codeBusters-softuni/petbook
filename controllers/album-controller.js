@@ -12,13 +12,13 @@ let parseFiles = multer({
 
 module.exports = {
   uploadAlbum: (req, res) => {
+    let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
     parseFiles(req, res, function (err) {
       if (!imagesAreValid(req, res, err, req.files)) {  // attaches error messages to req.session.errMsg
-        let returnUrl = '/'
-        if (req.session.returnUrl) {
-          returnUrl = req.session.returnUrl
-          delete req.session.returnUrl
-        }
         res.redirect(returnUrl)
         return
       }
@@ -43,13 +43,13 @@ module.exports = {
       if (newPost.content.length < 3) {
         req.session.erroMsg = "Your post's content must be longer than 3 characters!"
         req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       }
       Album.findOne({ name: newAlbum.name }).then(album => {
         if (album) {
           req.session.errorMsg = 'Album already exists!'
-          res.redirect('/')
+          res.redirect(returnUrl)
           return
         }
         Album.create(newAlbum).then(newAlbum => {
