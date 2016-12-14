@@ -5,8 +5,6 @@ const categories = require('../config/constants').categories
 
 module.exports = {
   homePageGet: (req, res) => {
-    let errorMsg = ''
-
     if (req.user) {
       // load all the articles from the user's friends
       User.findById(req.user._id).then(user => {
@@ -46,7 +44,7 @@ module.exports = {
                   Post.populate(postsToSee, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
                     postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
                       req.session.returnUrl = '/'
-                      res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost, categories: categories})
+                      res.render('user/newsfeed', {posts: postsToSee, failedPost: req.session.failedPost, categories: categories})
                     })
                   })
                 })
