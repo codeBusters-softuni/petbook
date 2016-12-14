@@ -961,6 +961,11 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     display: inline-block !important;
     float: left !important;
     overflow: hidden !important;
+
+    border: 1px solid rgba(59, 89, 152, 0.4);
+    box-shadow: 2px 2px 1px rgba(59, 89, 152, 0.3);
+    background: rgba(233, 235, 238, 1) !important;
+    position: relative;
 }
 
 .profile-content {
@@ -992,8 +997,18 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 .header-container {
     float: right;
     overflow: hidden;
-    background: #f4f4f4;
+    /*background: #f4f4f4;*/
     padding: 0;
+    border: 1px solid rgba(59, 89, 152, 0.4);
+    border-left: none;
+    box-shadow: 2px 2px 1px rgba(59, 89, 152, 0.3);
+    background: rgba(233, 235, 238, 1) !important;
+    right: 1px;
+    z-index: 9999;
+}
+
+.header-container>header{
+    background: none!important;
 }
 
 .user-names {
