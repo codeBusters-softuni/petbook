@@ -48,7 +48,12 @@ module.exports = {
       }
 
       FriendRequest.create({ sender: req.user.id, receiver: receiverId }).then(() => {
-        res.redirect(`/user/${user.userId}`)
+        let returnUrl = `/user/${user.userId}`
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+        res.redirect(returnUrl)
       })
     })
   },
@@ -80,7 +85,12 @@ module.exports = {
         // Success - users are now friends, delete the FriendRequest
         friendRequest.remove()
         // TODO: Attach success message
-        res.redirect('/friendRequests')
+        let returnUrl = '/friendRequests'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+        res.redirect(returnUrl)
       })
     })
   },
@@ -107,7 +117,12 @@ module.exports = {
 
       Promise.all(promises).then(() => {
         friendRequest.remove()
-        res.redirect('/friendRequests')
+        let returnUrl = '/friendRequests'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+        res.redirect(returnUrl)
       })
     })
   }
