@@ -131,7 +131,7 @@
                 </article>
 
                 <article class="cntnr-photos row custom-gallery">
-                    {{#each photos}}
+                    {{#eachUpTo photos 4}}
                         <article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <section class="photo-cntnr">
                                 <div class="album-photo-content">
@@ -220,7 +220,7 @@
                                 </footer>
                             </section>
                         </article>
-                    {{/each}}
+                    {{/eachUpTo}}
                 </article>
 
                 <footer class="preview-photo-thumbnail-footer post-btn-newsfeed">
