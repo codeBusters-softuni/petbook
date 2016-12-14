@@ -33,10 +33,19 @@ let joinCategoriesString = function (arr) {
   return resultString
 }
 
+let eachUpTo = function (arr, max, options) {  // modification of the each helper, iterating up to a certain number only
+  let result = []
+  for (var i = 0; i < max && i < arr.length; i++) {
+    result.push(options.fn(arr[i]))
+  }
+  return result.join('')
+}
+
 handlebars.registerHelper({
   hasPawed: hasLiked,
   hasDisliked: hasLiked,
   hasLoved: hasLiked,
   isSameUser: isSameUser,
-  joinCategoriesString: joinCategoriesString
+  joinCategoriesString: joinCategoriesString,
+  eachUpTo: eachUpTo
 })
