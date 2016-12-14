@@ -65,7 +65,7 @@ module.exports = {
         req.session.errorMsg = 'No such friend request exists!'
         res.redirect('/')
         return
-      } else if (!friendRequest.receiver.equals(req.used._id)) {
+      } else if (!friendRequest.receiver.equals(req.user._id)) {
         req.session.errorMsg = 'You do not have permission to accept that request!'
         res.redirect('/')
         return
