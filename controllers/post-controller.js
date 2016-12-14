@@ -7,11 +7,21 @@ const Album = require('mongoose').model('Album')
 const multer = require('multer')
 const photoUploadsPath = require('../config/constants').photoUploadsPath
 const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like
-let parseReqBody = multer({ dest: photoUploadsPath }).array('addPhotoToPost')
-
+const imagesAreValid = require('../models/Photo').validateImages
+let parseReqBody = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */ }).array('addPhotoToPost')
+console.log(photoUploadsPath)
 module.exports = {
   addPost: (req, res) => {
-    parseReqBody(req, res, function () {
+    parseReqBody(req, res, function (err) {
+      if (!imagesAreValid(req, res, err, req.files)) {  // attached error messages to req.session.errMsg
+        let returnUrl = '/'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+        res.redirect(returnUrl)
+        return
+      }
       let albumName = 'newsfeed-photos-' + req.user._id
       let newPostInfo = req.body
       let postIsPublic = newPostInfo.publicPost.toString() === 'publicvisible'
@@ -24,7 +34,7 @@ module.exports = {
 
       if (newPost.content.length < 3) {
         req.session.errorMsg = "Your post's content is too short! It must be longer than 3 characters."
-        req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
+        req.session.failedPost = newPost  // attach the post content to be displayed on the redirect  // TODO:
         res.redirect('/')
         return
       }
