@@ -46,11 +46,7 @@ module.exports = {
                   Post.populate(postsToSee, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
                     postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
                       req.session.returnUrl = '/'
-                      if (req.session.errorMsg) {
-                        errorMsg = req.session.errorMsg
-                        delete req.session.errorMsg
-                      }
-                      res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost, categories: categories, errorMessage: errorMsg })
+                      res.render('user/newsfeed', { posts: postsToSee, failedPost: req.session.failedPost, categories: categories})
                     })
                   })
                 })
@@ -60,11 +56,7 @@ module.exports = {
         })
       })
     } else {
-      if (req.session.errorMsg) {
-        errorMsg = req.session.errorMsg
-        delete req.session.errorMsg
-      }
-      res.render('index', { categories: categories, errorMessage: errorMsg })
+      res.render('index', { categories: categories })
     }
   },
   learnMoreGet: (req, res) => {

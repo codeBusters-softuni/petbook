@@ -20,7 +20,7 @@ module.exports = Like
 module.exports.getUserLikes = (likeType, authorId) => {
   return new Promise((resolve, reject) => {
     Like.count({type: likeType, author: authorId}).then(likeCount => {
-        resolve(likeCount)
+      resolve(likeCount)
     })
   })
 }

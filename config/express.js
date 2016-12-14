@@ -23,8 +23,12 @@ module.exports = (app, config) => {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  // adds the current user to res.locals for easy access in the HTML files
+  // adds the current user/error message to res.locals for easy access in the HTML files
   app.use((req, res, next) => {
+    if (req.session.errorMsg) {
+      res.locals.errorMessage = req.session.errorMsg
+      delete req.session.errorMsg
+    }
     if (req.user) {
       res.locals.user = req.user
       res.locals.user.hasRequest = req.user.hasFriendRequest()
