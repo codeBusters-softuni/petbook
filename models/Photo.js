@@ -157,3 +157,33 @@ const Photo = mongoose.model('Photo', photoSchema)
 
 module.exports = Photo
 module.exports.initializeForView = initializeForView
+// function that validates if an uploaded file is an image.
+// also handles err object sent from multer
+module.exports.validateImages = (req, res, err, images) => {
+  // returns a boolean indicating if the images are valid
+  if (!Array.isArray(images)) { images = [images] }
+
+  let isInvalidType = false
+
+  images.forEach(file => {
+    if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/jpeg') {
+      isInvalidType = true
+    }
+  })
+
+  if (isInvalidType) {
+    req.session.errorMsg = 'Supported image types are PNG, JPG and JPEG!'
+    return false
+  } else if (err) {
+    if (err.message === 'File too large') {
+      req.session.errorMsg = 'An image you uploaded was too large. Maximum size for an image is 2MB!'
+    } else if (err.message === 'Too many files') {
+      req.session.errorMsg = 'You cannot upload more than 10 images at once!'
+    } else {
+      req.session.errorMsg = err.message
+    }
+    return false
+  }
+
+  return true
+}

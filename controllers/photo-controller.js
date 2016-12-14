@@ -6,7 +6,8 @@ const Like = mongoose.model('Like')
 const multer = require('multer')
 const constants = require('../config/constants')
 const photoUploadsPath = constants.photoUploadsPath
-const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like
+const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like  // TODO: CHECK
+const imagesAreValid = require('../models/Photo').validateImages
 let parseReqBody = multer({ dest: photoUploadsPath,
    limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */})
    .array('uploadedPhotos')
@@ -21,14 +22,7 @@ module.exports = {
     Album.findOrCreateAlbum(albumName, req.user._id)  // custom function in Album.js
       .then(album => {
         parseReqBody(req, res, function (err) {  // middleware to parse the uploaded files to req.files and save them on the server
-          if (err) {
-            if (err.message === 'File too large') {
-              req.session.errorMsg = 'An image you uploaded was too large. Maximum size for an image is 2MB!'
-            } else if (err.message === 'Too many files') {
-              req.session.errorMsg = 'You cannot upload more than 10 images at once!'
-            } else {
-              req.session.errorMsg = err.message
-            }
+          if (!imagesAreValid(req, res, err, req.files)) {  // attached error messages to req.session.errMsg
             let returnUrl = '/'
             if (req.session.returnUrl) {
               returnUrl = req.session.returnUrl
@@ -92,14 +86,7 @@ module.exports = {
     Album.findOrCreateAlbum(albumName, req.user._id) // custom function in Album.js
       .then(album => {
         parseProfilePhoto(req, res, function (err) {
-          if (err) {
-            if (err.message === 'File too large') {
-              req.session.errorMsg = 'An image you uploaded was too large. Maximum size for an image is 2MB!'
-            } else if (err.message === 'Too many files') {
-              req.session.errorMsg = 'You cannot upload more than 10 images at once!'
-            } else {
-              req.session.errorMsg = err.message
-            }
+          if (!imagesAreValid(req, res, err, req.file)) {  // attached error messages to req.session.errMsg
             let returnUrl = '/'
             if (req.session.returnUrl) {
               returnUrl = req.session.returnUrl
