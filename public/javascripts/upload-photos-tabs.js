@@ -117,7 +117,7 @@ $(document).ready(function () {
                 checker = $('#check-before-send');
                 sendbtn = $('#publish-photos');
             }
-            else if (titleIndex - 1 == 0) {
+            else { //if (titleIndex - 1 == 0)
                 checker = $('#check-before-send-album');
                 sendbtn = $('#publish-album');
             }
