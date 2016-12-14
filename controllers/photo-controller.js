@@ -6,8 +6,8 @@ const Like = mongoose.model('Like')
 const multer = require('multer')
 const constants = require('../config/constants')
 const photoUploadsPath = constants.photoUploadsPath
-const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like  // TODO: CHECK
-const imagesAreValid = require('../models/Photo').validateImages
+const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like
+const imagesAreValid = mongoose.model('Photo').validateImages
 let parseReqBody = multer({ dest: photoUploadsPath,
    limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */})
    .array('uploadedPhotos')

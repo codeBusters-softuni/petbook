@@ -4,7 +4,7 @@ const Photo = mongoose.model('Photo')
 const Post = mongoose.model('Post')
 const multer = require('multer')
 const photoUploadsPath = require('../config/constants').photoUploadsPath
-const imagesAreValid = require('../models/Photo').validateImages
+const imagesAreValid = mongoose.model('Photo').validateImages
 let parseFiles = multer({
   dest: photoUploadsPath,
   limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */

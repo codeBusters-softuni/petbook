@@ -2,17 +2,16 @@ const mongoose = require('mongoose')
 const Post = mongoose.model('Post')
 const Comment_ = mongoose.model('Comment')
 const Like = mongoose.model('Like')
-const Photo = require('mongoose').model('Photo')
-const Album = require('mongoose').model('Album')
+const Photo = mongoose.model('Photo')
+const Album = mongoose.model('Album')
 const multer = require('multer')
 const photoUploadsPath = require('../config/constants').photoUploadsPath
 const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like
-const imagesAreValid = require('../models/Photo').validateImages
+const imagesAreValid = mongoose.model('Photo').validateImages
 let parseReqBody = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */ }).array('addPhotoToPost')
 console.log(photoUploadsPath)
 module.exports = {
   addPost: (req, res) => {
-    // TODO: ADD TRY CATCH :)
     let returnUrl = '/'
     if (req.session.returnUrl) {
       returnUrl = req.session.returnUrl
