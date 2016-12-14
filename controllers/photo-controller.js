@@ -7,7 +7,9 @@ const multer = require('multer')
 const constants = require('../config/constants')
 const photoUploadsPath = constants.photoUploadsPath
 const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like
-let parseReqBody = multer({ dest: photoUploadsPath }).array('uploadedPhotos')
+let parseReqBody = multer({ dest: photoUploadsPath,
+   limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */})
+   .array('uploadedPhotos')
 
 
 module.exports = {
@@ -18,7 +20,23 @@ module.exports = {
     // Try to find the user's album to add the picture to, otherwise create a new one
     Album.findOrCreateAlbum(albumName, req.user._id)  // custom function in Album.js
       .then(album => {
-        parseReqBody(req, res, function () {  // middleware to parse the uploaded files to req.files and save them on the server
+        parseReqBody(req, res, function (err) {  // middleware to parse the uploaded files to req.files and save them on the server
+          if (err) {
+            if (err.message === 'File too large') {
+              req.session.errorMsg = 'An image you uploaded was too large. Maximum size for an image is 2MB!'
+            } else if (err.message === 'Too many files') {
+              req.session.errorMsg = 'You cannot upload more than 10 images at once!'
+            } else {
+              req.session.errorMsg = err.message
+            }
+            let returnUrl = '/'
+            if (req.session.returnUrl) {
+              returnUrl = req.session.returnUrl
+              delete req.session.returnUrl
+            }
+            res.redirect(returnUrl)
+            return
+          }
           // logic for the post
           let newPostInfo = req.body
           let postIsPublic = newPostInfo.photocheck.toString() === 'publicvisible'
@@ -68,13 +86,28 @@ module.exports = {
   },
 
   uploadProfilePhoto: (req, res) => {
-    let parseProfilePhoto = multer({ dest: photoUploadsPath }).single('addProfilePhoto')
+    let parseProfilePhoto = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */ }).single('addProfilePhoto')
     let albumName = 'profile-photos-' + req.user._id
     // create or find said album
     Album.findOrCreateAlbum(albumName, req.user._id) // custom function in Album.js
       .then(album => {
-        parseProfilePhoto(req, res, function () {
-          console.log(req.file)
+        parseProfilePhoto(req, res, function (err) {
+          if (err) {
+            if (err.message === 'File too large') {
+              req.session.errorMsg = 'An image you uploaded was too large. Maximum size for an image is 2MB!'
+            } else if (err.message === 'Too many files') {
+              req.session.errorMsg = 'You cannot upload more than 10 images at once!'
+            } else {
+              req.session.errorMsg = err.message
+            }
+            let returnUrl = '/'
+            if (req.session.returnUrl) {
+              returnUrl = req.session.returnUrl
+              delete req.session.returnUrl
+            }
+            res.redirect(returnUrl)
+            return
+          }
           if (!req.file) {
             res.redirect('/')
           }

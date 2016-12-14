@@ -4,11 +4,30 @@ const Photo = mongoose.model('Photo')
 const Post = mongoose.model('Post')
 const multer = require('multer')
 const photoUploadsPath = require('../config/constants').photoUploadsPath
-let saveFiles = multer({ dest: photoUploadsPath }).array('uploadAlbum')
+let parseFiles = multer({
+  dest: photoUploadsPath,
+  limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */
+}).array('uploadAlbum')
 
 module.exports = {
   uploadAlbum: (req, res) => {
-    saveFiles(req, res, function () {
+    parseFiles(req, res, function (err) {
+      if (err) {
+        if (err.message === 'File too large') {
+          req.session.errorMsg = 'An image you uploaded was too large. Maximum size for an image is 2MB!'
+        } else if (err.message === 'Too many files') {
+          req.session.errorMsg = 'You cannot upload more than 10 images at once!'
+        } else {
+          req.session.errorMsg = err.message
+        }
+        let returnUrl = '/'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
+        res.redirect(returnUrl)
+        return
+      }
       let newPostInfo = req.body
       let postIsPublic = newPostInfo.photocheckAlbum.toString() === 'publicvisible'
       let cssClassName = newPostInfo.nameAlbum.replace(/\s+/g, '-') + '-DbStyle'
