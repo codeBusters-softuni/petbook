@@ -1116,6 +1116,10 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 }
 
 /*post view style*/
+.comment-view{
+    margin-bottom: 1%;
+}
+
 .contain-profile-image-container{
     display: inline-block;
     float: left;
@@ -1138,6 +1142,8 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     display: inline-block;
     float: left;
     margin-left: 1%;
+    width: 80%;
+    margin-bottom: 5px;
 }
 
 .name-date-container > a {
@@ -1156,6 +1162,8 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 .post-view {
     padding: 20px !important;
+    border: 1px solid rgba(189,189,189, 0.4);
+    box-shadow: 2px 2px 1px rgba(151,151,151, 0.3);
 }
 
 .post-view>section{
@@ -1181,6 +1189,25 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     background: #fafafa;
 }
 
+/*comment style under post*/
+
+
+
+.comment-comment-view{
+    width: 80%!important;
+    margin-left: 1%;
+}
+
+.underline-custom-style{
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(59, 89, 152, 0.4);
+    box-shadow: 0 4px 1px -2px rgba(59, 89, 152, 0.3);
+}
+
+.comment-area{
+    width:100%;
+    margin-bottom: 1%!important;
+}
 
 /*style fot the search output page*/
 .pending-request-container{
@@ -1274,7 +1301,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 .info-for-user>li{
     list-style-type: none;
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
     color: #3b5998;
 
 }

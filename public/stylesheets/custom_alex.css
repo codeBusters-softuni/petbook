@@ -360,18 +360,19 @@ section>ul>#remove-dislike{
     width: 100%;
     max-width: 100%;
     padding: 5px;
-    background: #f4f4f4;
+    /*background: #f4f4f4;*/
 }
 
 #profile-comment {
     display: inline-block;
-    width: 96%;
+    /*width: 96%;*/
 }
 
 
 #comment-btn{
-    position: relative;
-    top: 3px;
+    /*position: relative;*/
+    /*top: 3px;*/
+    float: right;
     display: inline-block;
     width: 20px;
     height: 20px;

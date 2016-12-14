@@ -59,7 +59,7 @@
 
                                 </article>
                             </div>
-                            <article class="name-date-container ">
+                            <article class="name-date-container underline-custom-style">
                                 <ul class="info-for-user">
                                     <li>
                                         <a href="/user/{{author.userId}}">{{author.fullName}}</a>
@@ -276,7 +276,7 @@
                     </footer>
                 </section>
 
-                <section id="comment-view">
+                <section id="comment-view" class="comment-view">
                     <!-- COMMENTS -->
                     {{#each comments}}
                         <section>
@@ -289,22 +289,22 @@
                                     {{/if}}
                                 </article>
                             </div>
-                            <section>
+                            <section class="comment-comment-view">
                                 <article>
                                     {{author.fullName}}
                                 </article>
-                                <article>
+                                <article class="underline-custom-style">
                                     {{dateStr}}
                                 </article>
+                                <section id="comment-value">
+                                    {{content}}
+                                </section>
                             </section>
                         </section>
-                        <article id="comment-value">
-                            {{content}}
-                        </article>
                     {{/each}}
                     <!-- END OF COMMENTS -->
                 </section>
-                <section id="comments-form">
+                <section id="comments-form" class="">
                     <section>
                         <div class="contain-profile-image-container">
                             <article class="profile-image-container">
@@ -315,9 +315,9 @@
                                 {{/if}}
                             </article>
                         </div>
-                        <section id="add-comment">
+                        <section id="add-comment" class="comment-comment-view">
                             <form method="post" action="/post/{{id}}/addComment">
-                                <textarea id="profile-comment" name="content" rows="1"
+                                <textarea id="profile-comment" class="profile-post comment-area" name="content" rows="2"
                                           placeholder="Add a comment"></textarea>
                                 <input type="submit" id="comment-btn" value="">
                             </form>
