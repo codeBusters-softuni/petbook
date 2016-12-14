@@ -129,7 +129,7 @@
                                             <form method="post" action="/photo/{{id}}/removePaw">
                                                 {{!--SHOULD BE GREY--}}
                                                 <li>
-                                                    <input type="submit" id="paw" class="btn" value="">{{paws.length}}
+                                                    <input type="submit" id="remove-paw" class="btn" value="">{{paws.length}}
                                                 </li>
                                             </form>
                                             <form method="post" action="/photo/{{id}}/addLove">
@@ -153,7 +153,7 @@
                                                 <form method="post" action="/photo/{{id}}/removeLove">
                                                     {{!--SHOULD BE GREY--}}
                                                     <li>
-                                                        <input type="submit" id="love" class="btn" value="">{{loves.length}}
+                                                        <input type="submit" id="remove-love" class="btn" value="">{{loves.length}}
                                                     </li>
                                                 </form>
                                                 <form method="post" action="/photo/{{id}}/addDislike">
@@ -177,7 +177,7 @@
                                                     <form method="post" action="/photo/{{id}}/removeDislike>">
                                                         {{!--SHOULD BE GREY--}}
                                                         <li>
-                                                            <input type="submit" id="dislike" class="btn"
+                                                            <input type="submit" id="remove-dislike" class="btn"
                                                                   value="">{{dislikes.length}}
                                                         </li>
                                                     </form>
@@ -217,7 +217,7 @@
                                 <form method="post" action="/post/{{id}}/removePaw">
                                     {{!--SHOULD BE GREY--}}
                                     <li>
-                                        <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                        <input type="submit" id="remove-paw" class="btn" value="">{{paws.length}} Paws
                                     </li>
                                 </form>
                                 <form method="post" action="/post/{{id}}/addLove">
@@ -240,7 +240,7 @@
                                 <form method="post" action="/post/{{id}}/removeLove">
                                     {{!--SHOULD BE GREY--}}
                                     <li>
-                                        <input type="submit" id="love" class="btn" value="">{{loves.length}} Loves
+                                        <input type="submit" id="remove-love" class="btn" value="">{{loves.length}} Loves
                                     </li>
                                 </form>
                                 <form method="post" action="/post/{{id}}/addDislike">
@@ -263,7 +263,7 @@
                                 <form method="post" action="/post/{{id}}/removeDislike>">
                                     {{!--SHOULD BE GREY--}}
                                     <li>
-                                        <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}}
+                                        <input type="submit" id="remove-dislike" class="btn" value="">{{dislikes.length}}
                                         Dislikes
                                     </li>
                                 </form>

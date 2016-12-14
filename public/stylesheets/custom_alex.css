@@ -104,6 +104,24 @@ section>ul>#like{
     display: inline-block;
     margin-right: 10px;
 }
+section>ul>#remove-like{
+    background: url("./../images/remove-paw.png");
+    width: 40px;
+    height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    display: inline-block;
+    margin-right: 10px;
+}
+#remove-paw{
+    background: url("./../images/remove-paw.png");
+    width: 40px;
+    height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    display: inline-block;
+    margin-right: 10px;
+}
 section>ul>#love{
     background: url("./../images/love.png");
     width: 40px;
@@ -115,6 +133,24 @@ section>ul>#love{
 }
 #love{
     background: url("./../images/love.png");
+    width: 40px;
+    height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    display: inline-block;
+    margin-right: 10px;
+}
+section>ul>#remove-love{
+    background: url("./../images/remove-love.png");
+    width: 40px;
+    height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    display: inline-block;
+    margin-right: 10px;
+}
+#remove-love{
+    background: url("./../images/remove-love.png");
     width: 40px;
     height: 40px;
     max-width: 40px;
@@ -139,7 +175,22 @@ section>ul>#dislike{
     max-height: 40px;
     display: inline-block;
 }
-
+section>ul>#remove-dislike{
+    background: url("./../images/remove-dislike.png");
+    width: 40px;
+    height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    display: inline-block;
+}
+#remove-dislike{
+    background: url("./../images/remove-dislike.png");
+    width: 40px;
+    height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    display: inline-block;
+}
 #user-info{
     border-top: 1px solid #fff;
     box-shadow: 0 -1px 0 #7c7c7c;
@@ -372,7 +423,32 @@ section>ul>#dislike{
     display: inline-block;
     content: "";
 }
+#remove-like-btn:before{
+    background: url("./../images/grey-small-icon.png") 0 100px;
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    content: "";
+}
 
+#remove-love-btn:before{
+    background: url("./../images/grey-small-icon.png") 0 125px;
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    content: "";
+}
+
+#remove-dislike-btn:before{
+    background: url("./../images/grey-small-icon.png") 0 150px;
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    content: "";
+}
 
 #post-view{
     background: #f4f4f4;
