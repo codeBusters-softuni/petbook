@@ -44,36 +44,33 @@
     <main>
         <!-- Here post view -->
         {{#each posts}}
-          <section id="post-view" class="post-view">
-              <section class="post-post-view">
-                <header>
-                    <section>
-                        <article class="profile-image-container">
-                            {{#if author.profilePic}}
-                              <img src="/uploads/{{author.profilePic.filename}}" alt="">
-                            {{else}}
-                              <img src="/images/no-profile-photo.jpg" alt="">
-                            {{/if}}
-                            <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
-
-                        </article>
+            <section id="post-view" class="post-view">
+                <section class="post-post-view">
                     <header>
                         <section>
-                            <article class="profile-image-container">
-                                <img src="/images/no-profile-photo.jpg" alt="">
-                                <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
-
-                            </article>
-                            <!--<section>-->
-                                <article class="name-date-container">
-                                    <a href="/user/{{author.userId}}">{{author.fullName}}</a>
-                                    <span>
-                                        {{dateStr}}
-                                    </span>
+                            <div class="contain-profile-image-container">
+                                <article class="profile-image-container">
+                                    {{#if author.profilePic}}
+                                        <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                                    {{else}}
+                                        <img src="/images/no-profile-photo.jpg" alt="">
+                                    {{/if}}
+                                    <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
 
                                 </article>
+                            </div>
+                            <article class="name-date-container ">
+                                <ul class="info-for-user">
+                                    <li>
+                                        <a href="/user/{{author.userId}}">{{author.fullName}}</a>
+                                    </li>
+                                    <li>
+                                        <span>{{dateStr}}</span>
+                                    </li>
+                                </ul>
 
-                            <!--</section>-->
+
+                            </article>
                         </section>
                     </header>
                     <article id="post-content" class="post-content">
@@ -102,12 +99,14 @@
                                                     </form>
                                                     <form method="post" action="/photo/{{id}}/addLove">
                                                         <li>
-                                                            <input type="submit" id="love" class="btn" value="">{{loves.length}}
+                                                            <input type="submit" id="love" class="btn"
+                                                                   value="">{{loves.length}}
                                                         </li>
                                                     </form>
                                                     <form method="post" action="/photo/{{id}}/addDislike">
                                                         <li>
-                                                            <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}}
+                                                            <input type="submit" id="dislike" class="btn"
+                                                                   value="">{{dislikes.length}}
                                                         </li>
                                                     </form>
                                                 {{else}}
@@ -115,7 +114,8 @@
                                                     {{#hasLoved loves ../../this.user._id}}
                                                         <form method="post" action="/photo/{{id}}/addPaw">
                                                             <li>
-                                                                <input type="submit" id="paw" class="btn" value="">{{paws.length}}
+                                                                <input type="submit" id="paw" class="btn"
+                                                                       value="">{{paws.length}}
                                                             </li>
                                                         </form>
                                                         <form method="post" action="/photo/{{id}}/removeLove">
@@ -126,7 +126,8 @@
                                                         </form>
                                                         <form method="post" action="/photo/{{id}}/addDislike">
                                                             <li>
-                                                                <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}}
+                                                                <input type="submit" id="dislike" class="btn"
+                                                                       value="">{{dislikes.length}}
                                                             </li>
                                                         </form>
                                                     {{else}}
@@ -134,12 +135,14 @@
                                                         {{#hasDisliked dislikes ../../this.user._id}}
                                                             <form method="post" action="/photo/{{id}}/addPaw">
                                                                 <li>
-                                                                    <input type="submit" id="paw" class="btn" value="">{{paws.length}}
+                                                                    <input type="submit" id="paw" class="btn"
+                                                                           value="">{{paws.length}}
                                                                 </li>
                                                             </form>
                                                             <form method="post" action="/photo/{{id}}/addLove">
                                                                 <li>
-                                                                    <input type="submit" id="love" class="btn" value="">{{loves.length}}
+                                                                    <input type="submit" id="love" class="btn"
+                                                                           value="">{{loves.length}}
                                                                 </li>
                                                             </form>
                                                             <form method="post" action="/photo/{{id}}/removeDislike>">
@@ -153,12 +156,14 @@
                                                         {{!--User has not liked this post at all--}}
                                                             <form method="post" action="/photo/{{id}}/addPaw">
                                                                 <li>
-                                                                    <input type="submit" id="paw" class="btn" value="">{{paws.length}}
+                                                                    <input type="submit" id="paw" class="btn"
+                                                                           value="">{{paws.length}}
                                                                 </li>
                                                             </form>
                                                             <form method="post" action="/photo/{{id}}/addLove">
                                                                 <li>
-                                                                    <input type="submit" id="love" class="btn" value="">{{loves.length}}
+                                                                    <input type="submit" id="love" class="btn"
+                                                                           value="">{{loves.length}}
                                                                 </li>
                                                             </form>
                                                             <form method="post" action="/photo/{{id}}/addDislike">
@@ -216,7 +221,8 @@
                                         </form>
                                         <form method="post" action="/post/{{id}}/addDislike">
                                             <li>
-                                                <input type="submit" id="dislike" class="btn" value="">{{dislikes.length}}
+                                                <input type="submit" id="dislike" class="btn"
+                                                       value="">{{dislikes.length}}
                                                 Dislikes
                                             </li>
                                         </form>
@@ -225,7 +231,8 @@
                                         {{#hasDisliked dislikes ../this.user._id}}
                                             <form method="post" action="/post/{{id}}/addPaw">
                                                 <li>
-                                                    <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                                    <input type="submit" id="paw" class="btn" value="">{{paws.length}}
+                                                    Paws
                                                 </li>
                                             </form>
                                             <form method="post" action="/post/{{id}}/addLove">
@@ -245,7 +252,8 @@
                                         {{!--User has not liked this post at all--}}
                                             <form method="post" action="/post/{{id}}/addPaw">
                                                 <li>
-                                                    <input type="submit" id="paw" class="btn" value="">{{paws.length}} Paws
+                                                    <input type="submit" id="paw" class="btn" value="">{{paws.length}}
+                                                    Paws
                                                 </li>
                                             </form>
                                             <form method="post" action="/post/{{id}}/addLove">
@@ -272,13 +280,15 @@
                     <!-- COMMENTS -->
                     {{#each comments}}
                         <section>
-                            <article>
-                              {{#if author.profilePic}}
-                                  <img src="/uploads/{{author.profilePic.filename}}" alt="">
-                                {{else}}
-                                  <img src="/images/no-profile-photo.jpg" alt="">
-                                {{/if}}
-                            </article>
+                            <div class="contain-profile-image-container">
+                                <article class="profile-image-container">
+                                    {{#if author.profilePic}}
+                                        <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                                    {{else}}
+                                        <img src="/images/no-profile-photo.jpg" alt="">
+                                    {{/if}}
+                                </article>
+                            </div>
                             <section>
                                 <article>
                                     {{author.fullName}}
@@ -296,13 +306,15 @@
                 </section>
                 <section id="comments-form">
                     <section>
-                        <article>
-                            {{#if ../this.user.profilePic}}
-                              <img src="/uploads/{{../this.user.profilePic.filename}}" alt="">
-                            {{else}}
-                              <img src="/images/no-profile-photo.jpg" alt="">
-                            {{/if}}
-                        </article>
+                        <div class="contain-profile-image-container">
+                            <article class="profile-image-container">
+                                {{#if ../this.user.profilePic}}
+                                    <img src="/uploads/{{../this.user.profilePic.filename}}" alt="">
+                                {{else}}
+                                    <img src="/images/no-profile-photo.jpg" alt="">
+                                {{/if}}
+                            </article>
+                        </div>
                         <section id="add-comment">
                             <form method="post" action="/post/{{id}}/addComment">
                                 <textarea id="profile-comment" name="content" rows="1"

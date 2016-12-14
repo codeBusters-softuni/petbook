@@ -1,73 +1,84 @@
-<div class="container">
-  {{#each users}}
-    <article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-        <section class="container-search-output">
-            <section>
-                <article class="">
-                  <a href="/user/{{userId}}">
-                    {{#if profilePic}}
-                      <img src="/uploads/{{profilePic.filename}}" alt="" class="profile-image-for-search">
-                    {{else}}
-                      <img src="/images/no-profile-photo.jpg" alt="" class="profile-image-for-search">
-                    {{/if}}
-                  </a>
-                </article>
-            </section>
-            <section class="container-info-search">
-                <article>
-                    <ul class="info-for-user">
-                        <li>
-                            <!--when click - goes to profile-->
-                            <a href="/user/{{userId}}" class="user-name">{{fullName}}</a>
-                        </li>
-                        <li>
-                            <span>Category: </span>
-                            <!--when click - new search and display all from that category-->
-                            <a href="#">{{category.name}}</a>
-                        </li>
-                        <li>
-                            <span>Owner: </span><span class="owner-name"> {{ownerName}}</span>
-                        </li>
-                        <li>
-                            <span>Email: </span>
-                            <!--when click - goes to profile-->
-                            <a href="/user/{{userId}}">{{email}}</a>
-                        </li>
+<div class="search-output-all">
+    {{#each users}}
+        <article class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <section class="container-search-output">
+                <section>
+                    <div class="img-container-for-center">
+                        <div>
+                            <article class="photo-container-for-search">
+                                <a href="/user/{{userId}}">
+                                    {{#if profilePic}}
+                                        <img src="/uploads/{{profilePic.filename}}" alt=""
+                                             class="profile-image-for-search">
+                                    {{else}}
+                                        <img src="/images/no-profile-photo.jpg" alt="" class="profile-image-for-search">
+                                    {{/if}}
+                                </a>
+                            </article>
+                        </div>
 
-                    </ul>
-                </article>
+                    </div>
+                </section>
+                <section class="container-info-search">
+                    <article>
+                        <ul class="info-for-user">
+                            <li>
+                                <!--when click - goes to profile-->
+                                <a href="/user/{{userId}}" class="user-name">{{fullName}}</a>
+                            </li>
+                            <li>
+                                <span>Category: </span>
+                                <!--when click - new search and display all from that category-->
+                                <a href="#">{{category.name}}</a>
+                            </li>
+                            <li>
+                                <span>Owner: </span><span class="owner-name"> {{ownerName}}</span>
+                            </li>
+                            <li>
+                                <span>Email: </span>
+                                <!--when click - goes to profile-->
+                                <a href="/user/{{userId}}">{{email}}</a>
+                            </li>
+
+                        </ul>
+                    </article>
+                </section>
+                <section class="btns-container-friend-unfriend">
+                    {{#if friendStatus.sentRequest}}
+                        <div class="pending-request-container">
+                            <span class="add-friend">Friend request pending</span>
+                        </div>
+                        <form method="POST" action="/friendRequest/{{friendStatus.friendRequest._id}}/remove">
+                            <input type="submit" id="remove-friend"
+                                   class="btn-cstm-style rgstr-btn already-friends-unfriend"
+                                   value="Cancel request" title="Cancel Friend Request">
+                        </form>
+                    {{else if friendStatus.receivedRequest}}
+                        <form method="POST" action="/friendRequest/{{friendStatus.receivedFriendRequest._id}}/accept">
+                            <input type="submit" class="btn-cstm-style rgstr-btn become-friends" value="Accept Friendship" title="Accept Friend Request">
+                        </form>
+                        <form method="POST" action="/friendRequest/{{friendStatus.receivedFriendRequest._id}}/decline">
+                            <input type="submit" class="btn-cstm-style rgstr-btn already-friends-unfriend" value="Decline Friendship" title="Decline Friend Request">
+                        </form>
+                    {{else if friendStatus.areFriends}}
+                        <label class="add-friend">Friends</label>
+                        <form method="POST" action="/user/{{_id}}/cancelFriendship">
+                            <input type="submit" id="remove-friend"
+                                   class="btn-cstm-style rgstr-btn already-friends-unfriend"
+                                   value="Cancel Friendship" title="Cancel Friendship">
+                        </form>
+                    {{else}}
+                        {{#isSameUser ../this.user.id profileUser.id}}
+                            <!-- you can't friend REQ yourself!-->
+                        {{else}}
+                            <form method="POST" action="/friendRequest/{{_id}}/send">
+                                <input type="submit" id="add-friend" class="btn-cstm-style rgstr-btn become-friends"
+                                       value="Add Friend" title="Send friend request">
+                            </form>
+                        {{/isSameUser}}
+                    {{/if}}
+                </section>
             </section>
-            <section class="btns-container-friend-unfriend">
-                {{#if friendStatus.sentRequest}}
-                  <span class="add-friend">Friend request pending</span>
-                  <form method="POST" action="/friendRequest/{{friendStatus.friendRequest._id}}/remove">
-                    <input type="submit" id="remove-friend" class="btn-cstm-style rgstr-btn already-friends-unfriend"
-                              value="Cancel request">
-                  </form>
-                {{else if friendStatus.receivedRequest}}
-                  <form method="POST" action="/friendRequest/{{friendStatus.receivedFriendRequest._id}}/accept">
-                    <input type="submit" class="button-with-plus add-friend" value="Accept Friendship">
-                  </form>
-                  <form method="POST" action="/friendRequest/{{friendStatus.receivedFriendRequest._id}}/decline">
-                    <input type="submit" class="button-with-plus remove-friend" value="Decline Friendship">
-                  </form>
-                {{else if friendStatus.areFriends}}
-                    <label class="add-friend">Friends</label>
-                    <form method="POST" action="/user/{{_id}}/cancelFriendship">
-                        <input type="submit" id="remove-friend" class="btn-cstm-style rgstr-btn already-friends-unfriend"
-                              value="Cancel Friendship">
-                    </form>
-                {{else}} 
-                  {{#isSameUser ../this.user.id profileUser.id}}
-                      <!-- you can't friend REQ yourself!-->
-                  {{else}}
-                      <form method="POST" action="/friendRequest/{{_id}}/send">
-                          <input type="submit" id="add-friend" class="btn-cstm-style rgstr-btn become-friends" value="Send Friend Request" title="Send friend request">
-                      </form>
-                  {{/isSameUser}} 
-                {{/if}}
-            </section>
-        </section>
-    </article>
-  {{/each}}
+        </article>
+    {{/each}}
 </div>
