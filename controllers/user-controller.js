@@ -150,9 +150,9 @@ module.exports = {
 
       // find the relation between the users
       let areFriends = req.user.friends.indexOf(user.id) !== -1
-      let friendRequestId = req.user.getFriendRequestTo(user.id)
+      let friendRequestId = req.user.getFriendRequestTo(user._id)
       let hasSentRequest = Boolean(friendRequestId)
-      let receivedFriendRequestId = req.user.getFriendRequestFrom(user.id)
+      let receivedFriendRequestId = req.user.getFriendRequestFrom(user._id)
       let hasReceivedRequest = Boolean(receivedFriendRequestId)
       let friendStatus = {
         sentRequest: hasSentRequest,
@@ -238,9 +238,9 @@ module.exports = {
       // attach a friendStatus object to each user, displaying thier relationship with the user doing the search
       users = users.map(user => {
         let areFriends = req.user.friends.indexOf(user.id) !== -1
-        let friendRequestId = req.user.getFriendRequestTo(user.id)
+        let friendRequestId = req.user.getFriendRequestTo(user._id)
         let hasSentRequest = Boolean(friendRequestId)
-        let receivedFriendRequestId = req.user.getFriendRequestFrom(user.id)
+        let receivedFriendRequestId = req.user.getFriendRequestFrom(user._id)
         let hasReceivedRequest = Boolean(receivedFriendRequestId)
         let friendStatus = {
           sentRequest: hasSentRequest,

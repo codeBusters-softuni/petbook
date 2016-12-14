@@ -61,7 +61,7 @@ userSchema.method({
     // friendRequests msut be populated!
     // returns the friend request if it exists, otherwise returns false
     let friendReqIndex = this.pendingFriendRequests.findIndex(frReq => {
-      return frReq.receiver.equals(userId)
+      return frReq.sender.equals(this._id) && frReq.receiver.equals(userId)
     })
     if (friendReqIndex === -1) {
       return false
@@ -74,7 +74,7 @@ userSchema.method({
     // friendRequests msut be populated!
     // returns the friend request if it exists, otherwise returns false
     let friendReqIndex = this.pendingFriendRequests.findIndex(frReq => {
-      return frReq.sender.equals(userId)
+      return frReq.sender.equals(userId) && frReq.receiver.equals(this._id)
     })
     if (friendReqIndex === -1) {
       return false
