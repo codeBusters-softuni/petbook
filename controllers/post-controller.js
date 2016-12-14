@@ -140,7 +140,7 @@ module.exports = {
           // So we simply change the name of this like
           post.likes[likeIndex].type = likeType
           post.likes[likeIndex].save().then(() => {
-            
+
             res.redirect(returnUrl)
             // Success!
           })
