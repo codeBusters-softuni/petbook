@@ -16,6 +16,11 @@ let parseReqBody = multer({ dest: photoUploadsPath,
 module.exports = {
   // function that handles photo uploads on the newsfeed
   uploadPhotosPost: (req, res) => {
+    let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
     let albumName = 'newsfeed-photos-' + req.user._id
 
     // Try to find the user's album to add the picture to, otherwise create a new one
@@ -23,11 +28,6 @@ module.exports = {
       .then(album => {
         parseReqBody(req, res, function (err) {  // middleware to parse the uploaded files to req.files and save them on the server
           if (!imagesAreValid(req, res, err, req.files)) {  // attached error messages to req.session.errMsg
-            let returnUrl = '/'
-            if (req.session.returnUrl) {
-              returnUrl = req.session.returnUrl
-              delete req.session.returnUrl
-            }
             res.redirect(returnUrl)
             return
           }
@@ -80,6 +80,11 @@ module.exports = {
   },
 
   uploadProfilePhoto: (req, res) => {
+    let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
     let parseProfilePhoto = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */ }).single('addProfilePhoto')
     let albumName = 'profile-photos-' + req.user._id
     // create or find said album
@@ -87,16 +92,8 @@ module.exports = {
       .then(album => {
         parseProfilePhoto(req, res, function (err) {
           if (!imagesAreValid(req, res, err, req.file)) {  // attached error messages to req.session.errMsg
-            let returnUrl = '/'
-            if (req.session.returnUrl) {
-              returnUrl = req.session.returnUrl
-              delete req.session.returnUrl
-            }
             res.redirect(returnUrl)
             return
-          }
-          if (!req.file) {
-            res.redirect('/')
           }
 
           let photo = req.file
@@ -118,7 +115,9 @@ module.exports = {
                 photos: [photo._id]
               })
               Post.create(newPost).then(() => {
-                res.redirect(`/user/${req.user.userId}`)
+                let profileUrl = `/user/${req.user.userId}`
+                req.session.returnUrl = profileUrl
+                res.redirect(profileUrl)
               })
             })
           })
@@ -127,25 +126,25 @@ module.exports = {
   },
 
   deletePhoto: (req, res) => {
+    let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
     let photoId = req.params.id
 
     Photo.findById(photoId).then(photo => {
       if (!photo) {
         req.session.errorMsg = 'No such photo exists.'
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       } else if (!photo.author.equals(req.user._id)) {
         req.session.errorMsg = 'You do not have permission to delete that photo!'
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       }
 
       photo.remove().then(() => {
-        let returnUrl = '/'
-        if (req.session.returnUrl) {
-          returnUrl = req.session.returnUrl
-          delete req.session.returnUrl
-        }
         res.redirect(returnUrl)
       })
     })
@@ -153,11 +152,17 @@ module.exports = {
 
   addLike: (req, res) => {
     // regex is: /photo\/(.+)\/add(.{3,7})/
+    let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
+
     let photoId = req.params[0]
     let likeType = req.params[1]
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
-      res.redirect('/')
+      res.redirect(returnUrl)
       return
     }
     let userId = req.user._id
@@ -165,7 +170,7 @@ module.exports = {
       if (!photo) {
         // ERROR - Photo with ID does not exist!
         req.session.errorMsg = 'No such photo exists.'
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       }
       let likeIndex = photo.likes.findIndex(like => {
@@ -183,11 +188,6 @@ module.exports = {
           // so we simply change the name of this like
           photo.likes[likeIndex].type = likeType
           photo.likes[likeIndex].save().then(() => {
-            let returnUrl = '/'
-            if (req.session.returnUrl) {
-              returnUrl = req.session.returnUrl
-              delete req.session.returnUrl
-            }
             res.redirect(returnUrl)
             // Success!
           })
@@ -196,12 +196,6 @@ module.exports = {
         // User is liking this photo for the first time
         Like.create({ type: likeType, author: req.user._id }).then(like => {
           photo.addLike(like._id).then(() => {
-            let returnUrl = '/'
-            if (req.session.returnUrl) {
-              returnUrl = req.session.returnUrl
-              delete req.session.returnUrl
-            }
-
             res.redirect(returnUrl)
           })
         })
@@ -210,12 +204,17 @@ module.exports = {
   },
 
   removeLike: (req, res) => {
+    let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
     // regex is: /photo\/(.+)\/remove(.{3,7})/
     let photoId = req.params[0]
     let likeType = req.params[1]
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
-      res.redirect('/')
+      res.redirect(returnUrl)
       return
     }
     let userId = req.user._id
@@ -223,7 +222,7 @@ module.exports = {
     Photo.findById(photoId).populate('likes').then(photo => {
       if (!photo) {
         req.session.errorMsg = 'No such photo exists.'
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       }
       // Get the index of the user's like
@@ -233,11 +232,11 @@ module.exports = {
 
       if (likeIndex === -1) {
         // ERROR - User has not liked this at all
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       } else if (photo.likes[likeIndex].type !== likeType) {
         // ERROR - example: User is trying to unPaw a post he has LOVED
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       }
 
@@ -246,11 +245,6 @@ module.exports = {
 
       photo.removeLike(likeId).then(() => {
         // Like is removed!
-        let returnUrl = '/'
-        if (req.session.returnUrl) {
-          returnUrl = req.session.returnUrl
-          delete req.session.returnUrl
-        }
 
         res.redirect(returnUrl)
         return

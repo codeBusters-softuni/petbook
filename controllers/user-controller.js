@@ -11,7 +11,7 @@ const userRegisterLayoutHbs = 'user/register/register-layout'
 module.exports = {
   registerGet: (req, res) => {
     Category.find({}).then(categories => {
-      res.render(userRegisterHbs, { categories: categories, layout: userRegisterLayoutHbs })
+      res.render(userRegisterHbs, { candidateUser: req.session.candidateUser, categories: categories, layout: userRegisterLayoutHbs })
     })
   },
 
@@ -20,28 +20,31 @@ module.exports = {
     if (!candidateUser.ownerName) {
       candidateUser.ownerName = 'nobody'
     }
+    // TODO: Add category change
     // Validate credentials
+    let toRedirect = false
     if (!emailValidator.validate(candidateUser.email)) {
-      let errorMessage = 'Your e-mail is invalid!'
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
-      return
+      req.session.errorMsg = 'Your e-mail is invalid!'
+      toRedirect = true
     } else if (candidateUser.fullName.length < 3 || candidateUser.fullName.length > 20) {
-      let errorMessage = 'Your full name has invalid length! It should be between 3 and 20 characters.'
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
-      return
+      req.session.errorMsg = 'Your full name has invalid length! It should be between 3 and 20 characters.'
+      toRedirect = true
     } else if (candidateUser.ownerName.length < 3 || candidateUser.ownerName.length > 20) {
-      let errorMessage = "Your owner's name has invalid length! It should be between 3 and 20 characters."
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
-      return
+      req.session.errorMsg = "Your owner's name has invalid length! It should be between 3 and 20 characters."
+      toRedirect = true
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
-      let errorMessage = 'Your password has invalid length! It should be between 4 and 20 characters.'
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
-      return
+      req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
+      toRedirect = true
     } else if (candidateUser.password !== candidateUser.confirmedPassword) {
-      let errorMessage = 'Your passwords do not match!'
-      res.render(userRegisterHbs, { user: candidateUser, categories: categories, layout: userRegisterLayoutHbs, errorMessage: errorMessage })
+      req.session.errorMsg = 'Your passwords do not match!'
+      toRedirect = true
+    }
+    if (toRedirect) {
+      req.session.candidateUser = candidateUser
+      res.redirect('/user/register')
       return
     }
+
     User  // function in the User.js model
       .register(candidateUser.fullName, candidateUser.email, candidateUser.ownerName, candidateUser.password, candidateUser.category)
       .then(newUser => {
@@ -70,23 +73,28 @@ module.exports = {
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
       req.session.errorMsg = 'Your e-mail is invalid!'
+      req.session.candidateUser = candidateUser
       res.redirect('/')
       return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
       req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
+      req.session.candidateUser = candidateUser
       res.redirect('/')
       return
     }
 
     User.findOne({ email: candidateUser.email }).then(user => {
       if (!user) {
+        // TODO
         req.session.errorMsg = 'Invalid e-mail/password.'
+        req.session.candidateUser = candidateUser
         res.redirect('/')
         return
       }
 
       if (!user.authenticate(candidateUser.password)) {
         req.session.errorMsg = 'Invalid e-mail/password.'
+        req.session.candidateUser = candidateUser
         res.redirect('/')
         return
       }
@@ -111,8 +119,11 @@ module.exports = {
   logout: (req, res) => {
     req.logOut()
     let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
     return res.redirect(returnUrl)
-    // res.redirect('/');
   },
 
   cancelFriendship: (req, res) => {

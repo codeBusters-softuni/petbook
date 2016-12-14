@@ -12,13 +12,14 @@ let parseReqBody = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000,
 console.log(photoUploadsPath)
 module.exports = {
   addPost: (req, res) => {
+    // TODO: ADD TRY CATCH :)
+    let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
     parseReqBody(req, res, function (err) {
       if (!imagesAreValid(req, res, err, req.files)) {  // attached error messages to req.session.errMsg
-        let returnUrl = '/'
-        if (req.session.returnUrl) {
-          returnUrl = req.session.returnUrl
-          delete req.session.returnUrl
-        }
         res.redirect(returnUrl)
         return
       }
@@ -34,7 +35,7 @@ module.exports = {
 
       if (newPost.content.length < 3) {
         req.session.errorMsg = "Your post's content is too short! It must be longer than 3 characters."
-        req.session.failedPost = newPost  // attach the post content to be displayed on the redirect  // TODO:
+        req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
         res.redirect('/')
         return
       }
@@ -104,12 +105,17 @@ module.exports = {
   },
 
   addLike: (req, res) => {
+    let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
     // regex is: /post\/(.+)\/add(.{3,7})/
     let postId = req.params[0]
     let likeType = req.params[1]
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
-      res.redirect('/')
+      res.redirect(returnUrl)
       return
     }
     let userId = req.user._id
@@ -117,7 +123,7 @@ module.exports = {
       if (!post) {
         // ERROR - Post with ID does not exist!
         req.session.errorMsg = 'No such post exists.'
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       }
       let likeIndex = post.likes.findIndex(like => {
@@ -127,18 +133,14 @@ module.exports = {
       if (likeIndex !== -1) {
         // user has already liked this post
         if (post.likes[likeIndex].type === likeType) {
-          res.redirect('/')
+          res.redirect(returnUrl)
           return
         } else {
           // User is un-liking this photo and giving it a {likeType}
           // So we simply change the name of this like
           post.likes[likeIndex].type = likeType
           post.likes[likeIndex].save().then(() => {
-            let returnUrl = '/'
-            if (req.session.returnUrl) {
-              returnUrl = req.session.returnUrl
-              delete req.session.returnUrl
-            }
+
             res.redirect(returnUrl)
             // Success!
           })
@@ -147,12 +149,6 @@ module.exports = {
         // User is liking this post for the first time
         Like.create({ type: likeType, author: req.user._id }).then(like => {
           post.addLike(like._id).then(() => {
-            let returnUrl = '/'
-            if (req.session.returnUrl) {
-              returnUrl = req.session.returnUrl
-              delete req.session.returnUrl
-            }
-
             res.redirect(returnUrl)
           })
         })
@@ -161,12 +157,17 @@ module.exports = {
   },
 
   removeLike: (req, res) => {
+    let returnUrl = '/'
+    if (req.session.returnUrl) {
+      returnUrl = req.session.returnUrl
+      delete req.session.returnUrl
+    }
     // regex is: /post\/(.+)\/remove(.{3,7})/
     let postId = req.params[0]
     let likeType = req.params[1]
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
-      res.redirect('/')
+      res.redirect(returnUrl)
       return
     }
     let userId = req.user._id
@@ -174,7 +175,7 @@ module.exports = {
     Post.findById(postId).populate('likes').then(post => {
       if (!post) {
         req.session.errorMsg = 'No such post exists.'
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       }
       // Get the index of the user's like'
@@ -184,11 +185,11 @@ module.exports = {
 
       if (likeIndex === -1) {
         // ERROR - User has not liked this at all
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       } else if (post.likes[likeIndex].type !== likeType) {
         // ERROR - example: User is trying to unPAW a post he has LOVED
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       }
       let likeId = post.likes[likeIndex]._id
@@ -196,12 +197,6 @@ module.exports = {
 
       post.removeLike(likeId).then(() => {
         // Like is removed!
-        let returnUrl = '/'
-        if (req.session.returnUrl) {
-          returnUrl = req.session.returnUrl
-          delete req.session.returnUrl
-        }
-
         res.redirect(returnUrl)
         return
       })
