@@ -10,7 +10,9 @@ module.exports = {
       return !frReq.sender.equals(req.user.id)
     })
     FriendRequest.populate(receivedFriendRequests, { path: 'sender' }).then(reqs => {
-      res.render('user/friendRequests', { friendRequests: receivedFriendRequests, categories: categories })
+      FriendRequest.populate(receivedFriendRequests, [{path: 'sender.profilePic', model: 'Photo'}, {path: 'sender.category', model: 'Category'}]).then(reqs => {
+        res.render('user/friendRequests', { friendRequests: receivedFriendRequests, categories: categories })
+      })
     })
   },
 

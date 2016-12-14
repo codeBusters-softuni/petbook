@@ -8,8 +8,8 @@
                         <div>
                             <article class="photo-container-for-search">
                                 <a href="/user/{{sender.userId}}">
-                                    {{#if profilePic}}
-                                        <img src="/uploads/{{profilePic.filename}}" alt=""
+                                    {{#if sender.profilePic}}
+                                        <img src="/uploads/{{sender.profilePic.filename}}" alt=""
                                              class="profile-image-for-search">
                                     {{else}}
                                         <img src="/images/no-profile-photo.jpg" alt="" class="profile-image-for-search">
@@ -30,15 +30,15 @@
                             <li>
                                 <span>Category: </span>
                                 <!--when click - new search and display all from that category-->
-                                <!--<a href="#">{{category.name}}</a>-->
+                                <a href="#">{{sender.category.name}}</a>
                             </li>
                             <li>
-                                <!--<span>Owner: </span><span class="owner-name"> {{ownerName}}</span>-->
+                                <span>Owner: </span><span class="owner-name"> {{sender.ownerName}}</span>
                             </li>
                             <li>
                                 <span>Email: </span>
                                 <!--when click - goes to profile-->
-                                <!--<a href="/user/{{userId}}">{{email}}</a>-->
+                                <a href="/user/{{sender.userId}}">{{sender.email}}</a>
                             </li>
 
                         </ul>
@@ -56,8 +56,6 @@
                                value="Decline Friendship" title="Decline Friendship">
                     </form>
                 </section>
-
-
             </section>
         </article>
     {{/each}}
