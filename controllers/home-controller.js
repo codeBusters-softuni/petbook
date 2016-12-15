@@ -41,7 +41,6 @@ module.exports = {
               Post.populate(postsInPage, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
                 Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
                   postsInPage = Post.initializeForView(postsInPage).then(postsInPage => {
-                    req.session.returnUrl = '/'
                     res.render('user/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
                   })
                 })

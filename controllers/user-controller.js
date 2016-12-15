@@ -105,11 +105,7 @@ module.exports = {
           return
         }
 
-        let returnUrl = '/'
-        if (req.session.returnUrl) {
-          returnUrl = req.session.returnUrl
-          delete req.session.returnUrl
-        }
+        let returnUrl = res.locals.returnUrl || '/'
 
         res.redirect(returnUrl)
       })
@@ -118,12 +114,7 @@ module.exports = {
 
   logout: (req, res) => {
     req.logOut()
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
-    return res.redirect(returnUrl)
+    return res.redirect('/')
   },
 
   cancelFriendship: (req, res) => {
@@ -206,7 +197,6 @@ module.exports = {
             Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
               postsInPage = Post.initializeForView(postsInPage).then(postsInPage => {
                 user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user
-                  req.session.returnUrl = req.originalUrl
                   res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsInPage, categories: categories, pages: pages })
                 })
               })
@@ -223,7 +213,6 @@ module.exports = {
       // load the page with the ability to upload photos/albums
       User.findById(req.user.id).populate('photos albums').then(user => {
         Photo.initializeForView(user.photos).then(photos => {
-          req.session.returnUrl = req.originalUrl
           res.render('user/uploadPhotos', { photos: photos, albums: user.albums, categories: categories })
         })
       })
@@ -235,7 +224,6 @@ module.exports = {
           return
         }
         Photo.initializeForView(user.photos).then(photos => {
-          req.session.returnUrl = req.originalUrl
           res.render('user/viewPhotos', { profileUser: user, photos: photos, albums: user.albums, categories: categories })
         })
       })

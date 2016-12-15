@@ -12,11 +12,7 @@ let parseReqBody = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000,
 
 module.exports = {
   addPost: (req, res) => {
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
+    let returnUrl = res.locals.returnUrl || '/'
     parseReqBody(req, res, function (err) {
       if (!imagesAreValid(req, res, err, req.files)) {  // attached error messages to req.session.errMsg
         res.redirect(returnUrl)
@@ -92,11 +88,7 @@ module.exports = {
       Comment_.create(newComment).then((newComment) => {
         post.addComment(newComment._id).then(() => {
           // Comment added!
-          let returnUrl = '/'
-          if (req.session.returnUrl) {
-            returnUrl = req.session.returnUrl
-            delete req.session.returnUrl
-          }
+          let returnUrl = res.locals.returnUrl || '/'
           res.redirect(returnUrl)
         })
       })
@@ -104,11 +96,7 @@ module.exports = {
   },
 
   addLike: (req, res) => {
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
+    let returnUrl = res.locals.returnUrl || '/'
     // regex is: /post\/(.+)\/add(.{3,7})/
     let postId = req.params[0]
     let likeType = req.params[1]
@@ -156,11 +144,7 @@ module.exports = {
   },
 
   removeLike: (req, res) => {
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
+    let returnUrl = res.locals.returnUrl || '/'
     // regex is: /post\/(.+)\/remove(.{3,7})/
     let postId = req.params[0]
     let likeType = req.params[1]

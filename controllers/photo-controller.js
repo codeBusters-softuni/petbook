@@ -16,11 +16,7 @@ let parseReqBody = multer({ dest: photoUploadsPath,
 module.exports = {
   // function that handles photo uploads on the newsfeed
   uploadPhotosPost: (req, res) => {
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
+    let returnUrl = res.locals.returnUrl || '/'
     let albumName = 'newsfeed-photos-' + req.user._id
 
     // Try to find the user's album to add the picture to, otherwise create a new one
@@ -80,11 +76,7 @@ module.exports = {
   },
 
   uploadProfilePhoto: (req, res) => {
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
+    let returnUrl = res.locals.returnUrl || '/'
     let parseProfilePhoto = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */ }).single('addProfilePhoto')
     let albumName = 'profile-photos-' + req.user._id
     // create or find said album
@@ -116,7 +108,6 @@ module.exports = {
               })
               Post.create(newPost).then(() => {
                 let profileUrl = `/user/${req.user.userId}`
-                req.session.returnUrl = profileUrl
                 res.redirect(profileUrl)
               })
             })
@@ -126,11 +117,7 @@ module.exports = {
   },
 
   deletePhoto: (req, res) => {
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
+    let returnUrl = res.locals.returnUrl || '/'
     let photoId = req.params.id
 
     Photo.findById(photoId).then(photo => {
@@ -152,11 +139,7 @@ module.exports = {
 
   addLike: (req, res) => {
     // regex is: /photo\/(.+)\/add(.{3,7})/
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
+    let returnUrl = res.locals.returnUrl || '/'
 
     let photoId = req.params[0]
     let likeType = req.params[1]
@@ -204,11 +187,7 @@ module.exports = {
   },
 
   removeLike: (req, res) => {
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
+    let returnUrl = res.locals.returnUrl || '/'
     // regex is: /photo\/(.+)\/remove(.{3,7})/
     let photoId = req.params[0]
     let likeType = req.params[1]

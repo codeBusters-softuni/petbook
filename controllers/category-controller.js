@@ -9,7 +9,6 @@ module.exports = {
   showArticles: (req, res) => {
     let page = parseInt(req.query.page || '1') - 1
     let category = req.params.category.toLowerCase().capitalize()
-
     if (categories.indexOf(category) === -1) {
       req.session.errorMsg = `Category ${category} does not exist!`
       res.redirect('/')
@@ -29,7 +28,6 @@ module.exports = {
           Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
             Post.initializeForView(postsInPage).then(postsInPage => {
               // sorts the posts and splits their likes
-              req.session.returnUrl = req.originalUrl
               res.render('user/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
             })
           })
@@ -65,7 +63,6 @@ module.exports = {
                 Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
                   // sorts the posts and splits their likes
                   Post.initializeForView(postsInPage).then(postsInPage => {
-                    req.session.returnUrl = req.originalUrl
                     res.render('user/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
                   })
                 })
