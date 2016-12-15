@@ -20,7 +20,6 @@ module.exports = {
     if (!candidateUser.ownerName) {
       candidateUser.ownerName = 'nobody'
     }
-    // TODO: Add category change
     // Validate credentials
     let toRedirect = false
     if (!emailValidator.validate(candidateUser.email)) {
@@ -69,32 +68,28 @@ module.exports = {
 
   loginPost: (req, res) => {
     let candidateUser = req.body
+    req.session.candidateUser = candidateUser
 
     // Validate credentials
     if (!emailValidator.validate(candidateUser.email)) {
       req.session.errorMsg = 'Your e-mail is invalid!'
-      req.session.candidateUser = candidateUser
       res.redirect('/')
       return
     } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
       req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
-      req.session.candidateUser = candidateUser
       res.redirect('/')
       return
     }
 
     User.findOne({ email: candidateUser.email }).then(user => {
       if (!user) {
-        // TODO
         req.session.errorMsg = 'Invalid e-mail/password.'
-        req.session.candidateUser = candidateUser
         res.redirect('/')
         return
       }
 
       if (!user.authenticate(candidateUser.password)) {
         req.session.errorMsg = 'Invalid e-mail/password.'
-        req.session.candidateUser = candidateUser
         res.redirect('/')
         return
       }
