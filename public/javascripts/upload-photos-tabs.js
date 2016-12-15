@@ -169,6 +169,76 @@ $(document).ready(function () {
 });
 
 
+// show images when click on them and move next and prev
+
+$(document).ready(function() {
+
+    var img = $('.images article img');
+    var nextBtn = $('.next');
+    var prevBtn = $('.prev');
+    var closeLightBox = $('.close-light-box');
+
+    var currentImg = '';
+    var nextImg = '';
+    var prevImg = '';
+
+    //open first image
+    img.on('click', function() {
+        var src = $(this).attr('src');
+        nextImg = $(this).parent().closest('article').next().find('img');
+        prevImg = $(this).parent().closest('article').prev().find('img');
+
+        console.log(nextImg.attr('src'));
+
+        $('#box').css('display', 'block');
+
+        display(src);
+
+    });
+
+//    click on NEXT button
+    nextBtn.on('click', function(e) {
+        if(!nextImg.is('img')) {
+            nextImg = img.first();
+        }
+
+        currentImg = nextImg;
+        var currentSrc = currentImg.attr('src');
+        prevImg = currentImg.parent().closest('article').prev().find('img');
+        nextImg = currentImg.parent().closest('article').next().find('img');
+        console.log(nextImg);
+
+
+        display(currentSrc);
+    });
+
+//    click on PREV button
+    prevBtn.on('click', function() {
+
+        if(!prevImg.is('img')) {
+            prevImg = img.last();
+        }
+
+        currentImg = prevImg;
+        var currentSrc = prevImg.attr('src');
+
+        nextImg = currentImg.parent().closest('article').next().find('img');
+        prevImg = currentImg.parent().closest('article').prev().find('img');
+
+        display(currentSrc);
+    });
+
+//    click on CLOSE button
+    closeLightBox.on('click', function() {
+        $('#box').css('display', 'none');
+    });
+
+    //display LIGHT BOX IMAGE
+    function display(src) {
+        $('.box-image').html('<img src=' + src + '>');
+    }
+});
+
 // filter photos by album
 
 $(document).ready(function () {
