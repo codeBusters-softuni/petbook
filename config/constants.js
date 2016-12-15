@@ -8,5 +8,8 @@ module.exports = {
   likes: ['Paw', 'Love', 'Dislike'],
   rootPath: config.rootFolder,
   photoUploadsPath: path.join(config.rootFolder, 'public', 'uploads'),
-  postsPerPage: 20
+  postsPerPage: 20,
+  favIconPath: path.join(config.rootFolder, '/public/images/favicon.ico'),
+  viewsDirPath: path.join(config.rootFolder, '/views'),
+  publicDirPath: path.join(config.rootFolder, 'public')
 }

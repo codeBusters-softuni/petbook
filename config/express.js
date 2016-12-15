@@ -1,17 +1,22 @@
 const express = require('express')
-const path = require('path')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const passport = require('passport')
+const favicon = require('serve-favicon')
+const constants = require('./constants')
+const favIconPath = constants.favIconPath
+const viewsDirPath = constants.viewsDirPath
+const publicDirPath = constants.publicDirPath
 
 module.exports = (app, config) => {
   require('./handlebar-helpers')  // load handlebars helpers
-  app.set('views', path.join(config.rootFolder, '/views'))
+  app.set('views', viewsDirPath)
   app.set('view engine', 'hbs')
 
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
+  app.use(favicon(favIconPath))
 
   app.use(cookieParser())
 
@@ -19,7 +24,7 @@ module.exports = (app, config) => {
   // TODO: Store somehwere else
   app.use(session({ secret: 's3cr3t5tr1ng', resave: false, saveUninitialized: false }))
 
-  app.use(express.static(path.join(config.rootFolder, 'public')))
+  app.use(express.static(publicDirPath))
 
   app.use(passport.initialize())
   app.use(passport.session())
