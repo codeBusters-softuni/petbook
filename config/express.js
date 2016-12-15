@@ -33,6 +33,10 @@ module.exports = (app, config) => {
       res.locals.failedPost = req.session.failedPost
       delete req.session.failedPost
     }
+    if (req.session.candidateUser) {
+      res.locals.candidateUser = req.session.candidateUser
+      delete req.session.candidateUser
+    }
     if (req.user) {
       res.locals.user = req.user
       res.locals.user.hasRequest = req.user.hasFriendRequest()

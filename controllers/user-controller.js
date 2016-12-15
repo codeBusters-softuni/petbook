@@ -11,7 +11,7 @@ const userRegisterLayoutHbs = 'user/register/register-layout'
 module.exports = {
   registerGet: (req, res) => {
     Category.find({}).then(categories => {
-      res.render(userRegisterHbs, { candidateUser: req.session.candidateUser, categories: categories, layout: userRegisterLayoutHbs })
+      res.render(userRegisterHbs, { candidateUser: res.locals.candidateUser, categories: categories, layout: userRegisterLayoutHbs })
     })
   },
 

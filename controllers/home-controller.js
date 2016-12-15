@@ -51,10 +51,10 @@ module.exports = {
         })
       })
     } else {
-      res.render('index', { categories: categories, candidateUser: req.session.candidateUser })
+      res.render('index', { categories: categories, candidateUser: res.locals.candidateUser })
     }
   },
   learnMoreGet: (req, res) => {
-    res.render('learnMore', { categories: categories, candidateUser: req.session.candidateUser })
+    res.render('learnMore', { categories: categories, candidateUser: res.locals.candidateUser })
   }
 }
