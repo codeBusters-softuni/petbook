@@ -16,16 +16,16 @@ function initializeForView (posts) {
       })
     })
     Promise.all(posts).then(posts => {
-      // Sort the posts in descending date order. (Newest ones first!)
-      posts.sort((a, b) => {
-        return b.date - a.date
-      })
-
       resolve(posts)
     })
   })
 }
 
+function sortPosts (posts) {
+  return posts.sort((postOne, postTwo) => {
+    return postTwo.date - postOne.date
+  })
+}
 let postSchema = mongoose.Schema(
   {
     content: { type: String, required: true },
@@ -105,3 +105,4 @@ const Post = mongoose.model('Post', postSchema)
 
 module.exports = Post
 module.exports.initializeForView = initializeForView
+module.exports.sortPosts = sortPosts
