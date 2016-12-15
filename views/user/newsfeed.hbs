@@ -49,13 +49,13 @@
                         <section>
                             <div class="contain-profile-image-container">
                                 <article class="profile-image-container">
+                                  <a href="/user/{{author.userId}}">
                                     {{#if author.profilePic}}
                                         <img src="/uploads/{{author.profilePic.filename}}" alt="">
                                     {{else}}
                                         <img src="/images/no-profile-photo.jpg" alt="">
                                     {{/if}}
-                                    <!--profile picture example: <img src="{dir photo resize width: 30px}"/>-->
-
+                                  </a>
                                 </article>
                             </div>
                             <article class="name-date-container underline-custom-style">
@@ -67,8 +67,6 @@
                                         <span>{{dateStr}}</span>
                                     </li>
                                 </ul>
-
-
                             </article>
                         </section>
                     </header>
@@ -77,12 +75,9 @@
                     </article>
 
                     <article class="cntnr-photos row custom-gallery">
-
                         {{#eachUpTo photos 4}}
                             <article class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-
                                 <section class="photo-cntnr">
-
                                     <div class="album-photo-content">
                                         <img src="/uploads/{{this.filename}}" alt="">
                                     </div>
@@ -281,16 +276,18 @@
                         <section>
                             <div class="contain-profile-image-container">
                                 <article class="profile-image-container">
-                                    {{#if author.profilePic}}
-                                        <img src="/uploads/{{author.profilePic.filename}}" alt="">
-                                    {{else}}
-                                        <img src="/images/no-profile-photo.jpg" alt="">
-                                    {{/if}}
+                                  <a href="/user/{{author.userId}}">
+                                  {{#if author.profilePic}}
+                                      <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                                  {{else}}
+                                      <img src="/images/no-profile-photo.jpg" alt="">
+                                  {{/if}}
+                                  </a>
                                 </article>
                             </div>
                             <section class="comment-comment-view">
                                 <article>
-                                    {{author.fullName}}
+                                    <a href="/user/{{author.userId}}" class="info-for-user">{{author.fullName}}</a>
                                 </article>
                                 <article class="underline-custom-style">
                                     {{dateStr}}

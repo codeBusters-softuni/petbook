@@ -11,6 +11,3 @@ require('./config/passport')()
 
 
 app.listen(1337)
-// TODO: Add links to each comment and user image
-
-
