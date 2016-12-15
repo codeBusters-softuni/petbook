@@ -147,6 +147,7 @@ module.exports = {
       if (!user) {
         req.session.errorMsg = 'No such user exists.'
         res.redirect('/')
+        return
       }
 
       // find the relation between the users
