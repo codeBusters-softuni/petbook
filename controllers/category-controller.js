@@ -30,7 +30,7 @@ module.exports = {
             Post.initializeForView(postsInPage).then(postsInPage => {
               // sorts the posts and splits their likes
               req.session.returnUrl = req.originalUrl
-              res.render('user/newsfeed', { posts: postsInPage, failedPost: req.session.failedPost, categories: categories, pages: pages })
+              res.render('user/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
             })
           })
         })
@@ -66,7 +66,7 @@ module.exports = {
                   // sorts the posts and splits their likes
                   Post.initializeForView(postsInPage).then(postsInPage => {
                     req.session.returnUrl = req.originalUrl
-                    res.render('user/newsfeed', { posts: postsInPage, failedPost: req.session.failedPost, categories: categories, pages: pages })
+                    res.render('user/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
                   })
                 })
               })

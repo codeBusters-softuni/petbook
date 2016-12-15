@@ -29,6 +29,10 @@ module.exports = (app, config) => {
       res.locals.errorMessage = req.session.errorMsg
       delete req.session.errorMsg
     }
+    if (req.session.failedPost) {
+      res.locals.failedPost = req.session.failedPost
+      delete req.session.failedPost
+    }
     if (req.user) {
       res.locals.user = req.user
       res.locals.user.hasRequest = req.user.hasFriendRequest()
