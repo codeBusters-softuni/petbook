@@ -5,7 +5,6 @@ let environment = process.env.ENVIRONMENT || 'development'
 const config = require('./config/config')[environment]
 
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
-console.log(__dirname + '/public/images/favicon.ico')
 
 require('./config/config').initialize()
 require('./config/database')(config)
