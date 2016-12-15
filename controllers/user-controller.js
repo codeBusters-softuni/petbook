@@ -11,7 +11,7 @@ const userRegisterLayoutHbs = 'user/register/register-layout'
 module.exports = {
   registerGet: (req, res) => {
     Category.find({}).then(categories => {
-      res.render(userRegisterHbs, { candidateUser: req.session.candidateUser, categories: categories, layout: userRegisterLayoutHbs })
+      res.render(userRegisterHbs, { candidateUser: res.locals.candidateUser, categories: categories, layout: userRegisterLayoutHbs })
     })
   },
 
@@ -105,11 +105,7 @@ module.exports = {
           return
         }
 
-        let returnUrl = '/'
-        if (req.session.returnUrl) {
-          returnUrl = req.session.returnUrl
-          delete req.session.returnUrl
-        }
+        let returnUrl = res.locals.returnUrl || '/'
 
         res.redirect(returnUrl)
       })
@@ -118,12 +114,7 @@ module.exports = {
 
   logout: (req, res) => {
     req.logOut()
-    let returnUrl = '/'
-    if (req.session.returnUrl) {
-      returnUrl = req.session.returnUrl
-      delete req.session.returnUrl
-    }
-    return res.redirect(returnUrl)
+    return res.redirect('/')
   },
 
   cancelFriendship: (req, res) => {
@@ -150,11 +141,13 @@ module.exports = {
   },
 
   profilePageGet: (req, res) => {
+    let page = parseInt(req.query.page || '1') - 1
     let userId = req.params.id
     User.findOne({ userId: userId }).populate('profilePic').then(user => {
       if (!user) {
         req.session.errorMsg = 'No such user exists.'
         res.redirect('/')
+        return
       }
 
       // find the relation between the users
@@ -192,15 +185,20 @@ module.exports = {
             })
           })
         }
-      }).then(postsToSee => {
-        Post.populate(postsToSee, 'author comments likes photos').then(() => {
+      }).then(posts => {
+        // sort by their date descending (newest first)
+        posts = Post.sortPosts(posts)
+        // get the posts in the page
+        let postPages = Post.getPostsInPage(page, posts)
+        let postsInPage = postPages.posts
+        let pages = postPages.pages  // array of possible pages [1,2,3]
+        Post.populate(postsInPage, 'author comments likes photos').then(() => {
           // populate each comment's author. Must be done after the initial populate
-          Post.populate(postsToSee, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
-            Post.populate(postsToSee, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
-              postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
+          Post.populate(postsInPage, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
+            Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
+              postsInPage = Post.initializeForView(postsInPage).then(postsInPage => {
                 user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user
-                  req.session.returnUrl = req.originalUrl
-                  res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
+                  res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsInPage, categories: categories, pages: pages })
                 })
               })
             })
@@ -216,7 +214,6 @@ module.exports = {
       // load the page with the ability to upload photos/albums
       User.findById(req.user.id).populate('photos albums').then(user => {
         Photo.initializeForView(user.photos).then(photos => {
-          req.session.returnUrl = req.originalUrl
           res.render('user/uploadPhotos', { photos: photos, albums: user.albums, categories: categories })
         })
       })
@@ -228,7 +225,6 @@ module.exports = {
           return
         }
         Photo.initializeForView(user.photos).then(photos => {
-          req.session.returnUrl = req.originalUrl
           res.render('user/viewPhotos', { profileUser: user, photos: photos, albums: user.albums, categories: categories })
         })
       })

@@ -1,7 +1,7 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
 
-function initializeForView(photos) {
+function initializeForView (photos) {
   // this function initializes an array of posts to be ready to be sent to a view
   // Splits the post's likes array into arrays of paws, loves and dislikes so that we can handle it properly in the view
   const Photo = mongoose.model('Photo')

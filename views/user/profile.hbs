@@ -382,8 +382,12 @@
             </section>
         {{/each}}
         <main>
-
-            <!-- Here include post view, about, photo gallery or groups views -->
+          <h4> Pages </h4>
+          <ul class="pagination">
+            {{#each pages}}  
+              <a href="?page={{this}}">{{this}}</a>
+            {{/each}}
+          </ul>
         </main>
     </section>
 </div>

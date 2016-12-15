@@ -14,7 +14,7 @@ module.exports = (app) => {
   // EVERYTHING BELOW REQUIRES AUTHENTICATION
   app.use((req, res, next) => {
     if (!req.isAuthenticated()) {
-      req.session.returnUrl = req.url
+      req.session.toLogIn = true
       res.redirect('/')  // lets the user log in. The loginPost function returns him to the URL he originally wanted to visit
     } else {
       next()

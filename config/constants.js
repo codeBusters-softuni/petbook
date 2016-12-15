@@ -7,5 +7,6 @@ module.exports = {
   categories: ['Dog', 'Cat'],
   likes: ['Paw', 'Love', 'Dislike'],
   rootPath: config.rootFolder,
-  photoUploadsPath: path.join(config.rootFolder, 'public', 'uploads')
+  photoUploadsPath: path.join(config.rootFolder, 'public', 'uploads'),
+  postsPerPage: 20
 }
