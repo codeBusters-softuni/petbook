@@ -325,6 +325,12 @@
                 </section>
             </section>
         {{/each}}
+        <h4> Pages </h4>
+        <ul class="pagination">
+          {{#each pages}}  
+            <a href="?page={{this}}">{{this}}</a>
+          {{/each}}
+        </ul>
         <!--end post view-->
     </main>
     </section>

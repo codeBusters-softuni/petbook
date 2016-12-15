@@ -150,6 +150,7 @@ module.exports = {
   },
 
   profilePageGet: (req, res) => {
+    let page = parseInt(req.query.page || '1') - 1
     let userId = req.params.id
     User.findOne({ userId: userId }).populate('profilePic').then(user => {
       if (!user) {
@@ -192,15 +193,21 @@ module.exports = {
             })
           })
         }
-      }).then(postsToSee => {
-        Post.populate(postsToSee, 'author comments likes photos').then(() => {
+      }).then(posts => {
+        // sort by their date descending (newest first)
+        posts = Post.sortPosts(posts)
+        // get the posts in the page
+        let postPages = Post.getPostsInPage(page, posts)
+        let postsInPage = postPages.posts
+        let pages = postPages.pages  // array of possible pages [1,2,3]
+        Post.populate(postsInPage, 'author comments likes photos').then(() => {
           // populate each comment's author. Must be done after the initial populate
-          Post.populate(postsToSee, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
-            Post.populate(postsToSee, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
-              postsToSee = Post.initializeForView(postsToSee).then(postsToSee => {
+          Post.populate(postsInPage, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
+            Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
+              postsInPage = Post.initializeForView(postsInPage).then(postsInPage => {
                 user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user
                   req.session.returnUrl = req.originalUrl
-                  res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsToSee, categories: categories })
+                  res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsInPage, categories: categories, pages: pages })
                 })
               })
             })
