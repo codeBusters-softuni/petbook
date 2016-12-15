@@ -115,13 +115,13 @@
                         <section>
                             <div class="contain-profile-image-container">
                                 <article class="profile-image-container">
-                                  <a href="/user/{{author.userId}}">
-                                    {{#if author.profilePic}}
-                                        <img src="/uploads/{{author.profilePic.filename}}" alt="">
-                                    {{else}}
-                                        <img src="/images/no-profile-photo.jpg" alt="">
-                                    {{/if}}
-                                  </a>
+                                    <a href="/user/{{author.userId}}">
+                                        {{#if author.profilePic}}
+                                            <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                                        {{else}}
+                                            <img src="/images/no-profile-photo.jpg" alt="">
+                                        {{/if}}
+                                    </a>
                                 </article>
                             </div>
 
@@ -337,21 +337,25 @@
                         <section>
                             <div class="contain-profile-image-container">
                                 <article class="profile-image-container">
-                                  <a href="/user/{{author.userId}}">
-                                    {{#if author.profilePic}}
-                                        <img src="/uploads/{{author.profilePic.filename}}" alt="">
-                                    {{else}}
-                                        <img src="/images/no-profile-photo.jpg" alt="">
-                                    {{/if}}
-                                  </a>
+                                    <a href="/user/{{author.userId}}">
+                                        {{#if author.profilePic}}
+                                            <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                                        {{else}}
+                                            <img src="/images/no-profile-photo.jpg" alt="">
+                                        {{/if}}
+                                    </a>
                                 </article>
                             </div>
                             <section class="comment-comment-view">
-                                <article>
-                                    <a href="/user/{{author.userId}}">{{author.fullName}}</a>
-                                </article>
                                 <article class="underline-custom-style">
-                                    {{dateStr}}
+                                    <ul class="info-for-user">
+                                        <li>
+                                            <a href="/user/{{author.userId}}">{{author.fullName}}</a>
+                                        </li>
+                                        <li>
+                                            <span>{{dateStr}}</span>
+                                        </li>
+                                    </ul>
                                 </article>
                                 <section id="comment-value">
                                     {{content}}
@@ -385,12 +389,12 @@
             </section>
         {{/each}}
         <main>
-          <h4> Pages </h4>
-          <ul class="pagination">
-            {{#each pages}}  
-              <a href="?page={{this}}">{{this}}</a>
-            {{/each}}
-          </ul>
+            <h4> Pages </h4>
+            <ul class="pagination">
+                {{#each pages}}
+                    <a href="?page={{this}}">{{this}}</a>
+                {{/each}}
+            </ul>
         </main>
     </section>
 </div>

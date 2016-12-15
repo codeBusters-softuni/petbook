@@ -49,13 +49,13 @@
                         <section>
                             <div class="contain-profile-image-container">
                                 <article class="profile-image-container">
-                                  <a href="/user/{{author.userId}}">
-                                    {{#if author.profilePic}}
-                                        <img src="/uploads/{{author.profilePic.filename}}" alt="">
-                                    {{else}}
-                                        <img src="/images/no-profile-photo.jpg" alt="">
-                                    {{/if}}
-                                  </a>
+                                    <a href="/user/{{author.userId}}">
+                                        {{#if author.profilePic}}
+                                            <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                                        {{else}}
+                                            <img src="/images/no-profile-photo.jpg" alt="">
+                                        {{/if}}
+                                    </a>
                                 </article>
                             </div>
                             <article class="name-date-container underline-custom-style">
@@ -88,7 +88,8 @@
                                                     <form method="post" action="/photo/{{id}}/removePaw">
                                                         {{!--SHOULD BE GREY--}}
                                                         <li>
-                                                            <input type="submit" id="remove-paw" class="btn" value="">{{paws.length}}
+                                                            <input type="submit" id="remove-paw" class="btn"
+                                                                   value="">{{paws.length}}
                                                         </li>
                                                     </form>
                                                     <form method="post" action="/photo/{{id}}/addLove">
@@ -115,7 +116,8 @@
                                                         <form method="post" action="/photo/{{id}}/removeLove">
                                                             {{!--SHOULD BE GREY--}}
                                                             <li>
-                                                                <input type="submit" id="remove-love" class="btn" value="">{{loves.length}}
+                                                                <input type="submit" id="remove-love" class="btn"
+                                                                       value="">{{loves.length}}
                                                             </li>
                                                         </form>
                                                         <form method="post" action="/photo/{{id}}/addDislike">
@@ -185,7 +187,8 @@
                                     <form method="post" action="/post/{{id}}/removePaw">
                                         {{!--SHOULD BE GREY--}}
                                         <li>
-                                            <input type="submit" id="remove-paw" class="btn" value="">{{paws.length}} Paws
+                                            <input type="submit" id="remove-paw" class="btn" value="">{{paws.length}}
+                                            Paws
                                         </li>
                                     </form>
                                     <form method="post" action="/post/{{id}}/addLove">
@@ -210,7 +213,8 @@
                                         <form method="post" action="/post/{{id}}/removeLove">
                                             {{!--SHOULD BE GREY--}}
                                             <li>
-                                                <input type="submit" id="remove-love" class="btn" value="">{{loves.length}} Loves
+                                                <input type="submit" id="remove-love" class="btn"
+                                                       value="">{{loves.length}} Loves
                                             </li>
                                         </form>
                                         <form method="post" action="/post/{{id}}/addDislike">
@@ -276,21 +280,26 @@
                         <section>
                             <div class="contain-profile-image-container">
                                 <article class="profile-image-container">
-                                  <a href="/user/{{author.userId}}">
-                                  {{#if author.profilePic}}
-                                      <img src="/uploads/{{author.profilePic.filename}}" alt="">
-                                  {{else}}
-                                      <img src="/images/no-profile-photo.jpg" alt="">
-                                  {{/if}}
-                                  </a>
+                                    <a href="/user/{{author.userId}}">
+                                        {{#if author.profilePic}}
+                                            <img src="/uploads/{{author.profilePic.filename}}" alt="">
+                                        {{else}}
+                                            <img src="/images/no-profile-photo.jpg" alt="">
+                                        {{/if}}
+                                    </a>
                                 </article>
                             </div>
                             <section class="comment-comment-view">
-                                <article>
-                                    <a href="/user/{{author.userId}}" class="info-for-user">{{author.fullName}}</a>
-                                </article>
                                 <article class="underline-custom-style">
-                                    {{dateStr}}
+                                    <ul class="info-for-user">
+                                        <li>
+                                            <a href="/user/{{author.userId}}"
+                                               class="info-for-user">{{author.fullName}}</a>
+                                        </li>
+                                        <li>
+                                            <span>{{dateStr}}</span>
+                                        </li>
+                                    </ul>
                                 </article>
                                 <section id="comment-value">
                                     {{content}}
@@ -324,9 +333,9 @@
         {{/each}}
         <h4> Pages </h4>
         <ul class="pagination">
-          {{#each pages}}  
-            <a href="?page={{this}}">{{this}}</a>
-          {{/each}}
+            {{#each pages}}
+                <a href="?page={{this}}">{{this}}</a>
+            {{/each}}
         </ul>
         <!--end post view-->
     </main>
