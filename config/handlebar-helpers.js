@@ -46,6 +46,7 @@ handlebars.registerHelper({
   hasDisliked: hasLiked,
   hasLoved: hasLiked,
   isSameUser: isSameUser,
+  areEqual: isSameUser,
   joinCategoriesString: joinCategoriesString,
   eachUpTo: eachUpTo
 })

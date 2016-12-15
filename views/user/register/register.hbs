@@ -31,7 +31,7 @@
                 <div class="">
                     <select class="cstm-input-register-style input-cstm-style" name="category">
                         {{#each categories}}
-                            <option value={{name}}>{{name}}</option>
+                            <option value={{name}} {{#areEqual this.name ../candidateUser.category }} selected {{/areEqual}}>{{name}}</option>
                         {{/each}}
                     </select>
                 </div>
