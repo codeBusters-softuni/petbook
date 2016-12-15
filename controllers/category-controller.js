@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Post = mongoose.model('Post')
 const Category = mongoose.model('Category')
 const categories = require('./../config/constants').categories
-// TODO: ADD RETURN URL
+
 module.exports = {
   // This function should show all the articles for the given category
   // if the user is not of the same category, we should only show the public posts that are in that category!
@@ -22,6 +22,7 @@ module.exports = {
           Post.populate(posts, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
             posts = Post.initializeForView(posts).then(posts => {
               // sorts the posts and splits their likes
+              req.session.returnUrl = req.originalUrl
               res.render('user/newsfeed', { posts: posts, failedPost: req.session.failedPost, categories: categories })
             })
           })
@@ -40,6 +41,7 @@ module.exports = {
             Post.populate(posts, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
               // sorts the posts and splits their likes
               Post.initializeForView(posts).then(posts => {
+                req.session.returnUrl = req.originalUrl
                 res.render('user/newsfeed', { posts: posts, failedPost: req.session.failedPost, categories: categories })
               })
             })
