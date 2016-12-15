@@ -147,7 +147,7 @@ userSchema.method({
     return new Promise((resolve, reject) => {
       let postLikes = []
       let postPromise = new Promise((resolve, reject) => {
-        Post.find({author: this._id}).populate('likes').then(posts => {
+        Post.find({ author: this._id }).populate('likes').then(posts => {
           posts.forEach(post => {
             postLikes.push.apply(postLikes, post.likes)
           })
@@ -157,7 +157,7 @@ userSchema.method({
 
       let photoLikes = []
       let photoPromise = new Promise((resolve, reject) => {
-        Photo.find({author: this._id}).populate('likes').then(photos => {
+        Photo.find({ author: this._id }).populate('likes').then(photos => {
           photos.forEach(photo => {
             photoLikes.push.apply(photoLikes, photo.likes)
           })
@@ -172,6 +172,24 @@ userSchema.method({
         this.receivedLovesCount = receivedLikes.filter(like => { return like.type === 'Love' }).length
         this.receivedDislikesCount = receivedLikes.filter(like => { return like.type === 'Dislike' }).length
         resolve(this)
+      })
+    })
+  },
+
+  getPostsByFriends: function () {
+    const Post = mongoose.model('Post')
+    // returns all the posts by the user's friends
+    return new Promise((resolve, reject) => {
+      let friendPostsPromises = []
+      this.friends.forEach(friend => {                               // for each friend
+        friendPostsPromises.push(new Promise((resolve, reject) => {  // add a promise
+          Post.find({ author: friend }).then(posts => {
+            resolve(posts)                                           // which resolves his posts
+          }).catch(err => reject(err))
+        }))
+      })
+      Promise.all(friendPostsPromises).then(friendPosts => {
+        resolve([].concat.apply([], friendPosts))  // flatten the array of arrays into one array
       })
     })
   }
