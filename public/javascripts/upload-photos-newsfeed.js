@@ -68,3 +68,126 @@ function uploadPhotosFromPost() {
 
 }
 
+// show images when click on them and move next and prev
+
+$(document).ready(function() {
+    var img = $('.newsfeed-post-images .newsfeed-images img'); // selects all images
+    var imgArticles = $('.newsfeed-post-images .newsfeed-images article');
+    var lightBox = document.getElementById('box');
+    var boxImages = document.createElement('div')
+    boxImages.className +=" box-image"
+    lightBox.insertBefore(boxImages, null)
+
+    var currImgClone;
+
+    // var description = $('.photo-description .description');
+    var nextBtn = $('.next-newsfeed');
+    var prevBtn = $('.prev-newsfeed');
+    var closeLightBox = $('.close-light-box');
+
+    var currentImg = '';
+    var nextImg = '';
+    var prevImg = '';
+
+    var indexImg = 0;
+    var indexArticle = 0;
+
+    //open first image
+    img.on('click', function() {
+        indexImg = img.index($(this));
+        indexArticle = indexImg;
+
+        currImgClone = imgArticles.eq(indexArticle).addClass("selected")
+        $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages)
+
+        $(this).parent().closest('.newsfeed-post-images').siblings().removeClass('newsfeed-post-images')
+        img = $('.newsfeed-post-images .newsfeed-images img');
+
+        imgArticles = $('.newsfeed-post-images .newsfeed-images article');
+
+
+        nextImg = $(this).parent().closest('article').next().find('img');
+
+        prevImg = $(this).parent().closest('article').prev().find('img');
+
+        indexImg = img.index($(this));
+        indexArticle = indexImg;
+
+        $('#box').css('display', 'block');
+
+        display();
+
+    });
+
+//    click on NEXT button
+    nextBtn.on('click', function(e) {
+        if(!nextImg.is('img')) {
+            nextImg = img.first();
+        }
+        removeByClass('box-image', 'selected')
+
+        imgArticles.eq(indexArticle).removeClass("selected")
+        currentImg = nextImg;
+        indexImg = img.index(currentImg);
+        indexArticle = indexImg;
+
+        currImgClone = imgArticles.eq(indexArticle).addClass("selected")
+        $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages)
+
+
+        // var currentSrc = currentImg.attr('src');
+        prevImg = currentImg.parent().closest('article').prev().find('img');
+        nextImg = currentImg.parent().closest('article').next().find('img');
+
+
+        display();
+    });
+
+//    click on PREV button
+    prevBtn.on('click', function() {
+        if(!prevImg.is('img')) {
+            prevImg = img.last();
+        }
+
+        removeByClass('box-image', 'selected')
+        imgArticles.eq(indexArticle).removeClass("selected")
+        currentImg = prevImg;
+        indexImg = img.index(currentImg);
+        indexArticle = indexImg;
+
+        currImgClone = imgArticles.eq(indexArticle).addClass("selected")
+        $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages)
+
+
+        // var currentSrc = prevImg.attr('src');
+
+        nextImg = currentImg.parent().closest('article').next().find('img');
+        prevImg = currentImg.parent().closest('article').prev().find('img');
+
+
+        display();
+    });
+
+//    click on CLOSE button
+    closeLightBox.on('click', function() {
+        removeByClass('box-image', 'selected')
+        imgArticles.eq(indexArticle).removeClass("selected")
+
+        currentImg.parent().closest('.post-view').siblings().addClass('newsfeed-post-images');
+
+        img = $('.newsfeed-post-images .newsfeed-images img');
+        imgArticles = $('.newsfeed-post-images .newsfeed-images article');
+
+        $('#box').css('display', 'none');
+    });
+
+    function removeByClass(classParent, className) {
+        $("." +classParent +" " + "."+className).remove();
+    }
+
+    //display LIGHT BOX IMAGE
+    function display() { //, indexFooter, indexDescription
+        $('.box-image')
+    }
+});
+

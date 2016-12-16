@@ -169,75 +169,99 @@ $(document).ready(function () {
 });
 
 
-// show images when click on them and move next and prev
-
-$(document).ready(function() {
-
-    var img = $('.images article img');
-    var nextBtn = $('.next');
-    var prevBtn = $('.prev');
-    var closeLightBox = $('.close-light-box');
-
-    var currentImg = '';
-    var nextImg = '';
-    var prevImg = '';
-
-    //open first image
-    img.on('click', function() {
-        var src = $(this).attr('src');
-        nextImg = $(this).parent().closest('article').next().find('img');
-        prevImg = $(this).parent().closest('article').prev().find('img');
-
-        console.log(nextImg.attr('src'));
-
-        $('#box').css('display', 'block');
-
-        display(src);
-
-    });
-
-//    click on NEXT button
-    nextBtn.on('click', function(e) {
-        if(!nextImg.is('img')) {
-            nextImg = img.first();
-        }
-
-        currentImg = nextImg;
-        var currentSrc = currentImg.attr('src');
-        prevImg = currentImg.parent().closest('article').prev().find('img');
-        nextImg = currentImg.parent().closest('article').next().find('img');
-        console.log(nextImg);
-
-
-        display(currentSrc);
-    });
-
-//    click on PREV button
-    prevBtn.on('click', function() {
-
-        if(!prevImg.is('img')) {
-            prevImg = img.last();
-        }
-
-        currentImg = prevImg;
-        var currentSrc = prevImg.attr('src');
-
-        nextImg = currentImg.parent().closest('article').next().find('img');
-        prevImg = currentImg.parent().closest('article').prev().find('img');
-
-        display(currentSrc);
-    });
-
-//    click on CLOSE button
-    closeLightBox.on('click', function() {
-        $('#box').css('display', 'none');
-    });
-
-    //display LIGHT BOX IMAGE
-    function display(src) {
-        $('.box-image').html('<img src=' + src + '>');
-    }
-});
+// // show images when click on them and move next and prev
+//
+// $(document).ready(function() {
+//
+//     var img = $('.images article img');
+//     var footer = $('.photo-buttons .preview-photo-thumbnail-footer');
+//     var description = $('.photo-description .description');
+//     var nextBtn = $('.next');
+//     var prevBtn = $('.prev');
+//     var closeLightBox = $('.close-light-box');
+//
+//     var currentImg = '';
+//     var nextImg = '';
+//     var prevImg = '';
+//
+//     var indexImg = 0;
+//     var indexFooter = 0;
+//     var indexDescription = 0;
+//
+//     // var paws ='';
+//     // var loves ='';
+//     // var hates ='';
+//     // var formAction = ''
+//
+//     //open first image
+//     img.on('click', function() {
+//         var src = $(this).attr('src');
+//         nextImg = $(this).parent().closest('article').next().find('img');
+//         prevImg = $(this).parent().closest('article').prev().find('img');
+//
+//         // paws = $(this).parent().closest('article').find()
+//
+//         indexImg = img.index($(this));
+//         indexFooter = indexImg;
+//         indexDescription = indexImg;
+//
+//
+//         $('#box').css('display', 'block');
+//
+//         display(src, indexFooter, indexDescription);
+//
+//     });
+//
+// //    click on NEXT button
+//     nextBtn.on('click', function(e) {
+//         if(!nextImg.is('img')) {
+//             nextImg = img.first();
+//         }
+//
+//         currentImg = nextImg;
+//         var currentSrc = currentImg.attr('src');
+//         prevImg = currentImg.parent().closest('article').prev().find('img');
+//         nextImg = currentImg.parent().closest('article').next().find('img');
+//
+//         indexImg = img.index(currentImg);
+//         indexFooter = indexImg;
+//         indexDescription = indexImg;
+//
+//         display(currentSrc, indexFooter, indexDescription);
+//     });
+//
+// //    click on PREV button
+//     prevBtn.on('click', function() {
+//
+//         if(!prevImg.is('img')) {
+//             prevImg = img.last();
+//         }
+//
+//         currentImg = prevImg;
+//         var currentSrc = prevImg.attr('src');
+//
+//         nextImg = currentImg.parent().closest('article').next().find('img');
+//         prevImg = currentImg.parent().closest('article').prev().find('img');
+//
+//         indexImg = img.index(currentImg);
+//         indexFooter = indexImg;
+//         indexDescription = indexImg;
+//
+//         display(currentSrc, indexFooter, indexDescription);
+//     });
+//
+// //    click on CLOSE button
+//     closeLightBox.on('click', function() {
+//         $('#box').css('display', 'none');
+//     });
+//
+//     //display LIGHT BOX IMAGE
+//     function display(src, indexFooter, indexDescription) {
+//         $('.box-image').html('<img src=' + src + '>');
+//         footer.eq(indexFooter).css('display', 'block').siblings().css('display', 'none');
+//         description.eq(indexDescription).css('display', 'block').siblings().css('display', 'none');
+//     }
+// });
 
 // filter photos by album
 

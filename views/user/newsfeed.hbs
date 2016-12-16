@@ -43,7 +43,7 @@
     <main>
         <!-- Here post view -->
         {{#each posts}}
-            <section id="post-view" class="post-view">
+            <section id="post-view" class="post-view newsfeed-post-images">
                 <section class="post-post-view">
                     <header>
                         <section>
@@ -74,7 +74,7 @@
                         {{content}}
                     </article>
 
-                    <article class="cntnr-photos row custom-gallery">
+                    <article class="cntnr-photos row custom-gallery newsfeed-images">
                         {{#eachUpTo photos 4}}
                             <article class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                                 <section class="photo-cntnr">
@@ -341,3 +341,15 @@
     </main>
     </section>
 </div>
+
+<section id="backdrop"></section>
+<section id="box">
+    <div class="prev-newsfeed">P</div>
+    <div class="next-newsfeed">N</div>
+    <div class="close-light-box">X</div>
+    <div class="photo-description">
+        {{#each photos}}
+            <div class="description">{{this.description}}</div>
+        {{/each}}
+    </div>
+</section>
