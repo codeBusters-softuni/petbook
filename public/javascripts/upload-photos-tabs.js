@@ -170,98 +170,121 @@ $(document).ready(function () {
 
 
 // // show images when click on them and move next and prev
-//
-// $(document).ready(function() {
-//
-//     var img = $('.images article img');
-//     var footer = $('.photo-buttons .preview-photo-thumbnail-footer');
-//     var description = $('.photo-description .description');
-//     var nextBtn = $('.next');
-//     var prevBtn = $('.prev');
-//     var closeLightBox = $('.close-light-box');
-//
-//     var currentImg = '';
-//     var nextImg = '';
-//     var prevImg = '';
-//
-//     var indexImg = 0;
-//     var indexFooter = 0;
-//     var indexDescription = 0;
-//
-//     // var paws ='';
-//     // var loves ='';
-//     // var hates ='';
-//     // var formAction = ''
-//
-//     //open first image
-//     img.on('click', function() {
-//         var src = $(this).attr('src');
-//         nextImg = $(this).parent().closest('article').next().find('img');
-//         prevImg = $(this).parent().closest('article').prev().find('img');
-//
-//         // paws = $(this).parent().closest('article').find()
-//
-//         indexImg = img.index($(this));
-//         indexFooter = indexImg;
-//         indexDescription = indexImg;
-//
-//
-//         $('#box').css('display', 'block');
-//
-//         display(src, indexFooter, indexDescription);
-//
-//     });
-//
-// //    click on NEXT button
-//     nextBtn.on('click', function(e) {
-//         if(!nextImg.is('img')) {
-//             nextImg = img.first();
-//         }
-//
-//         currentImg = nextImg;
-//         var currentSrc = currentImg.attr('src');
-//         prevImg = currentImg.parent().closest('article').prev().find('img');
-//         nextImg = currentImg.parent().closest('article').next().find('img');
-//
-//         indexImg = img.index(currentImg);
-//         indexFooter = indexImg;
-//         indexDescription = indexImg;
-//
-//         display(currentSrc, indexFooter, indexDescription);
-//     });
-//
-// //    click on PREV button
-//     prevBtn.on('click', function() {
-//
-//         if(!prevImg.is('img')) {
-//             prevImg = img.last();
-//         }
-//
-//         currentImg = prevImg;
-//         var currentSrc = prevImg.attr('src');
-//
-//         nextImg = currentImg.parent().closest('article').next().find('img');
-//         prevImg = currentImg.parent().closest('article').prev().find('img');
-//
-//         indexImg = img.index(currentImg);
-//         indexFooter = indexImg;
-//         indexDescription = indexImg;
-//
-//         display(currentSrc, indexFooter, indexDescription);
-//     });
-//
-// //    click on CLOSE button
-//     closeLightBox.on('click', function() {
-//         $('#box').css('display', 'none');
-//     });
-//
-//     //display LIGHT BOX IMAGE
-//     function display(src, indexFooter, indexDescription) {
-//         $('.box-image').html('<img src=' + src + '>');
-//         footer.eq(indexFooter).css('display', 'block').siblings().css('display', 'none');
-//         description.eq(indexDescription).css('display', 'block').siblings().css('display', 'none');
-//     }
-// });
+
+$(document).ready(function() {
+    var img = $('.images img'); // selects all images
+    console.log(img)
+    var imgArticles = $('.images article'); // select all articles that contain images and buttons
+    console.log(imgArticles)
+    var lightBox = document.getElementById('box'); // select lightbox
+    var boxImages = document.createElement('div') // create div that contains the image
+    boxImages.className +=" box-image" // give that div class
+    lightBox.insertBefore(boxImages, null) // insert that div in the lightbox
+
+    var currImgClone; // initialize the clone of the article with img and buttons what we will show in the lightbox
+
+    // var description = $('.photo-description .description');
+    var nextBtn = $('.next'); // get next button
+    var prevBtn = $('.prev'); // get prev button
+    var closeLightBox = $('.close-light-box'); // get close button
+
+    // initialize images to swap
+    var currentImg = '';
+    var nextImg = '';
+    var prevImg = '';
+
+    var indexImg = 0; //initialize index of clicked image
+    var indexArticle = 0; //initialize index of the article that contains clicked image and its buttons
+
+    //open first image
+    img.on('click', function() {
+        indexImg = img.index($(this)); // assign var to the index of the image that user clicked on
+        indexArticle = indexImg; // assign var to the index of the image that user clicked on - they are the same
+
+        currImgClone = imgArticles.eq(indexArticle).addClass("selected") //add class "selected" to the article that contains the selected image and buttons
+        $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").appendTo(boxImages) // clone the selected article and append it to the div container that should contain the selected image
+
+        nextImg = $(this).parent().closest('article').next().find('img'); //define next img
+        // console.log(nextImg)
+
+        prevImg = $(this).parent().closest('article').prev().find('img'); //define prev img
+        // console.log(prevImg)
+
+        indexImg = img.index($(this)); //define index of clicked image
+        indexArticle = indexImg; //define index of the article that contains clicked image and its buttons
+
+        $('#box').css('display', 'block'); // lightbox become visible
+
+        display(); // call display function
+
+    });
+
+//    click on NEXT button
+    nextBtn.on('click', function(e) {
+        // console.log(nextImg)
+        if(!nextImg.is('img')) {  //if next img is undefined
+            nextImg = img.first(); // next img becomes the first from the img array
+        }
+        removeByClass('box-image', 'selected') //on next click we should remove the article with the special "selected" class
+// and give that class to the next article which becomes current photo - currImgClone
+        imgArticles.eq(indexArticle).removeClass("selected") //remove special class from the articles Array too,
+        //so that when we give that special class to the next article then we can select it
+        currentImg = nextImg;  // current image becomes the next image
+        indexImg = img.index(currentImg); //define index of clicked image
+        indexArticle = indexImg;  //define index of the article that contains clicked image and its buttons
+
+        currImgClone = imgArticles.eq(indexArticle).addClass("selected") //add class "selected" to the article that contains the selected image and buttons
+        $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").appendTo(boxImages) // clone the selected article and append it to the div container that should contain the selected image
+
+        prevImg = currentImg.parent().closest('article').prev().find('img');  //define prev img
+        nextImg = currentImg.parent().closest('article').next().find('img'); //define next img
+
+
+        display();
+    });
+
+//    click on PREV button
+    prevBtn.on('click', function() {  // same as next!!
+        if(!prevImg.is('img')) {
+            prevImg = img.last();
+        }
+
+        removeByClass('box-image', 'selected')
+        imgArticles.eq(indexArticle).removeClass("selected")
+        currentImg = prevImg;
+        indexImg = img.index(currentImg);
+        indexArticle = indexImg;
+
+        currImgClone = imgArticles.eq(indexArticle).addClass("selected")
+        $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").appendTo(boxImages)
+
+        nextImg = currentImg.parent().closest('article').next().find('img');
+        prevImg = currentImg.parent().closest('article').prev().find('img');
+
+
+        display();
+    });
+
+//    click on CLOSE button
+    closeLightBox.on('click', function() { //on close click we should remove the article with the special "selected" class
+        removeByClass('box-image', 'selected') //remove special class from the articles Array too,
+        imgArticles.eq(indexArticle).removeClass("selected") //so that when we give that special class to the next image when click on it
+
+        img = $('.images img'); // selects all images
+        imgArticles = $('.images article'); // select all articles that contain images and buttons
+
+        $('#box').css('display', 'none'); // give style display: none to lightbox so that it is not visible
+    });
+
+    function removeByClass(classParent, className) { // on click on next or prev button, remove the current article(that contains img and buttons)
+        $("." +classParent +" " + "."+className).remove();
+    }
+
+    //display LIGHT BOX IMAGE
+    function display() { //, indexFooter, indexDescription
+        $('.box-image')
+    }
+});
 
 // filter photos by album
 

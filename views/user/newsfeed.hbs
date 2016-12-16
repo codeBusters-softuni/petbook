@@ -81,6 +81,7 @@
                                     <div class="album-photo-content">
                                         <img src="/uploads/{{this.filename}}" alt="">
                                     </div>
+                                    <div class="description">{{this.description}}</div>
                                     <footer class="preview-photo-thumbnail-footer">
                                         {{#if ../../this.user}}
                                             <ul>
@@ -347,9 +348,5 @@
     <div class="prev-newsfeed">P</div>
     <div class="next-newsfeed">N</div>
     <div class="close-light-box">X</div>
-    <div class="photo-description">
-        {{#each photos}}
-            <div class="description">{{this.description}}</div>
-        {{/each}}
     </div>
 </section>

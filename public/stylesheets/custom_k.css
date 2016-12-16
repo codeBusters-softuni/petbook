@@ -1458,7 +1458,11 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     opacity:1;
     display: none;
 }
-#box .photo-description .description{
+#box .description{
+    display: block;
+}
+
+.custom-gallery .description{
     display: none;
 }
 
