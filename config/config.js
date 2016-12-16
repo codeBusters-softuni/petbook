@@ -1,6 +1,10 @@
 const path = require('path')
 
 module.exports = {
+  test: {
+    rootFolder: path.normalize(path.join(__dirname, '/../')),
+    connectionString: 'mongodb://localhost:27017/petbook_test'
+  },
   development: {
     rootFolder: path.normalize(path.join(__dirname, '/../')),
     connectionString: 'mongodb://localhost:27017/petbook'
