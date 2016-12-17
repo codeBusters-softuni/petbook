@@ -1101,6 +1101,30 @@ describe('removeLike function', function () {
       }, 40)
     })
   })
+
+  it('Try to remove a love from a post with a paw like, should redirect only', function (done) {
+    requestMock.params[1] = likeTypeLove
+    postController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal("You can't unLove this post because your like is a Paw!")
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        // paw like should be there
+        expect(like).to.not.be.null
+        expect(like.type).to.be.equal(likeTypePaw)
+        Post.findOne({}).then(post => {
+          expect(post.likes).to.not.be.undefined
+          expect(post.likes.length).to.be.equal(1)
+          expect(post.likes[0].toString()).to.be.equal(like.id)
+          done()
+        })
+      })
+    }, 40)
+  })
 })
 
 // delete all the created models
