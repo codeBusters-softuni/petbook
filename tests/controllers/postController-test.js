@@ -8,29 +8,6 @@ const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
 const postController = require('../../controllers/post-controller')
 
-let samplePhoto = {
-  fieldname: 'addPhotoToPost',
-  originalname: 'testpic.jpg',
-  encoding: '7bit',
-  mimetype: 'image/jpeg',
-  destination: 'Somewhere',
-  filename: 'somefile',
-  path: 'somewhere',
-  size: 2000
-}
-let requestMock = {
-  body: {},
-  user: {},
-  files: [],
-  headers: {},
-  session: {}
-}
-let responseMock = {
-  locals: {},
-  redirected: false,
-  redirect: function () { this.redirected = true }
-}
-
 
 describe('Post', function () {
   let username = 'dog'
@@ -38,12 +15,37 @@ describe('Post', function () {
   let owner = 'OwnerMan'
   let userCategory = 'Dog'
   let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let samplePhoto = null
   const publicPost = 'publicvisible'
   const nonPublicPost = 'groupvisible'
   const shortContentErrorMsg = "Your post's content is too short! It must be longer than 3 characters."
   let newsfeedAlbumName = null
 
   beforeEach(function (done) {
+    requestMock = {
+      body: {},
+      user: {},
+      files: [],
+      headers: {},
+      session: {}
+    }
+    responseMock = {
+      locals: {},
+      redirected: false,
+      redirect: function () { this.redirected = true }
+    }
+    samplePhoto = {
+      fieldname: 'addPhotoToPost',
+      originalname: 'testpic.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'somewhere',
+      size: 2000
+    }
     User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
       User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
         reqUser = user
@@ -123,7 +125,7 @@ describe('Post', function () {
           Promise.all(photoPromises).then(photosInDB => {
             // assure that all 4 photos are in the DB
             // convert the array of id objects to an array of strings for easy compare
-            let stringifiedAlbumPhotos = album.photos.map(photo => {return photo.toString()})
+            let stringifiedAlbumPhotos = album.photos.map(photo => { return photo.toString() })
             expect(photosInDB).to.include.members(stringifiedAlbumPhotos)
             expect(photosInDB.length).to.be.equal(4)
             done()
