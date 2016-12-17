@@ -477,6 +477,27 @@ describe('addComment function', function () {
     }, 40)
   })
 
+  it('comment without content, should not save anything', function (done) {
+    requestMock.body = {}
+    postController.addComment(requestMock, responseMock)
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(shortCommentErrorMessage)
+      expect(responseMock.redirected).to.be.true
+
+      // check the DB
+      Comment_.findOne({}).then(comment => {
+        // there should not be a comment
+        expect(comment).to.be.null
+        // assert that it hasn't been saved to the post
+        Post.findOne({}).then(post => {
+          expect(post.comments.length).to.be.equal(0)
+          done()
+        })
+      })
+    }, 40)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
