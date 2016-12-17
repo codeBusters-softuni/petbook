@@ -595,6 +595,7 @@ describe('addLike function', function () {
   const likeTypePaw = 'Paw'
   const likeTypeLove = 'Love'
   const likeTypeDislike = 'Dislike'
+  const returnUrl = 'returnurl :)'
 
   let username = 'dogLike'
   let email = 'dogLike@abv.bg'
@@ -604,7 +605,6 @@ describe('addLike function', function () {
   let requestMock = null
   let responseMock = null
   let invalidPostIdErrorMessage = 'No such post exists.'
-
   beforeEach(function (done) {
     requestMock = {
       body: {},
@@ -615,7 +615,7 @@ describe('addLike function', function () {
       session: {}
     }
     responseMock = {
-      locals: {},
+      locals: { returnUrl: returnUrl },
       redirected: false,
       redirectUrl: null,
       redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
@@ -648,6 +648,8 @@ describe('addLike function', function () {
           expect(postLike.toString()).to.be.equal(like.id)
           expect(like.author.toString()).to.be.equal(reqUser.id)
           expect(like.type).to.be.equal(likeTypePaw)
+          expect(responseMock.redirected).to.be.true
+          expect(responseMock.redirectUrl).to.be.equal(returnUrl)
           done()
         })
       })
@@ -669,6 +671,8 @@ describe('addLike function', function () {
           expect(postLike.toString()).to.be.equal(like.id)
           expect(like.author.toString()).to.be.equal(reqUser.id)
           expect(like.type).to.be.equal(likeTypeLove)
+          expect(responseMock.redirected).to.be.true
+          expect(responseMock.redirectUrl).to.be.equal(returnUrl)
           done()
         })
       })
@@ -690,6 +694,8 @@ describe('addLike function', function () {
           expect(postLike.toString()).to.be.equal(like.id)
           expect(like.author.toString()).to.be.equal(reqUser.id)
           expect(like.type).to.be.equal(likeTypeDislike)
+          expect(responseMock.redirected).to.be.true
+          expect(responseMock.redirectUrl).to.be.equal(returnUrl)
           done()
         })
       })
@@ -706,6 +712,9 @@ describe('addLike function', function () {
       postController.addLike(requestMock, responseMock)
 
       setTimeout(function () {
+        expect(responseMock.redirected).to.be.true
+        expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
         Post.findOne({}).then(post => {
           Like.findOne({}).then(like => {
             expect(post.likes).to.not.be.undefined
@@ -738,6 +747,9 @@ describe('addLike function', function () {
       postController.addLike(requestMock, responseMock)
 
       setTimeout(function () {
+        expect(responseMock.redirected).to.be.true
+        expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
         Post.findOne({}).then(post => {
           Like.findOne({}).then(like => {
             expect(post.likes).to.not.be.undefined
@@ -770,6 +782,9 @@ describe('addLike function', function () {
       postController.addLike(requestMock, responseMock)
 
       setTimeout(function () {
+        expect(responseMock.redirected).to.be.true
+        expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
         Post.findOne({}).then(post => {
           Like.findOne({}).then(like => {
             expect(post.likes).to.not.be.undefined
@@ -808,6 +823,9 @@ describe('addLike function', function () {
           postController.addLike(requestMock, responseMock)
 
           setTimeout(function () {
+            expect(responseMock.redirected).to.be.true
+            expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
             Post.findOne({}).then(post => {
               Like.findOne({}).then(like => {
                 expect(post.likes).to.not.be.undefined
