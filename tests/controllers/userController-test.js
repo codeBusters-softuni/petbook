@@ -50,11 +50,18 @@ describe('registerPost function', function () {
   let requestMock = null
   let responseMock = null
 
+  let sampleFullName = 'Lewis the Dog'
+  let sampleEmail = 'Lewis@the.dog'
+  let samplePassword = 'Lewis12'
+  let sampleOwner = 'E-dubble'
+  let sampleCategory = 'Dog'
   let sampleValidUser = {
-    fullName: 'Lewis The Dog',
-    password: 'Lewis12',
-    ownerName: 'edub',
-    category: 'Dog'
+    fullName: sampleFullName,
+    email: sampleEmail,
+    password: samplePassword,
+    confirmedPassword: samplePassword,
+    ownerName: sampleOwner,
+    category: sampleCategory
   }
   beforeEach(function (done) {
     requestMock = {
@@ -62,7 +69,10 @@ describe('registerPost function', function () {
       user: {},
       files: [],
       headers: {},
-      session: {}
+      session: {},
+      logIn: function (user, func) {
+        func()
+      }
     }
     responseMock = {
       locals: {},
@@ -70,6 +80,8 @@ describe('registerPost function', function () {
       redirectUrl: null,
       redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
     }
+
+    done()
   })
 
   afterEach(function (done) {
