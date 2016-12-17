@@ -4,9 +4,20 @@ require('../../config/database')(config)  // load the DB models
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const Post = mongoose.model('Post')
+const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
 const postController = require('../../controllers/post-controller')
 
+let samplePhoto = {
+  fieldname: 'addPhotoToPost',
+  originalname: 'testpic.jpg',
+  encoding: '7bit',
+  mimetype: 'image/jpeg',
+  destination: 'Somewhere',
+  filename: 'somefile',
+  path: 'somewhere',
+  size: 2000
+}
 let requestMock = {
   body: {},
   user: {},
@@ -58,6 +69,33 @@ describe('Post', function () {
       })
     }, 50)
   })
+  it('post with photo, photo should be saved in the DB', function (done) {
+    let postContent = 'This post is a test :@'
+    requestMock.body = { publicPost: publicPost, content: postContent }
+    requestMock.files = [samplePhoto]
+    postController.addPost(requestMock, responseMock)
+    setTimeout(function () {
+      // assert that the post is there and has the correct values
+      Post.findOne({ content: postContent }).then(post => {
+        expect(post).to.not.be.null
+        // the post should have a photo in his array
+        expect(post.photos).to.be.a('array')
+        expect(post.photos.length).to.be.equal(1)
+        Photo.findById(post.photos[0]).then(photo => {
+          expect(photo).to.not.be.null
+          expect(photo.author.toString()).to.be.equal(reqUser.id)
+          expect(photo.post.toString()).to.be.equal(post.id)
+          // the reqUser should have the photo saved in his photos array
+          User.findById(reqUser.id).then(user => {
+            expect(user.photos).to.not.be.null
+            expect(user.photos).to.be.a('array')
+            expect(user.photos.length).to.be.equal(1)
+            done()
+          })
+        })
+      })
+    }, 60)
+  })
 
   it('multiple posts, should be saved in the DB', function (done) {
     let postContent = 'These posts are a test :@'
@@ -74,7 +112,7 @@ describe('Post', function () {
         expect(posts[0].content).to.be.equal(posts[2].content)
         done()
       })
-    }, 50)
+    }, 100)
   })
 
   it('normal post, newsfeed album should be created', function (done) {
@@ -157,7 +195,9 @@ describe('Post', function () {
     Post.remove({}).then(() => {
       User.remove({}).then(() => {
         Album.remove({}).then(() => {
-          done()
+          Photo.remove({}).then(() => {
+            done()
+          })
         })
       })
     })
