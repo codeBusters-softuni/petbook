@@ -294,6 +294,27 @@ describe('registerPost function', function () {
       })
     }, 50)
   })
+
+  it('A user with too short of a password, should redirect only', function (done) {
+    // password should be between 4 and 20 inclusive length
+    sampleValidUser.password = 'car'
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPasswordMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+
+      User.findOne({}).then(user => {
+        // Assure that no user has been created
+        expect(user).to.be.null
+        done()
+      })
+    }, 50)
+  })
+
   afterEach(function (done) {
     User.remove({}).then(() => {
       done()
