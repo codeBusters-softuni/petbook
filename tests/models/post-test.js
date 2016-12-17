@@ -10,10 +10,13 @@ let requestMock = {
   body: {},
   user: {},
   files: [],
-  headers: {}
+  headers: {},
+  session: {}
 }
 let responseMock = {
-  locals: {}
+  locals: {},
+  redirected: false,
+  redirect: function () { this.redirected = true }
 }
 
 
