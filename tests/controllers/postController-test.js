@@ -59,6 +59,24 @@ describe('Post', function () {
     }, 50)
   })
 
+  it('multiple posts, should be saved in the DB', function (done) {
+    let postContent = 'These posts are a test :@'
+    requestMock.body = { publicPost: publicPost, content: postContent }
+    postController.addPost(requestMock, responseMock)
+    postController.addPost(requestMock, responseMock)
+    postController.addPost(requestMock, responseMock)
+    setTimeout(function () {
+      // assert that the posts are there and that they have the same content
+      Post.find({ content: postContent }).then(posts => {
+        expect(posts).to.be.a('array')
+        expect(posts.length).to.be.equal(3)
+        expect(posts[0].content).to.be.equal(posts[1].content)
+        expect(posts[0].content).to.be.equal(posts[2].content)
+        done()
+      })
+    }, 50)
+  })
+
   it('normal post, newsfeed album should be created', function (done) {
     requestMock.body = { publicPost: 'tetste', content: 'teststes' }
     postController.addPost(requestMock, responseMock)
