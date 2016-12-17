@@ -22,6 +22,7 @@ describe('addPost function', function () {
   const publicPost = 'publicvisible'
   const nonPublicPost = 'groupvisible'
   const shortContentErrorMsg = "Your post's content is too short! It must be longer than 3 characters."
+  const unsupportedImageTypeErrorMsg = 'Supported image types are PNG, JPG and JPEG!'
   let newsfeedAlbumName = null
 
   beforeEach(function (done) {
@@ -35,7 +36,8 @@ describe('addPost function', function () {
     responseMock = {
       locals: {},
       redirected: false,
-      redirect: function () { this.redirected = true }
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
     }
     samplePhoto = {
       fieldname: 'addPhotoToPost',
@@ -325,6 +327,8 @@ describe('addPost function', function () {
     postController.addPost(requestMock, responseMock)
 
     setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(unsupportedImageTypeErrorMsg)
       expect(responseMock.redirected).to.be.true
       Post.findOne({}).then(post => {
         expect(post).to.be.null
@@ -336,6 +340,29 @@ describe('addPost function', function () {
           })
         })
       })
+    }, 60)
+  })
+
+  it('post with invalid photo, should redirect to the last URL', function (done) {
+    // we only accept jpg, jpeg and png mimetypes
+    requestMock.body = {
+      publicPost: publicPost,
+      content: 'Me, Myself and all my millions'
+    }
+    responseMock.locals.returnUrl = '/new/bugatti/'
+    let invalidPhoto = samplePhoto
+    invalidPhoto.mimetype = 'file/zip'
+    requestMock.files = [invalidPhoto]
+    postController.addPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(unsupportedImageTypeErrorMsg)
+      // should have redirected to our returnUrl
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.not.be.undefined
+      expect(responseMock.redirectUrl).to.be.equal(responseMock.locals.returnUrl)
+      done()
     }, 60)
   })
 
