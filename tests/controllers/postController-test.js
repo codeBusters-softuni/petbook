@@ -353,9 +353,9 @@ describe('addPost function', function () {
 })
 
 describe('addComment function', function () {
-  let username = 'dog'
-  let email = 'dog@abv.bg'
-  let owner = 'OwnerMan'
+  let username = 'dog2'
+  let email = 'dog2@abv.bg'
+  let owner = 'OwnerMan2'
   let userCategory = 'Dog'
   let reqUser = null
   let requestMock = null
@@ -367,6 +367,7 @@ describe('addComment function', function () {
     requestMock = {
       body: {},
       user: {},
+      params: {},
       files: [],
       headers: {},
       session: {}
@@ -390,8 +391,9 @@ describe('addComment function', function () {
       User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
         reqUser = user
         requestMock.user = reqUser
-        Post.create({ content: 'Sample Post', public: true, author: reqUser._id, category: reqUser.category })
+        Post.create({ content: 'Sample Post', public: true, author: reqUser._id, category: reqUser.category.id })
           .then(newPost => {
+            requestMock.params.id = newPost.id  // the addComment function reads from req.params.id
             post = newPost
             done()
           })
