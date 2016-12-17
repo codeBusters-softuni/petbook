@@ -133,7 +133,7 @@ describe('addPost function', function () {
           })
         })
       })
-    }, 80)
+    }, 120)
   })
 
   it('post with two photos and descriptions, photos should have the correct desc', function (done) {
