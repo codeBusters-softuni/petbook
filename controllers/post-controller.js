@@ -188,6 +188,7 @@ module.exports = {
 
       if (likeIndex === -1) {
         // ERROR - User has not liked this at all
+        req.session.errorMsg = "You can't unlike something you haven't liked at all!"
         res.redirect(returnUrl)
         return
       } else if (post.likes[likeIndex].type !== likeType) {
