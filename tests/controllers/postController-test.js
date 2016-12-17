@@ -42,6 +42,7 @@ describe('Post', function () {
   const nonPublicPost = 'groupvisible'
   const shortContentErrorMsg = "Your post's content is too short! It must be longer than 3 characters."
   let newsfeedAlbumName = null
+
   beforeEach(function (done) {
     User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
       User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
@@ -115,7 +116,7 @@ describe('Post', function () {
     }, 100)
   })
 
-  it('normal post, newsfeed album should be created', function (done) {
+  it('normal post WITHOUT photo, newsfeed album should be created', function (done) {
     requestMock.body = { publicPost: 'tetste', content: 'teststes' }
     postController.addPost(requestMock, responseMock)
     setTimeout(function () {
@@ -125,6 +126,30 @@ describe('Post', function () {
         expect(album.author.toString()).to.be.equal(reqUser.id)
         expect(album.name).to.be.equal(newsfeedAlbumName)
         done()
+      })
+    }, 50)
+  })
+
+  it('normal post with photo, newsfeed album should be correct', function (done) {
+    requestMock.body = { publicPost: 'tetste', content: 'teststes' }
+    requestMock.files = [samplePhoto]
+    postController.addPost(requestMock, responseMock)
+    setTimeout(function () {
+      // assert that the album is created
+      Post.findOne({}).then(post => {
+        let photoId = post.photos[0]
+        Photo.findById(photoId).then(photo => {
+          Album.findOne({}).then(album => {
+            expect(album).to.not.be.null
+            expect(album.author.toString()).to.be.equal(reqUser.id)
+            expect(album.name).to.be.equal(newsfeedAlbumName)
+            expect(album.photos).to.be.a('array')
+            expect(album.photos).to.not.be.null
+            expect(album.photos.length).to.be.equal(1)
+            expect(photo.album.toString()).to.be.equal(album.id)
+            done()
+          })
+        })
       })
     }, 50)
   })
