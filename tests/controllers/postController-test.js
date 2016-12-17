@@ -593,6 +593,8 @@ describe('addComment function', function () {
 
 describe('addLike function', function () {
   const likeTypePaw = 'Paw'
+  const likeTypeLove = 'Love'
+  const likeTypeDislike = 'Dislike'
 
   let username = 'dogLike'
   let email = 'dogLike@abv.bg'
@@ -646,6 +648,27 @@ describe('addLike function', function () {
           expect(postLike.toString()).to.be.equal(like.id)
           expect(like.author.toString()).to.be.equal(reqUser.id)
           expect(like.type).to.be.equal(likeTypePaw)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('Add a love to the post, should be saved', function (done) {
+    requestMock.params[1] = likeTypeLove
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      Post.findOne({}).then(post => {
+        Like.findOne({}).then(like => {
+          expect(post.likes).to.not.be.undefined
+          expect(post.likes).to.be.a('array')
+          expect(post.likes.length).to.be.equal(1)
+          // assure that the like has been saved in the DB
+          let postLike = post.likes[0]
+          expect(postLike.toString()).to.be.equal(like.id)
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          expect(like.type).to.be.equal(likeTypeLove)
           done()
         })
       })
