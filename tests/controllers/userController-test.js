@@ -140,6 +140,25 @@ describe('registerPost function', function () {
     }, 50)
   })
 
+  it('A user with too long of an e-mail address, should redirect only', function (done) {
+    sampleValidUser.email = 'VodkaTonicUpInMyBodySIttingOnTheFrontSeatIcallShawtyFF32callitFridayCuzIdontLikeBeefLikeMothefuckingGandhi@abv.com'
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidEmailAddressMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+
+      User.findOne({}).then(user => {
+        // Assure that no user has been created
+        expect(user).to.be.null
+        done()
+      })
+    }, 50)
+  })
+
   it('A user without an email address field, should redirect only', function (done) {
     delete sampleValidUser.email
     requestMock.body = sampleValidUser
