@@ -338,6 +338,35 @@ describe('addPost function', function () {
       })
     }, 60)
   })
+
+  it('post without content', function (done) {
+    requestMock.body = {
+      publicPost: publicPost
+    }
+
+    postController.addPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(shortContentErrorMsg)
+      expect(responseMock.redirecter).to.be.true
+
+      Post.findOne({}).then(post => {
+        // the post should not be created
+        expect(post).to.be.null
+        // Assure that a newsfeed album has not been created
+        Album.findOne({}).then(album => {
+          expect(album).to.be.null
+          // Assure that the photo has not been created
+          Photo.findOne({}).then(photo => {
+            expect(photo).to.be.null
+            done()
+          })
+        })
+      })
+    }, 50)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
@@ -497,7 +526,7 @@ describe('addComment function', function () {
       })
     }, 40)
   })
-
+// TODO: Invalid postId in params
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
