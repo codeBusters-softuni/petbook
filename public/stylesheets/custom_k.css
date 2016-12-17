@@ -1458,15 +1458,6 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 }
 
 
-/*#box .photo-buttons .preview-photo-thumbnail-footer{*/
-    /*visibility: visible;*/
-    /*opacity:1;*/
-    /*display: none;*/
-/*}*/
-/*#box .description{*/
-    /*display: block;*/
-/*}*/
-
 .images .description{
     display: none;
 }
@@ -1474,12 +1465,6 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 .custom-gallery .description{
     display: none;
 }
-
-/*#box .photo-buttons .post-view{*/
-    /*border: none;*/
-    /*box-shadow: none;*/
-    /*!*display: none;*!*/
-/*}*/
 
 
 /*Footer styling*/
