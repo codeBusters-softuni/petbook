@@ -150,7 +150,7 @@ module.exports = {
       } else {
         // User is liking this post for the first time
         Like.create({ type: likeType, author: req.user._id }).then(like => {
-          post.addLike(like._id).then(() => {            
+          post.addLike(like._id).then(() => {         
             res.redirect(returnUrl)
           })
         })
@@ -196,8 +196,7 @@ module.exports = {
         return
       }
       let likeId = post.likes[likeIndex]._id
-      Like.findByIdAndRemove(likeId)
-
+      Like.findByIdAndRemove(likeId, () => {})
       post.removeLike(likeId).then(() => {
         // Like is removed!
         res.redirect(returnUrl)
