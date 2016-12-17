@@ -605,6 +605,7 @@ describe('addLike function', function () {
   let requestMock = null
   let responseMock = null
   let invalidPostIdErrorMessage = 'No such post exists.'
+
   beforeEach(function (done) {
     requestMock = {
       body: {},
@@ -909,6 +910,26 @@ describe('addLike function', function () {
       }, 40)
     })
   })
+
+  it('Add an invalid like type, should not be saved', function (done) {
+    let invalidLikeType = 'Laugh'
+    requestMock.params[1] = invalidLikeType
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(`${invalidLikeType} is not a valid type of like!`)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        // No like should have been created
+        expect(like).to.be.null
+        done()
+      })
+    }, 40)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
