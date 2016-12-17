@@ -6,6 +6,7 @@ const User = mongoose.model('User')
 const Post = mongoose.model('Post')
 const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
+const Like = mongoose.model('Like')
 const Comment_ = mongoose.model('Comment')
 const postController = require('../../controllers/post-controller')
 
@@ -22,6 +23,7 @@ describe('addPost function', function () {
   const publicPost = 'publicvisible'
   const nonPublicPost = 'groupvisible'
   const shortContentErrorMsg = "Your post's content is too short! It must be longer than 3 characters."
+  const unsupportedImageTypeErrorMsg = 'Supported image types are PNG, JPG and JPEG!'
   let newsfeedAlbumName = null
 
   beforeEach(function (done) {
@@ -35,7 +37,8 @@ describe('addPost function', function () {
     responseMock = {
       locals: {},
       redirected: false,
-      redirect: function () { this.redirected = true }
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
     }
     samplePhoto = {
       fieldname: 'addPhotoToPost',
@@ -325,6 +328,8 @@ describe('addPost function', function () {
     postController.addPost(requestMock, responseMock)
 
     setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(unsupportedImageTypeErrorMsg)
       expect(responseMock.redirected).to.be.true
       Post.findOne({}).then(post => {
         expect(post).to.be.null
@@ -338,6 +343,72 @@ describe('addPost function', function () {
       })
     }, 60)
   })
+
+  it('post with invalid photo, should redirect to the last URL', function (done) {
+    // we only accept jpg, jpeg and png mimetypes
+    requestMock.body = {
+      publicPost: publicPost,
+      content: 'Me, Myself and all my millions'
+    }
+    responseMock.locals.returnUrl = '/new/bugatti/'
+    let invalidPhoto = samplePhoto
+    invalidPhoto.mimetype = 'file/zip'
+    requestMock.files = [invalidPhoto]
+    postController.addPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(unsupportedImageTypeErrorMsg)
+      // should have redirected to our returnUrl
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.not.be.undefined
+      expect(responseMock.redirectUrl).to.be.equal(responseMock.locals.returnUrl)
+      done()
+    }, 60)
+  })
+
+  it('post without content, should not be created', function (done) {
+    requestMock.body = {
+      publicPost: publicPost
+    }
+
+    postController.addPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(shortContentErrorMsg)
+      expect(responseMock.redirected).to.be.true
+
+      Post.findOne({}).then(post => {
+        // the post should not be created
+        expect(post).to.be.null
+        // Assure that a newsfeed album has not been created
+        Album.findOne({}).then(album => {
+          expect(album).to.be.null
+          // Assure that the photo has not been created
+          Photo.findOne({}).then(photo => {
+            expect(photo).to.be.null
+            done()
+          })
+        })
+      })
+    }, 50)
+  })
+
+  it('post without the publicPost variable, should be set to public', function (done) {
+    requestMock.body = { content: 'smoking down!' }
+
+    postController.addPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      Post.findOne({}).then(post => {
+        expect(post.public).to.not.be.undefined
+        expect(post.public).to.be.true
+        done()
+      })
+    }, 40)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
@@ -360,8 +431,8 @@ describe('addComment function', function () {
   let reqUser = null
   let requestMock = null
   let responseMock = null
-  let samplePhoto = null
-  let post = null
+  let invalidPostIdErrorMessage = 'No such post exists.'
+  let shortCommentErrorMessage = 'Your comment is too short! All comments must be longer than 2 characters.'
 
   beforeEach(function (done) {
     requestMock = {
@@ -375,17 +446,8 @@ describe('addComment function', function () {
     responseMock = {
       locals: {},
       redirected: false,
-      redirect: function () { this.redirected = true }
-    }
-    samplePhoto = {
-      fieldname: 'addPhotoToPost',
-      originalname: 'testpic.jpg',
-      encoding: '7bit',
-      mimetype: 'image/jpeg',
-      destination: 'Somewhere',
-      filename: 'somefile',
-      path: 'somewhere',
-      size: 2000
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
     }
     User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
       User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
@@ -394,7 +456,6 @@ describe('addComment function', function () {
         Post.create({ content: 'Sample Post', public: true, author: reqUser._id, category: reqUser.category.id })
           .then(newPost => {
             requestMock.params.id = newPost.id  // the addComment function reads from req.params.id
-            post = newPost
             done()
           })
       })
@@ -403,7 +464,8 @@ describe('addComment function', function () {
 
   it('add comment, should be saved in DB', function (done) {
     let commentContent = 'never going to jail'
-    requestMock.body = {content: commentContent}
+    responseMock.locals.returnUrl = 'ReturnUrl!'
+    requestMock.body = { content: commentContent }
     postController.addComment(requestMock, responseMock)
 
     setTimeout(function () {
@@ -418,10 +480,717 @@ describe('addComment function', function () {
           expect(post.comments).to.be.a('array')
           expect(post.comments.length).to.be.equal(1)
           expect(post.comments[0].toString()).to.be.equal(createdComment.id)
+
+          // assert that we were redirected to the right URL
+          expect(responseMock.redirectUrl).to.be.equal(responseMock.locals.returnUrl)
           done()
         })
       })
     }, 50)
+  })
+
+  it('multiple comments, should be saved in DB', function (done) {
+    let commentContent = 'never going to jail'
+    requestMock.body = { content: commentContent }
+    postController.addComment(requestMock, responseMock)
+    setTimeout(function () {
+      postController.addComment(requestMock, responseMock)
+      setTimeout(function () {
+        postController.addComment(requestMock, responseMock)
+        setTimeout(function () {
+          // Assert that the comment has been created
+          Comment_.find({}).then(createdComments => {
+            expect(createdComments).to.not.be.null
+            expect(createdComments).to.be.a('array')
+            expect(createdComments.length).to.be.equal(3)
+            // Assert that the comment is in the post's comments
+            Post.findOne({}).then(post => {
+              expect(post.comments).to.not.be.undefined
+              expect(post.comments).to.be.a('array')
+              expect(post.comments.length).to.be.equal(3)
+              expect(post.comments[0].toString()).to.be.equal(createdComments[0].id)
+              expect(post.comments[1].toString()).to.be.equal(createdComments[1].id)
+              expect(post.comments[2].toString()).to.be.equal(createdComments[2].id)
+              done()
+            })
+          })
+        }, 50)
+      }, 15)
+    }, 15)
+  })
+
+  it('short comment, should not be saved in DB', function (done) {
+    requestMock.body = { content: 'b' }
+    postController.addComment(requestMock, responseMock)
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(shortCommentErrorMessage)
+      expect(responseMock.redirected).to.be.true
+
+      // check the DB
+      Comment_.findOne({}).then(comment => {
+        // there should not be a comment
+        expect(comment).to.be.null
+        // assert that it hasn't been saved to the post
+        Post.findOne({}).then(post => {
+          expect(post.comments.length).to.be.equal(0)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('comment without content, should not save anything', function (done) {
+    requestMock.body = {}
+    postController.addComment(requestMock, responseMock)
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(shortCommentErrorMessage)
+      expect(responseMock.redirected).to.be.true
+
+      // check the DB
+      Comment_.findOne({}).then(comment => {
+        // there should not be a comment
+        expect(comment).to.be.null
+        // assert that it hasn't been saved to the post
+        Post.findOne({}).then(post => {
+          expect(post.comments.length).to.be.equal(0)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('comment with an invalid postId in the URL', function (done) {
+    requestMock.body = { content: 'Remy Boyz' }
+    requestMock.params.id = 'GrindingHard'  // change the postId that supposedly comes from the url
+
+    postController.addComment(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPostIdErrorMessage)
+      expect(responseMock.redirected).to.be.true
+      done()
+    }, 40)
+  })
+  // delete all the created models
+  afterEach(function (done) {
+    Post.remove({}).then(() => {
+      User.remove({}).then(() => {
+        Album.remove({}).then(() => {
+          Photo.remove({}).then(() => {
+            Comment_.remove({}).then(() => {
+              done()
+            })
+          })
+        })
+      })
+    })
+  })
+})
+
+
+describe('addLike function', function () {
+  const likeTypePaw = 'Paw'
+  const likeTypeLove = 'Love'
+  const likeTypeDislike = 'Dislike'
+  const returnUrl = 'returnurl :)'
+
+  let username = 'dogLike'
+  let email = 'dogLike@abv.bg'
+  let owner = 'FettyCashmyName'
+  let userCategory = 'Dog'
+  let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let invalidPostIdErrorMessage = 'No such post exists.'
+
+  beforeEach(function (done) {
+    requestMock = {
+      body: {},
+      user: {},
+      params: [],
+      files: [],
+      headers: {},
+      session: {}
+    }
+    responseMock = {
+      locals: { returnUrl: returnUrl },
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+    User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
+      User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
+        reqUser = user
+        requestMock.user = reqUser
+        Post.create({ content: 'Sample Post', public: true, author: reqUser._id, category: reqUser.category.id })
+          .then(newPost => {
+            requestMock.params.push(newPost.id)
+            requestMock.params.push('Paw')
+            done()
+          })
+      })
+    })
+  })
+
+  it('Add a paw to the post, should be saved', function (done) {
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      Post.findOne({}).then(post => {
+        Like.findOne({}).then(like => {
+          expect(post.likes).to.not.be.undefined
+          expect(post.likes).to.be.a('array')
+          expect(post.likes.length).to.be.equal(1)
+          // assure that the like has been saved in the DB
+          let postLike = post.likes[0]
+          expect(postLike.toString()).to.be.equal(like.id)
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          expect(like.type).to.be.equal(likeTypePaw)
+          expect(responseMock.redirected).to.be.true
+          expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('Add a love to the post, should be saved', function (done) {
+    requestMock.params[1] = likeTypeLove
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      Post.findOne({}).then(post => {
+        Like.findOne({}).then(like => {
+          expect(post.likes).to.not.be.undefined
+          expect(post.likes).to.be.a('array')
+          expect(post.likes.length).to.be.equal(1)
+          // assure that the like has been saved in the DB
+          let postLike = post.likes[0]
+          expect(postLike.toString()).to.be.equal(like.id)
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          expect(like.type).to.be.equal(likeTypeLove)
+          expect(responseMock.redirected).to.be.true
+          expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('Add a dislike to the post, should be saved', function (done) {
+    requestMock.params[1] = likeTypeDislike
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      Post.findOne({}).then(post => {
+        Like.findOne({}).then(like => {
+          expect(post.likes).to.not.be.undefined
+          expect(post.likes).to.be.a('array')
+          expect(post.likes.length).to.be.equal(1)
+          // assure that the like has been saved in the DB
+          let postLike = post.likes[0]
+          expect(postLike.toString()).to.be.equal(like.id)
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          expect(like.type).to.be.equal(likeTypeDislike)
+          expect(responseMock.redirected).to.be.true
+          expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('Add a dislike to a post you have pawed, should overwrite itself', function (done) {
+    // add the like first
+    requestMock.params[1] = likeTypePaw
+    postController.addLike(requestMock, responseMock)
+    setTimeout(function () {
+      // add the dislike
+      requestMock.params[1] = likeTypeDislike
+      postController.addLike(requestMock, responseMock)
+
+      setTimeout(function () {
+        expect(responseMock.redirected).to.be.true
+        expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+        Post.findOne({}).then(post => {
+          Like.findOne({}).then(like => {
+            expect(post.likes).to.not.be.undefined
+            expect(post.likes).to.be.a('array')
+            expect(post.likes.length).to.be.equal(1)  // there should be only one like
+            // assure that the like has been saved in the DB
+            let postLike = post.likes[0]
+            expect(postLike.toString()).to.be.equal(like.id)
+            expect(like.author.toString()).to.be.equal(reqUser.id)
+            expect(like.type).to.be.equal(likeTypeDislike)
+
+            // Assert that the previous like was deleted from the DB
+            Like.find({}).then(allLikes => {
+              expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest dislike
+              done()
+            })
+          })
+        })
+      }, 40)
+    }, 40)
+  })
+
+  it('Add a paw to a post you have loved, should overwrite itself', function (done) {
+    // add the like first
+    requestMock.params[1] = likeTypeLove
+    postController.addLike(requestMock, responseMock)
+    setTimeout(function () {
+      // add the dislike
+      requestMock.params[1] = likeTypePaw
+      postController.addLike(requestMock, responseMock)
+
+      setTimeout(function () {
+        expect(responseMock.redirected).to.be.true
+        expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+        Post.findOne({}).then(post => {
+          Like.findOne({}).then(like => {
+            expect(post.likes).to.not.be.undefined
+            expect(post.likes).to.be.a('array')
+            expect(post.likes.length).to.be.equal(1)  // there should be only one like
+            // assure that the like has been saved in the DB
+            let postLike = post.likes[0]
+            expect(postLike.toString()).to.be.equal(like.id)
+            expect(like.author.toString()).to.be.equal(reqUser.id)
+            expect(like.type).to.be.equal(likeTypePaw)
+
+            // Assert that the previous like was deleted from the DB
+            Like.find({}).then(allLikes => {
+              expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest paw
+              done()
+            })
+          })
+        })
+      }, 40)
+    }, 40)
+  })
+
+  it('Add a love to a post you have disliked, should overwrite itself', function (done) {
+    // add the like first
+    requestMock.params[1] = likeTypeDislike
+    postController.addLike(requestMock, responseMock)
+    setTimeout(function () {
+      // add the dislike
+      requestMock.params[1] = likeTypeLove
+      postController.addLike(requestMock, responseMock)
+
+      setTimeout(function () {
+        expect(responseMock.redirected).to.be.true
+        expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+        Post.findOne({}).then(post => {
+          Like.findOne({}).then(like => {
+            expect(post.likes).to.not.be.undefined
+            expect(post.likes).to.be.a('array')
+            expect(post.likes.length).to.be.equal(1)  // there should be only one like
+            // assure that the like has been saved in the DB
+            let postLike = post.likes[0]
+            expect(postLike.toString()).to.be.equal(like.id)
+            expect(like.author.toString()).to.be.equal(reqUser.id)
+            expect(like.type).to.be.equal(likeTypeLove)
+
+            // Assert that the previous like was deleted from the DB
+            Like.find({}).then(allLikes => {
+              expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest love
+              done()
+            })
+          })
+        })
+      }, 40)
+    }, 40)
+  })
+
+  it('Add a paw -> love -> dislike -> paw, should be one paw only', function (done) {
+    requestMock.params[1] = likeTypePaw
+    postController.addLike(requestMock, responseMock)
+    setTimeout(function () {
+      requestMock.params[1] = likeTypeLove
+      postController.addLike(requestMock, responseMock)
+
+      setTimeout(function () {
+        requestMock.params[1] = likeTypeDislike
+        postController.addLike(requestMock, responseMock)
+
+        setTimeout(function () {
+          requestMock.params[1] = likeTypePaw
+          postController.addLike(requestMock, responseMock)
+
+          setTimeout(function () {
+            expect(responseMock.redirected).to.be.true
+            expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+            Post.findOne({}).then(post => {
+              Like.findOne({}).then(like => {
+                expect(post.likes).to.not.be.undefined
+                expect(post.likes).to.be.a('array')
+                expect(post.likes.length).to.be.equal(1)  // there should be only one like
+                // assure that the like has been saved in the DB
+                let postLike = post.likes[0]
+                expect(postLike.toString()).to.be.equal(like.id)
+                expect(like.author.toString()).to.be.equal(reqUser.id)
+                expect(like.type).to.be.equal(likeTypePaw)
+
+                // Assert that the previous like was deleted from the DB
+                Like.find({}).then(allLikes => {
+                  expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest paw
+                  done()
+                })
+              })
+            })
+          }, 40)
+        }, 40)
+      }, 40)
+    }, 40)
+  })
+
+  it('Add a paw and then add a paw again, nothing should happen on the second paw', function (done) {
+    requestMock.params[1] = likeTypePaw
+    postController.addLike(requestMock, responseMock)
+    setTimeout(function () {
+      postController.addLike(requestMock, responseMock)
+      setTimeout(function () {
+        Post.findOne({}).then(post => {
+          Like.findOne({}).then(like => {
+            expect(post.likes).to.not.be.undefined
+            expect(post.likes).to.be.a('array')
+            expect(post.likes.length).to.be.equal(1)
+            // assure that the like has been saved in the DB
+            let postLike = post.likes[0]
+            expect(postLike.toString()).to.be.equal(like.id)
+            expect(like.author.toString()).to.be.equal(reqUser.id)
+            expect(like.type).to.be.equal(likeTypePaw)
+            expect(responseMock.redirected).to.be.true
+            expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+            done()
+          })
+        })
+      }, 40)
+    }, 40)
+  })
+
+  it('Two users add a paw, should be two paws', function (done) {
+    // create the other user
+    User.register('Cat@abv.bg', 'Maaan', 'SomeOwner', 'catpass123', 'Cat').then(catUser => {
+      // add the like with the default dog user
+      postController.addLike(requestMock, responseMock)
+      setTimeout(function () {
+        // add the like with the cat user
+        requestMock.user = catUser
+        postController.addLike(requestMock, responseMock)
+
+        setTimeout(function () {
+          Post.findOne({}).populate('likes').then(post => {
+            expect(post.likes).to.not.be.undefined
+            expect(post.likes).to.be.a('array')
+            expect(post.likes.length).to.be.equal(2)  // there should be only one like
+            // assure that the like has been saved in the DB
+            post.likes.forEach(like => {
+              expect(like.type).to.be.equal(likeTypePaw)
+            })
+            // Assert that the previous like was deleted from the DB
+            Like.find({}).then(allLikes => {
+              expect(allLikes.length).to.be.equal(2)  // we should have only two likes in the DB
+              done()
+            })
+          })
+        }, 40)
+      }, 40)
+    })
+  })
+
+  it('Two users add a paw, one adds a dislike, should be one paw and one dislike', function (done) {
+    // create the other user
+    User.register('Cat@abv.bg', 'Maaan', 'SomeOwner', 'catpass123', 'Cat').then(catUser => {
+      // add the like with the default dog user
+      postController.addLike(requestMock, responseMock)
+      setTimeout(function () {
+        // add the like with the cat user
+        requestMock.user = catUser
+        postController.addLike(requestMock, responseMock)
+
+        setTimeout(function () {
+          requestMock.params[1] = likeTypeDislike
+          postController.addLike(requestMock, responseMock)
+
+          setTimeout(function () {
+            Post.findOne({}).populate('likes').then(post => {
+              expect(post.likes.length).to.be.equal(2)
+              let firstLike = post.likes[0]
+              let secondLike = post.likes[1]
+              // they should be different types
+              expect(firstLike.type).to.not.be.equal(secondLike.type)
+              expect(firstLike.author.toString()).to.not.be.equal(secondLike.author.toString())
+            })
+            done()
+          }, 40)
+        }, 40)
+      }, 40)
+    })
+  })
+
+  it('Add an invalid like type, should not be saved', function (done) {
+    let invalidLikeType = 'Laugh'
+    requestMock.params[1] = invalidLikeType
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(`${invalidLikeType} is not a valid type of like!`)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        // No like should have been created
+        expect(like).to.be.null
+        done()
+      })
+    }, 40)
+  })
+
+  it('Add an like with an invalid postid, should redirect without saving anything', function (done) {
+    requestMock.params[0] = 'grindin'
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal('Invalid post id!')
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        // No like should have been created
+        expect(like).to.be.null
+        done()
+      })
+    }, 40)
+  })
+
+  it('Add a like with a postId that does not exist, should redirect', function (done) {
+    requestMock.params[0] = '4edd40c86762e0fb12000003'
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPostIdErrorMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        // No like should have been created
+        expect(like).to.be.null
+        done()
+      })
+    }, 40)
+  })
+})
+
+// delete all the created models
+afterEach(function (done) {
+  Post.remove({}).then(() => {
+    User.remove({}).then(() => {
+      Album.remove({}).then(() => {
+        Photo.remove({}).then(() => {
+          Comment_.remove({}).then(() => {
+            Like.remove({}).then(() => {
+              done()
+            })
+          })
+        })
+      })
+    })
+  })
+})
+
+describe('removeLike function', function () {
+  /* Have a post in the DB with a like on it */
+  const likeTypePaw = 'Paw'
+  const likeTypeLove = 'Love'
+  const likeTypeDislike = 'Dislike'
+  const returnUrl = 'returnurl :)'
+
+  let username = 'dogLike'
+  let email = 'dogLike@abv.bg'
+  let owner = 'FettyCashmyName'
+  let userCategory = 'Dog'
+  let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let invalidPostIdErrorMessage = 'No such post exists.'
+  let haveNotLikedPostErrorMessage = "You can't unlike something you haven't liked at all!"
+
+  beforeEach(function (done) {
+    requestMock = {
+      body: {},
+      user: {},
+      params: [],
+      files: [],
+      headers: {},
+      session: {}
+    }
+    responseMock = {
+      locals: { returnUrl: returnUrl },
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+    User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
+      User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
+        reqUser = user
+        requestMock.user = reqUser
+        Post.create({ content: 'Sample Post', public: true, author: reqUser._id, category: reqUser.category.id })
+          .then(newPost => {
+            Like.create({ author: reqUser.id, type: 'Paw' }).then(like => {
+              newPost.addLike(like.id).then(() => {
+                requestMock.params.push(newPost.id)
+                requestMock.params.push('Paw')
+                done()
+              })
+            })
+          })
+      })
+    })
+  })
+
+  it('Remove a paw from a post with a paw like', function (done) {
+    postController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        // like should be deleted
+        expect(like).to.be.null
+        Post.findOne({}).then(post => {
+          expect(post.likes).to.not.be.undefined
+          expect(post.likes.length).to.be.equal(0)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('Try to remove a paw from a post which has a paw but not from the same user, should redirect only', function (done) {
+    User.register('TestUser', 'TestMan@abv.bg', 'OwnerMan', 'dogpass123', userCategory).then(maliciousUser => {
+      requestMock.user = maliciousUser  // change the user in the request
+      postController.removeLike(requestMock, responseMock)
+      setTimeout(function () {
+        expect(requestMock.session.errorMsg).to.not.be.undefined
+        expect(requestMock.session.errorMsg).to.be.equal(haveNotLikedPostErrorMessage)
+        expect(responseMock.redirected).to.be.true
+        expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+        Like.findOne({}).then(like => {
+          // like should be there
+          expect(like).to.not.be.null
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          Post.findOne({}).then(post => {
+            expect(post.likes).to.not.be.undefined
+            expect(post.likes.length).to.be.equal(1)
+            expect(post.likes[0].toString()).to.be.equal(like.id)
+            done()
+          })
+        })
+      }, 40)
+    })
+  })
+
+  it('Try to remove a love from a post with a paw like, should redirect only', function (done) {
+    requestMock.params[1] = likeTypeLove
+    postController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal("You can't unLove this post because your like is a Paw!")
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        // paw like should be there
+        expect(like).to.not.be.null
+        expect(like.type).to.be.equal(likeTypePaw)
+        Post.findOne({}).then(post => {
+          expect(post.likes).to.not.be.undefined
+          expect(post.likes.length).to.be.equal(1)
+          expect(post.likes[0].toString()).to.be.equal(like.id)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('Try to remove an invalid like type, should redirect', function (done) {
+    let invalidLikeType = 'Laughed'
+    requestMock.params[1] = invalidLikeType
+    postController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(`${invalidLikeType} is not a valid type of like!`)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        expect(like).to.not.be.null
+        Post.findOne({}).then(post => {
+          expect(post.likes.length).to.be.equal(1)
+          expect(post.likes[0].toString()).to.be.equal(like.id)
+          expect(like.type).to.be.equal(likeTypePaw)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('Try to remove a like from an invalid post id, should redirect', function (done) {
+    requestMock.params[0] = 'grindin'
+    postController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal('Invalid post id!')
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        expect(like).to.not.be.null
+        Post.findOne({}).then(post => {
+          expect(post.likes.length).to.be.equal(1)
+          expect(post.likes[0].toString()).to.be.equal(like.id)
+          expect(like.type).to.be.equal(likeTypePaw)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  it('Try to remove a like from a post id that does not exist, should recirect', function (done) {
+    requestMock.params[0] = '4edd40c86762e0fb12000003'
+    postController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPostIdErrorMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        expect(like).to.not.be.null
+        Post.findOne({}).then(post => {
+          expect(post.likes.length).to.be.equal(1)
+          expect(post.likes[0].toString()).to.be.equal(like.id)
+          expect(like.type).to.be.equal(likeTypePaw)
+          done()
+        })
+      })
+    }, 40)
   })
 
   // delete all the created models
@@ -431,7 +1200,9 @@ describe('addComment function', function () {
         Album.remove({}).then(() => {
           Photo.remove({}).then(() => {
             Comment_.remove({}).then(() => {
-              done()
+              Like.remove({}).then(() => {
+                done()
+              })
             })
           })
         })

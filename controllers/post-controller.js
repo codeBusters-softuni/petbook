@@ -20,6 +20,10 @@ module.exports = {
       }
       let albumName = 'newsfeed-photos-' + req.user._id
       let newPostInfo = req.body
+      if (typeof newPostInfo.publicPost === 'undefined') {
+        // Make the post public by default
+        newPostInfo.publicPost = 'publicvisible'
+      }
       let postIsPublic = newPostInfo.publicPost.toString() === 'publicvisible'
       let newPost = new Post({
         author: req.user._id,
@@ -28,7 +32,7 @@ module.exports = {
         public: postIsPublic
       })
 
-      if (newPost.content.length < 3) {
+      if (!newPost.content || newPost.content.length < 3) {
         req.session.errorMsg = "Your post's content is too short! It must be longer than 3 characters."
         req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
         res.redirect('/')
@@ -69,10 +73,17 @@ module.exports = {
 
   addComment: (req, res) => {
     let postId = req.params.id  // the post this comment is on
+    let returnUrl = res.locals.returnUrl || '/'
+
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      req.session.errorMsg = 'Invalid post id!'
+      res.redirect(returnUrl)
+      return
+    }
     let newComment = req.body
     newComment.author = req.user._id
 
-    if (newComment.content.length < 2) {
+    if (!newComment.content || newComment.content.length < 2) {
       req.session.errorMsg = 'Your comment is too short! All comments must be longer than 2 characters.'
       res.redirect('/')
       return
@@ -88,7 +99,6 @@ module.exports = {
       Comment_.create(newComment).then((newComment) => {
         post.addComment(newComment._id).then(() => {
           // Comment added!
-          let returnUrl = res.locals.returnUrl || '/'
           res.redirect(returnUrl)
         })
       })
@@ -99,6 +109,11 @@ module.exports = {
     let returnUrl = res.locals.returnUrl || '/'
     // regex is: /post\/(.+)\/add(.{3,7})/
     let postId = req.params[0]
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      req.session.errorMsg = 'Invalid post id!'
+      res.redirect(returnUrl)
+      return
+    }
     let likeType = req.params[1]
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
@@ -119,7 +134,7 @@ module.exports = {
 
       if (likeIndex !== -1) {
         // user has already liked this post
-        if (post.likes[likeIndex].type === likeType) {
+        if (post.likes[likeIndex].type === likeType) {          
           res.redirect(returnUrl)
           return
         } else {
@@ -135,7 +150,7 @@ module.exports = {
       } else {
         // User is liking this post for the first time
         Like.create({ type: likeType, author: req.user._id }).then(like => {
-          post.addLike(like._id).then(() => {
+          post.addLike(like._id).then(() => {         
             res.redirect(returnUrl)
           })
         })
@@ -147,6 +162,11 @@ module.exports = {
     let returnUrl = res.locals.returnUrl || '/'
     // regex is: /post\/(.+)\/remove(.{3,7})/
     let postId = req.params[0]
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      req.session.errorMsg = 'Invalid post id!'
+      res.redirect(returnUrl)
+      return
+    }
     let likeType = req.params[1]
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
@@ -168,16 +188,17 @@ module.exports = {
 
       if (likeIndex === -1) {
         // ERROR - User has not liked this at all
+        req.session.errorMsg = "You can't unlike something you haven't liked at all!"
         res.redirect(returnUrl)
         return
       } else if (post.likes[likeIndex].type !== likeType) {
         // ERROR - example: User is trying to unPAW a post he has LOVED
+        req.session.errorMsg = `You can't un${likeType} this post because your like is a ${post.likes[likeIndex].type}!`
         res.redirect(returnUrl)
         return
       }
       let likeId = post.likes[likeIndex]._id
-      Like.findByIdAndRemove(likeId)
-
+      Like.findByIdAndRemove(likeId, () => {})
       post.removeLike(likeId).then(() => {
         // Like is removed!
         res.redirect(returnUrl)

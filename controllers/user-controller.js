@@ -25,13 +25,13 @@ module.exports = {
     if (!emailValidator.validate(candidateUser.email)) {
       req.session.errorMsg = 'Your e-mail is invalid!'
       toRedirect = true
-    } else if (candidateUser.fullName.length < 3 || candidateUser.fullName.length > 20) {
+    } else if (!candidateUser.fullName || (candidateUser.fullName.length < 3 || candidateUser.fullName.length > 20)) {
       req.session.errorMsg = 'Your full name has invalid length! It should be between 3 and 20 characters.'
       toRedirect = true
     } else if (candidateUser.ownerName.length < 3 || candidateUser.ownerName.length > 20) {
       req.session.errorMsg = "Your owner's name has invalid length! It should be between 3 and 20 characters."
       toRedirect = true
-    } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
+    } else if (!candidateUser.password || (candidateUser.password.length < 4 || candidateUser.password.length > 20)) {
       req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
       toRedirect = true
     } else if (candidateUser.password !== candidateUser.confirmedPassword) {
@@ -43,7 +43,6 @@ module.exports = {
       res.redirect('/user/register')
       return
     }
-
     User  // function in the User.js model
       .register(candidateUser.fullName, candidateUser.email, candidateUser.ownerName, candidateUser.password, candidateUser.category)
       .then(newUser => {
