@@ -973,16 +973,34 @@ describe('addLike function', function () {
     }, 40)
   })
 
-  // delete all the created models
-  afterEach(function (done) {
-    Post.remove({}).then(() => {
-      User.remove({}).then(() => {
-        Album.remove({}).then(() => {
-          Photo.remove({}).then(() => {
-            Comment_.remove({}).then(() => {
-              Like.remove({}).then(() => {
-                done()
-              })
+  it('Add a like with a postId that does not exist, should redirect', function (done) {
+    requestMock.params[0] = '4edd40c86762e0fb12000003'
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPostIdErrorMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        // No like should have been created
+        expect(like).to.be.null
+        done()
+      })
+    }, 40)
+  })
+})
+
+// delete all the created models
+afterEach(function (done) {
+  Post.remove({}).then(() => {
+    User.remove({}).then(() => {
+      Album.remove({}).then(() => {
+        Photo.remove({}).then(() => {
+          Comment_.remove({}).then(() => {
+            Like.remove({}).then(() => {
+              done()
             })
           })
         })
@@ -990,3 +1008,6 @@ describe('addLike function', function () {
     })
   })
 })
+
+
+
