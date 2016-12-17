@@ -266,6 +266,32 @@ describe('Post', function () {
       })
     })
   })
+
+  it('post with invalid photo, should not be created', function (done) {
+    // we only accept jpg, jpeg and png mimetypes
+    requestMock.body = {
+      publicPost: publicPost,
+      content: 'Me, Myself and all my millions'
+    }
+    let invalidPhoto = samplePhoto
+    invalidPhoto.mimetype = 'file/zip'
+    requestMock.files = [invalidPhoto]
+    postController.addPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(responseMock.redirected).to.be.true
+      Post.findOne({}).then(post => {
+        expect(post).to.be.null
+        Photo.findOne({}).then(photo => {
+          expect(photo).to.be.null
+          Album.findOne({}).then(album => {
+            expect(album).to.be.null
+            done()
+          })
+        })
+      })
+    }, 60)
+  })
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
