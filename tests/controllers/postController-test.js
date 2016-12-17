@@ -1024,6 +1024,7 @@ describe('removeLike function', function () {
   let requestMock = null
   let responseMock = null
   let invalidPostIdErrorMessage = 'No such post exists.'
+  let haveNotLikedPostErrorMessage = "You can't unlike something you haven't liked at all!"
 
   beforeEach(function (done) {
     requestMock = {
@@ -1075,6 +1076,30 @@ describe('removeLike function', function () {
         })
       })
     }, 40)
+  })
+
+  it('Try to remove a paw from a post which has a paw but not from the same user, should redirect only', function (done) {
+    User.register('TestUser', 'TestMan@abv.bg', 'OwnerMan', 'dogpass123', userCategory).then(maliciousUser => {
+      requestMock.user = maliciousUser  // change the user in the request
+      postController.removeLike(requestMock, responseMock)
+      setTimeout(function () {
+        expect(requestMock.session.errorMsg).to.not.be.undefined
+        expect(requestMock.session.errorMsg).to.be.equal(haveNotLikedPostErrorMessage)
+        expect(responseMock.redirected).to.be.true
+        expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+        Like.findOne({}).then(like => {
+          // like should be there
+          expect(like).to.not.be.null
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          Post.findOne({}).then(post => {
+            expect(post.likes).to.not.be.undefined
+            expect(post.likes.length).to.be.equal(1)
+            expect(post.likes[0].toString()).to.be.equal(like.id)
+            done()
+          })
+        })
+      }, 40)
+    })
   })
 })
 
