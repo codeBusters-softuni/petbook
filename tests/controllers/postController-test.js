@@ -135,6 +135,51 @@ describe('Post', function () {
     }, 80)
   })
 
+  it('post with two photos and descriptions, photos should have the correct desc', function (done) {
+    // create two photo objects with different paths and differentiate them by that
+    let samplePhoto1 = {
+      fieldname: 'addPhotoToPost',
+      originalname: 'testpic.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'first',
+      size: 2000
+    }
+    let samplePhoto2 = {
+      fieldname: 'addPhotoToPost',
+      originalname: 'testpic.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'second',
+      size: 2000
+    }
+    let firstPhotoDesc = 'first photo desc'
+    let secondPhotoDesc = 'second photo desc'
+    requestMock.body = { publicPost: publicPost, content: 'fresh to them', '1': firstPhotoDesc, '2': secondPhotoDesc }
+    requestMock.files = [samplePhoto1, samplePhoto2]
+
+    postController.addPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      // get the first photo
+      Photo.findOne({path: 'first'}).then(firstPhoto => {
+        Photo.findOne({path: 'second'}).then(secondPhoto => {
+          expect(firstPhoto).to.not.be.null
+          expect(secondPhoto).to.not.be.null
+          expect(firstPhoto.description).to.not.be.undefined
+          expect(secondPhoto.description).to.not.be.undefined
+          expect(firstPhoto.description).to.be.equal(firstPhotoDesc)
+          expect(secondPhoto.description).to.be.equal(secondPhotoDesc)
+          done()
+        })
+      })
+    }, 60)
+  })
+
   it('multiple posts, should be saved in the DB', function (done) {
     let postContent = 'These posts are a test :@'
     requestMock.body = { publicPost: publicPost, content: postContent }
@@ -232,7 +277,7 @@ describe('Post', function () {
           done()
         })
       })
-    }, 50)
+    }, 80)
   })
 
   it('short post content, should not be created', function (done) {
