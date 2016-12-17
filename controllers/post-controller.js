@@ -20,6 +20,10 @@ module.exports = {
       }
       let albumName = 'newsfeed-photos-' + req.user._id
       let newPostInfo = req.body
+      if (typeof newPostInfo.publicPost === 'undefined') {
+        // Make the post public by default
+        newPostInfo.publicPost = 'publicvisible'
+      }
       let postIsPublic = newPostInfo.publicPost.toString() === 'publicvisible'
       let newPost = new Post({
         author: req.user._id,
