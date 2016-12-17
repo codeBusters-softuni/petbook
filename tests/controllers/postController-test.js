@@ -339,7 +339,7 @@ describe('addPost function', function () {
     }, 60)
   })
 
-  it('post without content', function (done) {
+  it('post without content, should not be created', function (done) {
     requestMock.body = {
       publicPost: publicPost
     }
@@ -365,6 +365,20 @@ describe('addPost function', function () {
         })
       })
     }, 50)
+  })
+
+  it('post without the publicPost variable, should be set to public', function (done) {
+    requestMock.body = {content: 'smoking down!'}
+
+    postController.addPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      Post.findOne({}).then(post => {
+        expect(post.public).to.not.be.undefined
+        expect(post.public).to.be.true
+        done()
+      })
+    }, 40)
   })
 
   // delete all the created models
