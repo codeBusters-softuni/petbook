@@ -72,7 +72,7 @@ module.exports = {
     let newComment = req.body
     newComment.author = req.user._id
 
-    if (newComment.content.length < 2) {
+    if (!newComment.content || newComment.content.length < 2) {
       req.session.errorMsg = 'Your comment is too short! All comments must be longer than 2 characters.'
       res.redirect('/')
       return
