@@ -1149,6 +1149,28 @@ describe('removeLike function', function () {
     }, 40)
   })
 
+  it('Try to remove a like from an invalid post id, should redirect', function (done) {
+    requestMock.params[0] = 'grindin'
+    postController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal('Invalid post id!')
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        expect(like).to.not.be.null
+        Post.findOne({}).then(post => {
+          expect(post.likes.length).to.be.equal(1)
+          expect(post.likes[0].toString()).to.be.equal(like.id)
+          expect(like.type).to.be.equal(likeTypePaw)
+          done()
+        })
+      })
+    }, 40)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
