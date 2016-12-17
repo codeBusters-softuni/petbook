@@ -24,6 +24,7 @@ describe('Post', function () {
   let userCategory = 'Dog'
   let reqUser = null
   const publicPost = 'publicvisible'
+  const nonPublicPost = 'groupvisible'
 
   beforeEach(function (done) {
     User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
@@ -49,8 +50,23 @@ describe('Post', function () {
         expect(post.category.toString()).to.equal(reqUser.category.id)
         done()
       })
+    }, 50)
+  })
+
+  it('non-public post, should not be public', function (done) {
+    let postContent = 'I am not public'
+    requestMock.body = {
+      publicPost: nonPublicPost,
+      content: postContent
     }
-      , 50)
+    postController.addPost(requestMock, responseMock)
+    setTimeout(function () {
+      Post.findOne({content: postContent}).then(post => {
+        expect(post.public).to.not.be.null
+        expect(post.public).to.be.false
+        done()
+      })
+    }, 50)
   })
 
   // delete all the created models
