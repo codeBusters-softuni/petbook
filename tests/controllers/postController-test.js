@@ -1171,6 +1171,28 @@ describe('removeLike function', function () {
     }, 40)
   })
 
+  it('Try to remove a like from a post id that does not exist, should recirect', function (done) {
+    requestMock.params[0] = '4edd40c86762e0fb12000003'
+    postController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPostIdErrorMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        expect(like).to.not.be.null
+        Post.findOne({}).then(post => {
+          expect(post.likes.length).to.be.equal(1)
+          expect(post.likes[0].toString()).to.be.equal(like.id)
+          expect(like.type).to.be.equal(likeTypePaw)
+          done()
+        })
+      })
+    }, 40)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
