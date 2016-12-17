@@ -215,7 +215,11 @@ describe('Post', function () {
         expect(requestMock.session.failedPost).to.not.be.null
         expect(requestMock.session.failedPost.content).to.be.equal(postContent)
         expect(responseMock.redirected).to.be.true
-        done()
+        // Assure that a newsfeed album has not been created
+        Album.findOne({}).then(album => {
+          expect(album).to.be.null
+          done()
+        })
       })
     })
   })
