@@ -382,6 +382,7 @@ describe('registerPost function', function () {
 })
 
 describe('loginPost function, logging in a user', function () {
+  const invalidEmailMessage = 'Your e-mail is invalid!'
   let sampleValidUser = null
   let requestMock = null
   let responseMock = null
@@ -392,6 +393,7 @@ describe('loginPost function, logging in a user', function () {
   let redirectUrl = 'demJohns'
 
   beforeEach(function (done) {
+    loggedIn = false
     requestMock = {
       body: {},
       user: {},
@@ -426,6 +428,19 @@ describe('loginPost function, logging in a user', function () {
       expect(requestMock.session.errorMsg).to.be.undefined
       expect(loggedIn).to.be.true
       expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+      done()
+    }, 50)
+  })
+
+  it('Log in a user without the email field', function (done) {
+    delete requestMock.body.email
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidEmailMessage)
+      expect(loggedIn).to.be.false
+      expect(responseMock.redirectUrl).to.be.equal('/')
       done()
     }, 50)
   })
