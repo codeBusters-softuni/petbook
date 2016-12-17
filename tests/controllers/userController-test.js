@@ -21,7 +21,7 @@ describe('registerGet function', function () {
   let requestMock = {
   }
   let responseMock = {
-    locals: {candidateUser: successfullCandidateUserMessage},
+    locals: { candidateUser: successfullCandidateUserMessage },
 
     render: function (hbsPage, argumentsPassed) {
       receivedHbsPage = hbsPage
@@ -47,23 +47,27 @@ describe('registerGet function', function () {
 })
 
 describe('registerPost function', function () {
+  const invalidEmailAddressMessage = 'Your e-mail is invalid!'
   let requestMock = null
   let responseMock = null
+  const redirectUrl = '/user/register'
 
   let sampleFullName = 'Lewis the Dog'
   let sampleEmail = 'Lewis@the.dog'
   let samplePassword = 'Lewis12'
   let sampleOwner = 'E-dubble'
   let sampleCategory = 'Dog'
-  let sampleValidUser = {
-    fullName: sampleFullName,
-    email: sampleEmail,
-    password: samplePassword,
-    confirmedPassword: samplePassword,
-    ownerName: sampleOwner,
-    category: sampleCategory
-  }
+  let sampleValidUser = null
+
   beforeEach(function (done) {
+    sampleValidUser = {
+      fullName: sampleFullName,
+      email: sampleEmail,
+      password: samplePassword,
+      confirmedPassword: samplePassword,
+      ownerName: sampleOwner,
+      category: sampleCategory
+    }
     requestMock = {
       body: {},
       user: {},
@@ -103,7 +107,7 @@ describe('registerPost function', function () {
     }, 200)
   })
 
-  it('A user without an ownername, should turn his ownerName to Nobody', function (done) {
+  it('A user without an ownername, should turn his ownerName to nobody', function (done) {
     sampleValidUser.ownerName = null
     requestMock.body = sampleValidUser
     userController.registerPost(requestMock, responseMock)
@@ -113,7 +117,26 @@ describe('registerPost function', function () {
         expect(user.ownerName).to.be.equal('nobody')
         done()
       })
-    }, 100)
+    }, 130)
+  })
+
+  it('A user with an invalid email address, should redirect only', function (done) {
+    sampleValidUser.email = 'ThisIsNotAnEmail.com'
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidEmailAddressMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+
+      User.findOne({}).then(user => {
+        // Assure that no user has been created
+        expect(user).to.be.null
+        done()
+      })
+    }, 50)
   })
 
   afterEach(function (done) {
