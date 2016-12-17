@@ -1467,6 +1467,10 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     /*display: block;*/
 /*}*/
 
+.images .description{
+    display: none;
+}
+
 .custom-gallery .description{
     display: none;
 }
