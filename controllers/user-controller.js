@@ -31,7 +31,7 @@ module.exports = {
     } else if (candidateUser.ownerName.length < 3 || candidateUser.ownerName.length > 20) {
       req.session.errorMsg = "Your owner's name has invalid length! It should be between 3 and 20 characters."
       toRedirect = true
-    } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
+    } else if (!candidateUser.password || (candidateUser.password.length < 4 || candidateUser.password.length > 20)) {
       req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
       toRedirect = true
     } else if (candidateUser.password !== candidateUser.confirmedPassword) {
