@@ -184,12 +184,16 @@ describe('Post', function () {
       publicPost: nonPublicPost,
       content: postContent
     }
+    requestMock.files = [samplePhoto]
     postController.addPost(requestMock, responseMock)
     setTimeout(function () {
       Post.findOne({ content: postContent }).then(post => {
-        expect(post.public).to.not.be.null
-        expect(post.public).to.be.false
-        done()
+        Photo.findById(post.photos[0]).then(photo => {
+          expect(photo.public).to.be.false
+          expect(post.public).to.not.be.null
+          expect(post.public).to.be.false
+          done()
+        })
       })
     }, 50)
   })
