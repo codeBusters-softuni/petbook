@@ -759,7 +759,7 @@ describe('addLike function', function () {
       }, 40)
     }, 40)
   })
-  
+
   it('Add a love to a post you have disliked, should overwrite itself', function (done) {
     // add the like first
     requestMock.params[1] = likeTypeDislike
@@ -788,6 +788,46 @@ describe('addLike function', function () {
             })
           })
         })
+      }, 40)
+    }, 40)
+  })
+
+  it('Add a paw -> love -> dislike -> paw, should be one paw only', function (done) {
+    requestMock.params[1] = likeTypePaw
+    postController.addLike(requestMock, responseMock)
+    setTimeout(function () {
+      requestMock.params[1] = likeTypeLove
+      postController.addLike(requestMock, responseMock)
+
+      setTimeout(function () {
+        requestMock.params[1] = likeTypeDislike
+        postController.addLike(requestMock, responseMock)
+
+        setTimeout(function () {
+          requestMock.params[1] = likeTypePaw
+          postController.addLike(requestMock, responseMock)
+
+          setTimeout(function () {
+            Post.findOne({}).then(post => {
+              Like.findOne({}).then(like => {
+                expect(post.likes).to.not.be.undefined
+                expect(post.likes).to.be.a('array')
+                expect(post.likes.length).to.be.equal(1)  // there should be only one like
+                // assure that the like has been saved in the DB
+                let postLike = post.likes[0]
+                expect(postLike.toString()).to.be.equal(like.id)
+                expect(like.author.toString()).to.be.equal(reqUser.id)
+                expect(like.type).to.be.equal(likeTypePaw)
+
+                // Assert that the previous like was deleted from the DB
+                Like.find({}).then(allLikes => {
+                  expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest dislike
+                  done()
+                })
+              })
+            })
+          }, 40)
+        }, 40)
       }, 40)
     }, 40)
   })
