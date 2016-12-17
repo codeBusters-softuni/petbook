@@ -4,6 +4,7 @@ require('../../config/database')(config)  // load the DB models
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const Post = mongoose.model('Post')
+const Album = mongoose.model('Album')
 const postController = require('../../controllers/post-controller')
 
 let requestMock = {
@@ -29,11 +30,12 @@ describe('Post', function () {
   const publicPost = 'publicvisible'
   const nonPublicPost = 'groupvisible'
   const shortContentErrorMsg = "Your post's content is too short! It must be longer than 3 characters."
-
+  let newsfeedAlbumName = null
   beforeEach(function (done) {
     User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
       User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
         reqUser = user
+        newsfeedAlbumName = 'newsfeed-photos-' + user.id
         requestMock.user = reqUser
         done()
       })
@@ -52,6 +54,20 @@ describe('Post', function () {
         expect(post.public).to.be.true
         expect(post.author.toString()).to.equal(reqUser.id)
         expect(post.category.toString()).to.equal(reqUser.category.id)
+        done()
+      })
+    }, 50)
+  })
+
+  it('normal post, newsfeed album should be created', function (done) {
+    requestMock.body = { publicPost: 'tetste', content: 'teststes' }
+    postController.addPost(requestMock, responseMock)
+    setTimeout(function () {
+      // assert that the album is created
+      Album.findOne({}).then(album => {
+        expect(album).to.not.be.null
+        expect(album.author.toString()).to.be.equal(reqUser.id)
+        expect(album.name).to.be.equal(newsfeedAlbumName)
         done()
       })
     }, 50)
@@ -98,7 +114,9 @@ describe('Post', function () {
   afterEach(function (done) {
     Post.remove({}).then(() => {
       User.remove({}).then(() => {
-        done()
+        Album.remove({}).then(() => {
+          done()
+        })
       })
     })
   })
