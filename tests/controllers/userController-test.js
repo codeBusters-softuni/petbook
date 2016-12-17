@@ -103,6 +103,19 @@ describe('registerPost function', function () {
     }, 200)
   })
 
+  it('A user without an ownername, should turn his ownerName to Nobody', function (done) {
+    sampleValidUser.ownerName = null
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+    setTimeout(function () {
+      User.findOne({}).populate('category').then(user => {
+        expect(user).to.not.be.null
+        expect(user.ownerName).to.be.equal('nobody')
+        done()
+      })
+    }, 100)
+  })
+
   afterEach(function (done) {
     User.remove({}).then(() => {
       done()
