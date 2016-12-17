@@ -380,3 +380,59 @@ describe('registerPost function', function () {
     })
   })
 })
+
+describe('loginPost function, logging in a user', function () {
+  let sampleValidUser = null
+  let requestMock = null
+  let responseMock = null
+  let reqUser = null
+  let validUserEmail = 'somebody@abv.bg'
+  let validUserPassword = '12345'
+  let loggedIn = null
+  let redirectUrl = 'demJohns'
+
+  beforeEach(function (done) {
+    requestMock = {
+      body: {},
+      user: {},
+      files: [],
+      headers: {},
+      session: {},
+      logIn: function (user, func) {
+        loggedIn = true
+        func()
+      }
+    }
+    responseMock = {
+      locals: {returnUrl: redirectUrl},
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+    User.register('Guyssmart', validUserEmail, 'TheOwner', validUserPassword, 'Dog').then(dog => {
+      reqUser = dog
+      requestMock.body = {
+        email: validUserEmail,
+        password: validUserPassword
+      }
+      done()
+    })
+  })
+
+  it('Log in a valid user', function (done) {
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.be.undefined
+      expect(loggedIn).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+      done()
+    }, 50)
+  })
+
+  afterEach(function (done) {
+    User.remove({}).then(() => {
+      done()
+    })
+  })
+})
