@@ -255,7 +255,25 @@ describe('registerPost function', function () {
       })
     }, 50)
   })
+  
+  it('A user with too long of an ownerName', function (done) {
+    sampleValidUser.ownerName = 'Hubert Blaine Wolfeschlegelsteinhausenbergerdorff, Sr.'
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
 
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidOwnerNameMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+
+      User.findOne({}).then(user => {
+        // Assure that no user has been created
+        expect(user).to.be.null
+        done()
+      })
+    }, 50)
+  })
   afterEach(function (done) {
     User.remove({}).then(() => {
       done()
