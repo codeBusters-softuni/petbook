@@ -6,10 +6,11 @@ const User = mongoose.model('User')
 const Post = mongoose.model('Post')
 const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
+const Comment_ = mongoose.model('Comment')
 const postController = require('../../controllers/post-controller')
 
 
-describe('Post', function () {
+describe('addPost function', function () {
   let username = 'dog'
   let email = 'dog@abv.bg'
   let owner = 'OwnerMan'
@@ -98,7 +99,7 @@ describe('Post', function () {
           })
         })
       })
-    }, 60)
+    }, 100)
   })
 
   it('post with multiple photos, photos should be saved in the DB', function (done) {
@@ -166,8 +167,8 @@ describe('Post', function () {
 
     setTimeout(function () {
       // get the first photo
-      Photo.findOne({path: 'first'}).then(firstPhoto => {
-        Photo.findOne({path: 'second'}).then(secondPhoto => {
+      Photo.findOne({ path: 'first' }).then(firstPhoto => {
+        Photo.findOne({ path: 'second' }).then(secondPhoto => {
           expect(firstPhoto).to.not.be.null
           expect(secondPhoto).to.not.be.null
           expect(firstPhoto.description).to.not.be.undefined
@@ -344,6 +345,69 @@ describe('Post', function () {
         Album.remove({}).then(() => {
           Photo.remove({}).then(() => {
             done()
+          })
+        })
+      })
+    })
+  })
+})
+
+describe('addComment function', function () {
+  let username = 'dog'
+  let email = 'dog@abv.bg'
+  let owner = 'OwnerMan'
+  let userCategory = 'Dog'
+  let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let samplePhoto = null
+  let post = null
+
+  beforeEach(function (done) {
+    requestMock = {
+      body: {},
+      user: {},
+      files: [],
+      headers: {},
+      session: {}
+    }
+    responseMock = {
+      locals: {},
+      redirected: false,
+      redirect: function () { this.redirected = true }
+    }
+    samplePhoto = {
+      fieldname: 'addPhotoToPost',
+      originalname: 'testpic.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'somewhere',
+      size: 2000
+    }
+    User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
+      User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
+        reqUser = user
+        requestMock.user = reqUser
+        Post.create({ content: 'Sample Post', public: true, author: reqUser._id, category: reqUser.category })
+          .then(newPost => {
+            post = newPost
+            done()
+          })
+      })
+    })
+  })
+
+  // delete all the created models
+  afterEach(function (done) {
+    Post.remove({}).then(() => {
+      User.remove({}).then(() => {
+        Album.remove({}).then(() => {
+          Photo.remove({}).then(() => {
+            Comment_.remove({}).then(() => {
+              done()
+            })
           })
         })
       })
