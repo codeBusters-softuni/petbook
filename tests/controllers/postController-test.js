@@ -880,6 +880,35 @@ describe('addLike function', function () {
     })
   })
 
+  it('Two users add a paw, one adds a dislike, should be one paw and one dislike', function (done) {
+    // create the other user
+    User.register('Cat@abv.bg', 'Maaan', 'SomeOwner', 'catpass123', 'Cat').then(catUser => {
+      // add the like with the default dog user
+      postController.addLike(requestMock, responseMock)
+      setTimeout(function () {
+        // add the like with the cat user
+        requestMock.user = catUser
+        postController.addLike(requestMock, responseMock)
+
+        setTimeout(function () {
+          requestMock.params[1] = likeTypeDislike
+          postController.addLike(requestMock, responseMock)
+
+          setTimeout(function () {
+            Post.findOne({}).populate('likes').then(post => {
+              expect(post.likes.length).to.be.equal(2)
+              let firstLike = post.likes[0]
+              let secondLike = post.likes[1]
+              // they should be different types
+              expect(firstLike.type).to.not.be.equal(secondLike.type)
+              expect(firstLike.author.toString()).to.not.be.equal(secondLike.author.toString())
+            })
+            done()
+          }, 40)
+        }, 40)
+      }, 40)
+    })
+  })
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
