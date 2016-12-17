@@ -1009,5 +1009,73 @@ afterEach(function (done) {
   })
 })
 
+describe('removeLike function', function () {
+  /* Have a post in the DB with a like on it */
+  const likeTypePaw = 'Paw'
+  const likeTypeLove = 'Love'
+  const likeTypeDislike = 'Dislike'
+  const returnUrl = 'returnurl :)'
+
+  let username = 'dogLike'
+  let email = 'dogLike@abv.bg'
+  let owner = 'FettyCashmyName'
+  let userCategory = 'Dog'
+  let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let invalidPostIdErrorMessage = 'No such post exists.'
+
+  beforeEach(function (done) {
+    requestMock = {
+      body: {},
+      user: {},
+      params: [],
+      files: [],
+      headers: {},
+      session: {}
+    }
+    responseMock = {
+      locals: { returnUrl: returnUrl },
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+    User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
+      User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
+        reqUser = user
+        requestMock.user = reqUser
+        Post.create({ content: 'Sample Post', public: true, author: reqUser._id, category: reqUser.category.id })
+          .then(newPost => {
+            Like.create({ author: reqUser.id, type: 'Paw' }).then(like => {
+              newPost.addLike(like.id).then(() => {
+                requestMock.params.push(newPost.id)
+                requestMock.params.push('Paw')
+                done()
+              })
+            })
+          })
+      })
+    })
+  })
+
+
+
+
+// delete all the created models
+afterEach(function (done) {
+  Post.remove({}).then(() => {
+    User.remove({}).then(() => {
+      Album.remove({}).then(() => {
+        Photo.remove({}).then(() => {
+          Comment_.remove({}).then(() => {
+            Like.remove({}).then(() => {
+              done()
+            })
+          })
+        })
+      })
+    })
+  })
+})
 
 
