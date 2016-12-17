@@ -6,6 +6,7 @@ const User = mongoose.model('User')
 const Post = mongoose.model('Post')
 const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
+const Like = mongoose.model('Like')
 const Comment_ = mongoose.model('Comment')
 const postController = require('../../controllers/post-controller')
 
@@ -430,8 +431,6 @@ describe('addComment function', function () {
   let reqUser = null
   let requestMock = null
   let responseMock = null
-  let samplePhoto = null
-  let post = null
   let invalidPostIdErrorMessage = 'No such post exists.'
   let shortCommentErrorMessage = 'Your comment is too short! All comments must be longer than 2 characters.'
 
@@ -450,16 +449,6 @@ describe('addComment function', function () {
       redirectUrl: null,
       redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
     }
-    samplePhoto = {
-      fieldname: 'addPhotoToPost',
-      originalname: 'testpic.jpg',
-      encoding: '7bit',
-      mimetype: 'image/jpeg',
-      destination: 'Somewhere',
-      filename: 'somefile',
-      path: 'somewhere',
-      size: 2000
-    }
     User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
       User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
         reqUser = user
@@ -467,7 +456,6 @@ describe('addComment function', function () {
         Post.create({ content: 'Sample Post', public: true, author: reqUser._id, category: reqUser.category.id })
           .then(newPost => {
             requestMock.params.id = newPost.id  // the addComment function reads from req.params.id
-            post = newPost
             done()
           })
       })
@@ -594,6 +582,86 @@ describe('addComment function', function () {
           Photo.remove({}).then(() => {
             Comment_.remove({}).then(() => {
               done()
+            })
+          })
+        })
+      })
+    })
+  })
+})
+
+
+describe('addLike function', function () {
+  const likeTypePaw = 'Paw'
+
+  let username = 'dogLike'
+  let email = 'dogLike@abv.bg'
+  let owner = 'FettyCashmyName'
+  let userCategory = 'Dog'
+  let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let invalidPostIdErrorMessage = 'No such post exists.'
+
+  beforeEach(function (done) {
+    requestMock = {
+      body: {},
+      user: {},
+      params: [],
+      files: [],
+      headers: {},
+      session: {}
+    }
+    responseMock = {
+      locals: {},
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+    User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
+      User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
+        reqUser = user
+        requestMock.user = reqUser
+        Post.create({ content: 'Sample Post', public: true, author: reqUser._id, category: reqUser.category.id })
+          .then(newPost => {
+            requestMock.params.push(newPost.id)
+            requestMock.params.push('Paw')
+            done()
+          })
+      })
+    })
+  })
+
+  it('Add a paw to the post, should be saved', function (done) {
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      Post.findOne({}).then(post => {
+        Like.findOne({}).then(like => {
+          expect(post.likes).to.not.be.undefined
+          expect(post.likes).to.be.a('array')
+          expect(post.likes.length).to.be.equal(1)
+          // assure that the like has been saved in the DB
+          let postLike = post.likes[0]
+          expect(postLike.toString()).to.be.equal(like.id)
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          expect(like.type).to.be.equal(likeTypePaw)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  // delete all the created models
+  afterEach(function (done) {
+    Post.remove({}).then(() => {
+      User.remove({}).then(() => {
+        Album.remove({}).then(() => {
+          Photo.remove({}).then(() => {
+            Comment_.remove({}).then(() => {
+              Like.remove({}).then(() => {
+                done()
+              })
             })
           })
         })
