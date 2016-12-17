@@ -763,7 +763,7 @@ describe('addLike function', function () {
 
             // Assert that the previous like was deleted from the DB
             Like.find({}).then(allLikes => {
-              expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest dislike
+              expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest paw
               done()
             })
           })
@@ -798,7 +798,7 @@ describe('addLike function', function () {
 
             // Assert that the previous like was deleted from the DB
             Like.find({}).then(allLikes => {
-              expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest dislike
+              expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest love
               done()
             })
           })
@@ -839,7 +839,7 @@ describe('addLike function', function () {
 
                 // Assert that the previous like was deleted from the DB
                 Like.find({}).then(allLikes => {
-                  expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest dislike
+                  expect(allLikes.length).to.be.equal(1)  // we should have only one like in the DB - the newest paw
                   done()
                 })
               })
@@ -848,6 +848,36 @@ describe('addLike function', function () {
         }, 40)
       }, 40)
     }, 40)
+  })
+
+  it('Two users add a paw, should be two paws', function (done) {
+    // create the other user
+    User.register('Cat@abv.bg', 'Maaan', 'SomeOwner', 'catpass123', 'Cat').then(catUser => {
+      // add the like with the default dog user
+      postController.addLike(requestMock, responseMock)
+      setTimeout(function () {
+        // add the like with the cat user
+        requestMock.user = catUser
+        postController.addLike(requestMock, responseMock)
+
+        setTimeout(function () {
+          Post.findOne({}).populate('likes').then(post => {
+            expect(post.likes).to.not.be.undefined
+            expect(post.likes).to.be.a('array')
+            expect(post.likes.length).to.be.equal(2)  // there should be only one like
+            // assure that the like has been saved in the DB
+            post.likes.forEach(like => {
+              expect(like.type).to.be.equal(likeTypePaw)
+            })
+            // Assert that the previous like was deleted from the DB
+            Like.find({}).then(allLikes => {
+              expect(allLikes.length).to.be.equal(2)  // we should have only two likes in the DB
+              done()
+            })
+          })
+        }, 40)
+      }, 40)
+    })
   })
 
   // delete all the created models
