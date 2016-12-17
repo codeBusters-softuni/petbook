@@ -567,7 +567,20 @@ describe('addComment function', function () {
       })
     }, 40)
   })
-// TODO: Invalid postId in params
+
+  it('comment with an invalid postId in the URL', function (done) {
+    requestMock.body = {content: 'Remy Boyz'}
+    requestMock.params.id = 'GrindingHard'  // change the postId that supposedly comes from the url
+
+    postController.addComment(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPostIdErrorMessage)
+      expect(responseMock.redirected).to.be.true
+      done()
+    }, 40)
+  })
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
