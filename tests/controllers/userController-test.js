@@ -45,3 +45,36 @@ describe('registerGet function', function () {
     }, 40)
   })
 })
+
+describe('registerPost function', function () {
+  let requestMock = null
+  let responseMock = null
+
+  let sampleValidUser = {
+    fullName: 'Lewis The Dog',
+    password: 'Lewis12',
+    ownerName: 'edub',
+    category: 'Dog'
+  }
+  beforeEach(function (done) {
+    requestMock = {
+      body: {},
+      user: {},
+      files: [],
+      headers: {},
+      session: {}
+    }
+    responseMock = {
+      locals: {},
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+  })
+
+  afterEach(function (done) {
+    User.remove({}).then(() => {
+      done()
+    })
+  })
+})
