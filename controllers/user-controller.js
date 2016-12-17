@@ -204,6 +204,7 @@ module.exports = {
   },
 
   userPhotosGet: (req, res) => {
+    // TODO: Filter public photos based on the req.user category!
     let userId = req.params.id  // userId in the User model
     if (userId === req.user.userId.toString()) {
       // load the page with the ability to upload photos/albums
