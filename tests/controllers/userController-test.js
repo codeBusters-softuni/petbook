@@ -117,11 +117,30 @@ describe('registerPost function', function () {
         expect(user.ownerName).to.be.equal('nobody')
         done()
       })
-    }, 130)
+    }, 170)
   })
 
   it('A user with an invalid email address, should redirect only', function (done) {
     sampleValidUser.email = 'ThisIsNotAnEmail.com'
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidEmailAddressMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+
+      User.findOne({}).then(user => {
+        // Assure that no user has been created
+        expect(user).to.be.null
+        done()
+      })
+    }, 50)
+  })
+
+  it('A user without an email address, should redirect only', function (done) {
+    delete sampleValidUser.email
     requestMock.body = sampleValidUser
     userController.registerPost(requestMock, responseMock)
 
