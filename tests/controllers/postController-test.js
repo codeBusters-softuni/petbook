@@ -349,7 +349,7 @@ describe('addPost function', function () {
     setTimeout(function () {
       expect(requestMock.session.errorMsg).to.not.be.undefined
       expect(requestMock.session.errorMsg).to.be.equal(shortContentErrorMsg)
-      expect(responseMock.redirecter).to.be.true
+      expect(responseMock.redirected).to.be.true
 
       Post.findOne({}).then(post => {
         // the post should not be created
