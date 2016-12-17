@@ -91,6 +91,30 @@ describe('Post', function () {
     }, 50)
   })
 
+  it('multiple posts, there should be only one newsfeed album', function (done) {
+    // we hold only one newsfeed album for each user
+    requestMock.body = { publicPost: 'SOMETING', content: 'teats' }
+    // Add the posts with some slight delay, otherwise multiple albums get created due to the asynchrocity
+    postController.addPost(requestMock, responseMock)
+    setTimeout(function () {
+      postController.addPost(requestMock, responseMock)
+      setTimeout(function () {
+        postController.addPost(requestMock, responseMock)
+        setTimeout(function () {
+          Album.find({}).then(albums => {
+            expect(albums).to.be.a('array')
+            expect(albums.length).to.be.equal(1)
+            let album = albums[0]
+            expect(album).to.not.be.null
+            expect(album.author.toString()).to.be.equal(reqUser.id)
+            expect(album.name).to.be.equal(newsfeedAlbumName)
+            done()
+          })
+        }, 50)
+      }, 5)
+    }, 5)
+  })
+
   it('non-public post, should not be public', function (done) {
     let postContent = 'I am not public'
     requestMock.body = {
