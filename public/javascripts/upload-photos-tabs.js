@@ -197,9 +197,9 @@ $(document).ready(function () {
 // $(document).ready(function() {
 
 function displayPhotosInLightBox() {
-    var img = $('.active-tab-section .images img'); // selects all images
+    var img = $('.active-tab-section .images .in-album img'); // selects all images
     // console.log(img)
-    var imgArticles = $('.active-tab-section .images article');
+    var imgArticles = $('.active-tab-section .images .in-album');
     var boxImages; // = document.createElement('div') // create div that contains the image
     // boxImages.className +=" box-image" // give that div class
     // lightBox.insertBefore(boxImages, null) // insert that div in the lightbox
@@ -225,6 +225,10 @@ function displayPhotosInLightBox() {
         //open first image
         img.off("click");
         img.on('click', function () {
+            img = $('.active-tab-section .images .in-album img'); // selects all images
+            // console.log(img)
+            imgArticles = $('.active-tab-section .images .in-album');
+
             console.log("IMAGE CLICKED :)")
             boxImages = document.createElement('div') // create div that contains the image
             boxImages.className += " box-image" // give that div class
@@ -236,16 +240,19 @@ function displayPhotosInLightBox() {
             currImgClone = imgArticles.eq(indexArticle).addClass("selected") //add class "selected" to the article that contains the selected image and buttons
             $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages) // clone the selected article and append it to the div container that should contain the selected image
 
-            nextImg = $(this).parent().closest('article').next().find('img'); //define next img
-            // console.log(nextImg)
+            nextImg = $(this).parent().closest('.in-album').next().find('img'); //define next img
+            console.log(nextImg)
 
-            prevImg = $(this).parent().closest('article').prev().find('img'); //define prev img
+            prevImg = $(this).parent().closest('.in-album').prev().find('img'); //define prev img
             // console.log(prevImg)
 
             indexImg = img.index($(this)); //define index of clicked image
             indexArticle = indexImg; //define index of the article that contains clicked image and its buttons
 
             $('#box-photos').css('display', 'block'); // lightbox become visible
+            $('.custom-header').css('display', 'none');
+            $('#cstm-stl-ftr').css('display', 'none');
+            $('.pic-up-container').css('display', 'none');
 
             display(); // call display function
 
@@ -254,7 +261,7 @@ function displayPhotosInLightBox() {
 //    click on NEXT button
         nextBtn.off("click");
         nextBtn.on('click', function (e) {
-            // console.log(nextImg)
+            console.log(nextImg)
             if (!nextImg.is('img')) {  //if next img is undefined
                 nextImg = img.first(); // next img becomes the first from the img array
             }
@@ -270,8 +277,8 @@ function displayPhotosInLightBox() {
             currImgClone = imgArticles.eq(indexArticle).addClass("selected") //add class "selected" to the article that contains the selected image and buttons
             $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages) // clone the selected article and append it to the div container that should contain the selected image
 
-            prevImg = currentImg.parent().closest('article').prev().find('img');  //define prev img
-            nextImg = currentImg.parent().closest('article').next().find('img'); //define next img
+            prevImg = $(currentImg).parent().closest('.in-album').prev().find('img');  //define prev img
+            nextImg = $(currentImg).parent().closest('.in-album').next().find('img'); //define next img
 
 
             display();
@@ -294,8 +301,8 @@ function displayPhotosInLightBox() {
             currImgClone = imgArticles.eq(indexArticle).addClass("selected")
             $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages)
 
-            nextImg = currentImg.parent().closest('article').next().find('img');
-            prevImg = currentImg.parent().closest('article').prev().find('img');
+            nextImg = $(currentImg).parent().closest('.in-album').next().find('img');
+            prevImg = $(currentImg).parent().closest('.in-album').prev().find('img');
 
 
             display();
@@ -318,7 +325,9 @@ function displayPhotosInLightBox() {
             // }
 
             $('#box-photos').css('display', 'none'); // give style display: none to lightbox so that it is not visible
-
+            $('.custom-header').css('display', 'block');
+            $('#cstm-stl-ftr').css('display', 'block');
+            $('.pic-up-container').css('display', 'block');
         });
 
         function removeByClass(classParent, className) { // on click on next or prev button, remove the current article(that contains img and buttons)
@@ -341,12 +350,14 @@ $(document).ready(function () {
     function filterHide(el) {
         for (var i = 0; i < el.length; ++i) {
             el[i].style.display = 'none';
+            $(el[i]).removeClass('in-album') //!!!should be jquery object - I added  $()
         }
     }
 
     function filterShow(el) {
         for (var i = 0; i < el.length; ++i) {
             el[i].style.display = 'block';
+            $(el[i]).addClass('in-album')  //!!!should be jquery object -  - I added  $()
         }
     }
 
@@ -359,7 +370,7 @@ $(document).ready(function () {
     }
 
     //get the unique classed of photos
-    var photosDisplayed = $('#display-photos-in-selected-album .filter-wrap article');
+    var photosDisplayed = $('#display-photos-in-selected-album .filter-wrap .in-album');
     var uniqueClasses = []; //CSS3 doesn't support ID selectors that start with a digit - check is needed whed cssClass is assigned
     var access = true;
     for (var i = 0; i < photosDisplayed.length; i++) {
@@ -381,7 +392,7 @@ $(document).ready(function () {
 
 
     var filterVars = uniqueClasses; // define filter categories here
-    // console.log(filterVars)
+    console.log(filterVars)
     var filterItems = document.querySelectorAll('.filter-wrap .filter-item');
     for (var i = 0; i < filterVars.length; i++) {
 

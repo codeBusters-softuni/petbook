@@ -109,6 +109,9 @@ $(document).ready(function() {
             indexArticle = indexImg; //define index of the article that contains clicked image and its buttons
 
             $('#box-profile-photos').css('display', 'block'); // lightbox become visible
+            $('.custom-header').css('display', 'none');
+            $('#cstm-stl-ftr').css('display', 'none');
+            $('.profile-all-container').css('display', 'none');
 
             display(); // call display function
 
@@ -172,6 +175,10 @@ $(document).ready(function() {
             imgArticles = $('.profile-post-images .profile-images article');  // select all articles that contain images and buttons
 
             $('#box-profile-photos').css('display', 'none'); // give style display: none to lightbox so that it is not visible
+            $('.custom-header').css('display', 'block');
+            $('#cstm-stl-ftr').css('display', 'block');
+            $('.profile-all-container').css('display', 'block');
+
         });
 
         function removeByClass(classParent, className) { // on click on next or prev button, remove the current article(that contains img and buttons)
