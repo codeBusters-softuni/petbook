@@ -851,6 +851,31 @@ describe('addLike function', function () {
     }, 40)
   })
 
+  it('Add a paw and then add a paw again, nothing should happen on the second paw', function (done) {
+    requestMock.params[1] = likeTypePaw
+    postController.addLike(requestMock, responseMock)
+    setTimeout(function () {
+      postController.addLike(requestMock, responseMock)
+      setTimeout(function () {
+        Post.findOne({}).then(post => {
+          Like.findOne({}).then(like => {
+            expect(post.likes).to.not.be.undefined
+            expect(post.likes).to.be.a('array')
+            expect(post.likes.length).to.be.equal(1)
+            // assure that the like has been saved in the DB
+            let postLike = post.likes[0]
+            expect(postLike.toString()).to.be.equal(like.id)
+            expect(like.author.toString()).to.be.equal(reqUser.id)
+            expect(like.type).to.be.equal(likeTypePaw)
+            expect(responseMock.redirected).to.be.true
+            expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+            done()
+          })
+        })
+      }, 40)
+    }, 40)
+  })
+
   it('Two users add a paw, should be two paws', function (done) {
     // create the other user
     User.register('Cat@abv.bg', 'Maaan', 'SomeOwner', 'catpass123', 'Cat').then(catUser => {
