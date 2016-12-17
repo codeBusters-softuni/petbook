@@ -18,6 +18,7 @@
                                             <div class="album-photo-content">
                                                 <img src="/uploads/{{this.filename}}" alt="">
                                             </div>
+                                            <div class="description">{{this.description}}</div>
                                             <footer class="preview-photo-thumbnail-footer">
                                               {{#if ../this.user}}
                                               <ul>
@@ -130,13 +131,14 @@
                                 </section>
                                 <section class="col-xs-12 col-sm-8 col-md-9">
                                     <article id="display-photos-in-selected-album">
-                                        <section class="filter-wrap">
+                                        <section class="filter-wrap images">
                                             {{#each photos}}
                                                 <article class="col-xs-12 col-sm-6 col-md-4 col-lg-4 filter-item {{this.classCss}}">
                                                     <section class="photo-cntnr">
                                                         <div class="album-photo-content">
                                                             <img src="/uploads/{{this.filename}}" alt="">
                                                         </div>
+                                                        <div class="description">{{this.description}}</div>
                                                         <footer class="preview-photo-thumbnail-footer">
                                                             {{#if ../this.user}}
                                                             <ul>
@@ -339,4 +341,10 @@
             </footer>
         {{/each}}
     </div>
+</section>
+<section id="backdrop-photos"></section>
+<section id="box-photos">
+    <div class="prev">P</div>
+    <div class="next">N</div>
+    <div class="close-light-box">X</div>
 </section>

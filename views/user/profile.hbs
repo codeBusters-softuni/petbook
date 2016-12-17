@@ -109,7 +109,7 @@
 
         <!-- Here include addPost.hbs if url is user/id-->
         {{#each posts}}
-            <section id="post-view" class="post-view-profile-view post-view">
+            <section id="post-view" class="post-view-profile-view post-view profile-post-images">
                 <section class="post-post-view">
                     <header>
                         <section>
@@ -142,13 +142,14 @@
                         {{content}}
                     </article>
 
-                    <article class="cntnr-photos row custom-gallery">
+                    <article class="cntnr-photos row custom-gallery profile-images">
                         {{#eachUpTo photos 4}}
                             <article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                 <section class="photo-cntnr">
                                     <div class="album-photo-content">
                                         <img src="/uploads/{{this.filename}}" alt="">
                                     </div>
+                                    <div class="description">{{this.description}}</div>
                                     <footer class="preview-photo-thumbnail-footer">
                                         {{#if ../../this.user}}
                                             <ul>
@@ -398,3 +399,9 @@
         </main>
     </section>
 </div>
+<section id="backdrop-profile-photos"></section>
+<section id="box-profile-photos">
+    <div class="prev-profile-photos">P</div>
+    <div class="next-profile-photos">N</div>
+    <div class="close-light-box">X</div>
+</section>
