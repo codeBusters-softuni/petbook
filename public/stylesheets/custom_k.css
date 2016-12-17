@@ -34,7 +34,7 @@ legend {
 
 /*Header styling when not logged in*/
 
-header {
+.custom-header {
     overflow: hidden;
     background-color: #3b5998;
     /*    border: 2px solid red;   */
