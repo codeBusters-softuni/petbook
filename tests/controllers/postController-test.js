@@ -213,7 +213,7 @@ describe('Post', function () {
     }, 5)
   })
 
-  it('non-public post, should not be public', function (done) {
+  it('non-public post with photo, post and photo should not be public', function (done) {
     let postContent = 'I am not public'
     requestMock.body = {
       publicPost: nonPublicPost,
@@ -239,6 +239,8 @@ describe('Post', function () {
       publicPost: publicPost,
       content: postContent
     }
+    requestMock.files = [samplePhoto]
+
     postController.addPost(requestMock, responseMock)
     setTimeout(function () {
       Post.findOne({ content: postContent }).then(post => {
@@ -253,7 +255,11 @@ describe('Post', function () {
         // Assure that a newsfeed album has not been created
         Album.findOne({}).then(album => {
           expect(album).to.be.null
-          done()
+          // Assure that the photo has not been created
+          Photo.findOne({}).then(photo => {
+            expect(photo).to.be.null
+            done()
+          })
         })
       })
     })
