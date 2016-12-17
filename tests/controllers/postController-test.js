@@ -362,6 +362,8 @@ describe('addComment function', function () {
   let responseMock = null
   let samplePhoto = null
   let post = null
+  let invalidPostIdErrorMessage = 'No such post exists.'
+  let shortCommentErrorMessage = 'Your comment is too short! All comments must be longer than 2 characters.'
 
   beforeEach(function (done) {
     requestMock = {
@@ -452,6 +454,27 @@ describe('addComment function', function () {
         }, 50)
       }, 15)
     }, 15)
+  })
+
+  it('short comment, should not be saved in DB', function (done) {
+    requestMock.body = {content: 'b'}
+    postController.addComment(requestMock, responseMock)
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(shortCommentErrorMessage)
+      expect(responseMock.redirected).to.be.true
+
+      // check the DB
+      Comment_.findOne({}).then(comment => {
+        // there should not be a comment
+        expect(comment).to.be.null
+        // assert that it hasn't been saved to the post
+        Post.findOne({}).then(post => {
+          expect(post.comments.length).to.be.equal(0)
+          done()
+        })
+      })
+    }, 40)
   })
 
   // delete all the created models
