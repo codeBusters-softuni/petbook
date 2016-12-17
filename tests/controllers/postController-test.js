@@ -395,7 +395,7 @@ describe('addPost function', function () {
   })
 
   it('post without the publicPost variable, should be set to public', function (done) {
-    requestMock.body = {content: 'smoking down!'}
+    requestMock.body = { content: 'smoking down!' }
 
     postController.addPost(requestMock, responseMock)
 
@@ -447,7 +447,8 @@ describe('addComment function', function () {
     responseMock = {
       locals: {},
       redirected: false,
-      redirect: function () { this.redirected = true }
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
     }
     samplePhoto = {
       fieldname: 'addPhotoToPost',
@@ -475,6 +476,7 @@ describe('addComment function', function () {
 
   it('add comment, should be saved in DB', function (done) {
     let commentContent = 'never going to jail'
+    responseMock.locals.returnUrl = 'ReturnUrl!'
     requestMock.body = { content: commentContent }
     postController.addComment(requestMock, responseMock)
 
@@ -490,6 +492,9 @@ describe('addComment function', function () {
           expect(post.comments).to.be.a('array')
           expect(post.comments.length).to.be.equal(1)
           expect(post.comments[0].toString()).to.be.equal(createdComment.id)
+
+          // assert that we were redirected to the right URL
+          expect(responseMock.redirectUrl).to.be.equal(responseMock.locals.returnUrl)
           done()
         })
       })
@@ -527,7 +532,7 @@ describe('addComment function', function () {
   })
 
   it('short comment, should not be saved in DB', function (done) {
-    requestMock.body = {content: 'b'}
+    requestMock.body = { content: 'b' }
     postController.addComment(requestMock, responseMock)
     setTimeout(function () {
       expect(requestMock.session.errorMsg).to.not.be.undefined
@@ -569,7 +574,7 @@ describe('addComment function', function () {
   })
 
   it('comment with an invalid postId in the URL', function (done) {
-    requestMock.body = {content: 'Remy Boyz'}
+    requestMock.body = { content: 'Remy Boyz' }
     requestMock.params.id = 'GrindingHard'  // change the postId that supposedly comes from the url
 
     postController.addComment(requestMock, responseMock)
