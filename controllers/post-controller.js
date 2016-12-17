@@ -73,6 +73,13 @@ module.exports = {
 
   addComment: (req, res) => {
     let postId = req.params.id  // the post this comment is on
+    let returnUrl = res.locals.returnUrl || '/'
+
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      req.session.errorMsg = 'Invalid post id!'
+      res.redirect(returnUrl)
+      return
+    }
     let newComment = req.body
     newComment.author = req.user._id
 
@@ -92,7 +99,6 @@ module.exports = {
       Comment_.create(newComment).then((newComment) => {
         post.addComment(newComment._id).then(() => {
           // Comment added!
-          let returnUrl = res.locals.returnUrl || '/'
           res.redirect(returnUrl)
         })
       })
@@ -103,6 +109,11 @@ module.exports = {
     let returnUrl = res.locals.returnUrl || '/'
     // regex is: /post\/(.+)\/add(.{3,7})/
     let postId = req.params[0]
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      req.session.errorMsg = 'Invalid post id!'
+      res.redirect(returnUrl)
+      return
+    }
     let likeType = req.params[1]
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
@@ -123,7 +134,7 @@ module.exports = {
 
       if (likeIndex !== -1) {
         // user has already liked this post
-        if (post.likes[likeIndex].type === likeType) {
+        if (post.likes[likeIndex].type === likeType) {          
           res.redirect(returnUrl)
           return
         } else {
@@ -139,7 +150,7 @@ module.exports = {
       } else {
         // User is liking this post for the first time
         Like.create({ type: likeType, author: req.user._id }).then(like => {
-          post.addLike(like._id).then(() => {
+          post.addLike(like._id).then(() => {            
             res.redirect(returnUrl)
           })
         })
@@ -151,6 +162,11 @@ module.exports = {
     let returnUrl = res.locals.returnUrl || '/'
     // regex is: /post\/(.+)\/remove(.{3,7})/
     let postId = req.params[0]
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      req.session.errorMsg = 'Invalid post id!'
+      res.redirect(returnUrl)
+      return
+    }
     let likeType = req.params[1]
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
