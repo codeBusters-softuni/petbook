@@ -70,6 +70,7 @@ describe('Post', function () {
       })
     }, 50)
   })
+
   it('post with photo, photo should be saved in the DB', function (done) {
     let postContent = 'This post is a test :@'
     requestMock.body = { publicPost: publicPost, content: postContent }
@@ -98,6 +99,40 @@ describe('Post', function () {
     }, 60)
   })
 
+  it('post with multiple photos, photos should be saved in the DB', function (done) {
+    let postContent = 'This post is a test :@'
+    requestMock.body = { publicPost: publicPost, content: postContent }
+    requestMock.files = [samplePhoto, samplePhoto, samplePhoto, samplePhoto]
+    postController.addPost(requestMock, responseMock)
+    setTimeout(function () {
+      Post.findOne({ content: postContent }).then(post => {
+        expect(post.photos).to.not.be.null
+        expect(post.photos).to.be.a('array')
+        expect(post.photos.length).to.be.equal(4)
+        Album.findOne({}).then(album => {
+          // assure that the album has all 4 photos
+          expect(album.photos.length).to.be.equal(4)
+          let photoPromises = post.photos.map(photo => {
+            return new Promise((resolve, reject) => {
+              Photo.findById(photo).then(photo => {
+                expect(photo.album.toString()).to.be.equal(album.id)
+                resolve(photo.id)
+              })
+            })
+          })
+          Promise.all(photoPromises).then(photosInDB => {
+            // assure that all 4 photos are in the DB
+            // convert the array of id objects to an array of strings for easy compare
+            let stringifiedAlbumPhotos = album.photos.map(photo => {return photo.toString()})
+            expect(photosInDB).to.include.members(stringifiedAlbumPhotos)
+            expect(photosInDB.length).to.be.equal(4)
+            done()
+          })
+        })
+      })
+    }, 80)
+  })
+
   it('multiple posts, should be saved in the DB', function (done) {
     let postContent = 'These posts are a test :@'
     requestMock.body = { publicPost: publicPost, content: postContent }
@@ -113,7 +148,7 @@ describe('Post', function () {
         expect(posts[0].content).to.be.equal(posts[2].content)
         done()
       })
-    }, 100)
+    }, 160)
   })
 
   it('normal post WITHOUT photo, newsfeed album should be created', function (done) {
