@@ -49,6 +49,7 @@ describe('registerGet function', function () {
 describe('registerPost function', function () {
   const invalidEmailAddressMessage = 'Your e-mail is invalid!'
   const invalidFullNameMessage = 'Your full name has invalid length! It should be between 3 and 20 characters.'
+  const invalidOwnerNameMessage = "Your owner's name has invalid length! It should be between 3 and 20 characters."
   let requestMock = null
   let responseMock = null
   const redirectUrl = '/user/register'
@@ -114,11 +115,12 @@ describe('registerPost function', function () {
     userController.registerPost(requestMock, responseMock)
     setTimeout(function () {
       User.findOne({}).populate('category').then(user => {
+        console.log()  // for some reason this test gives a timeout error, console log seems to fix it
         expect(user).to.not.be.null
         expect(user.ownerName).to.be.equal('nobody')
         done()
       })
-    }, 170)
+    }, 110)
   })
 
   it('A user with an invalid email address, should redirect only', function (done) {
@@ -224,6 +226,25 @@ describe('registerPost function', function () {
     setTimeout(function () {
       expect(requestMock.session.errorMsg).to.not.be.undefined
       expect(requestMock.session.errorMsg).to.be.equal(invalidFullNameMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+
+      User.findOne({}).then(user => {
+        // Assure that no user has been created
+        expect(user).to.be.null
+        done()
+      })
+    }, 50)
+  })
+
+  it('A user with a short ownername', function (done) {
+    sampleValidUser.ownerName = 'dd'
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidOwnerNameMessage)
       expect(responseMock.redirected).to.be.true
       expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
 
