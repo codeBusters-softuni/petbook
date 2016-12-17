@@ -401,6 +401,29 @@ describe('addComment function', function () {
     })
   })
 
+  it('add comment, should be saved in DB', function (done) {
+    let commentContent = 'never going to jail'
+    requestMock.body = {content: commentContent}
+    postController.addComment(requestMock, responseMock)
+
+    setTimeout(function () {
+      // Assert that the comment has been created
+      Comment_.findOne({}).then(createdComment => {
+        expect(createdComment).to.not.be.null
+        expect(createdComment.content).to.be.equal(commentContent)
+        expect(createdComment.author.toString()).to.be.equal(reqUser.id)
+        // Assert that the comment is in the post's comments
+        Post.findOne({}).then(post => {
+          expect(post.comments).to.not.be.undefined
+          expect(post.comments).to.be.a('array')
+          expect(post.comments.length).to.be.equal(1)
+          expect(post.comments[0].toString()).to.be.equal(createdComment.id)
+          done()
+        })
+      })
+    }, 50)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
