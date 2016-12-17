@@ -1125,17 +1125,40 @@ describe('removeLike function', function () {
       })
     }, 40)
   })
-})
 
-// delete all the created models
-afterEach(function (done) {
-  Post.remove({}).then(() => {
-    User.remove({}).then(() => {
-      Album.remove({}).then(() => {
-        Photo.remove({}).then(() => {
-          Comment_.remove({}).then(() => {
-            Like.remove({}).then(() => {
-              done()
+  it('Try to remove an invalid like type, should redirect', function (done) {
+    let invalidLikeType = 'Laughed'
+    requestMock.params[1] = invalidLikeType
+    postController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(`${invalidLikeType} is not a valid type of like!`)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        expect(like).to.not.be.null
+        Post.findOne({}).then(post => {
+          expect(post.likes.length).to.be.equal(1)
+          expect(post.likes[0].toString()).to.be.equal(like.id)
+          expect(like.type).to.be.equal(likeTypePaw)
+          done()
+        })
+      })
+    }, 40)
+  })
+
+  // delete all the created models
+  afterEach(function (done) {
+    Post.remove({}).then(() => {
+      User.remove({}).then(() => {
+        Album.remove({}).then(() => {
+          Photo.remove({}).then(() => {
+            Comment_.remove({}).then(() => {
+              Like.remove({}).then(() => {
+                done()
+              })
             })
           })
         })
@@ -1143,5 +1166,3 @@ afterEach(function (done) {
     })
   })
 })
-
-
