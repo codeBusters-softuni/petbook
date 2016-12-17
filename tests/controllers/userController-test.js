@@ -51,6 +51,7 @@ describe('registerPost function', function () {
   const invalidFullNameMessage = 'Your full name has invalid length! It should be between 3 and 20 characters.'
   const invalidOwnerNameMessage = "Your owner's name has invalid length! It should be between 3 and 20 characters."
   const invalidPasswordMessage = 'Your password has invalid length! It should be between 4 and 20 characters.'
+  const nonMatchingPasswordsMessage = 'Your passwords do not match!'
   let requestMock = null
   let responseMock = null
   const redirectUrl = '/user/register'
@@ -324,6 +325,25 @@ describe('registerPost function', function () {
     setTimeout(function () {
       expect(requestMock.session.errorMsg).to.not.be.undefined
       expect(requestMock.session.errorMsg).to.be.equal(invalidPasswordMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+
+      User.findOne({}).then(user => {
+        // Assure that no user has been created
+        expect(user).to.be.null
+        done()
+      })
+    }, 50)
+  })
+
+  it('A user with password and confirmpassword that do not match, should redirect', function (done) {
+  // password should be between 4 and 20 inclusive length
+    sampleValidUser.confirmedPassword = true
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(nonMatchingPasswordsMessage)
       expect(responseMock.redirected).to.be.true
       expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
 
