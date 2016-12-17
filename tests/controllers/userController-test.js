@@ -84,6 +84,25 @@ describe('registerPost function', function () {
     done()
   })
 
+  it('A valid user should be registered', function (done) {
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+    setTimeout(function () {
+      User.findOne({}).populate('category').then(user => {
+        expect(user).to.not.be.null
+        expect(user.fullName).to.be.equal(sampleFullName)
+        expect(user.ownerName).to.be.equal(sampleOwner)
+        expect(user.email).to.be.equal(sampleEmail)
+        expect(user.category.name).to.be.equal(sampleCategory)
+        // Password should be hashed
+        expect(user.salt).to.not.be.undefined
+        expect(user.password).to.not.be.equal(samplePassword)
+        expect(user.password.length).to.be.greaterThan(samplePassword.length)
+        done()
+      })
+    }, 200)
+  })
+
   afterEach(function (done) {
     User.remove({}).then(() => {
       done()
