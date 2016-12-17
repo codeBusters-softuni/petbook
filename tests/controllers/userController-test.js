@@ -50,6 +50,7 @@ describe('registerPost function', function () {
   const invalidEmailAddressMessage = 'Your e-mail is invalid!'
   const invalidFullNameMessage = 'Your full name has invalid length! It should be between 3 and 20 characters.'
   const invalidOwnerNameMessage = "Your owner's name has invalid length! It should be between 3 and 20 characters."
+  const invalidPasswordMessage = 'Your password has invalid length! It should be between 4 and 20 characters.'
   let requestMock = null
   let responseMock = null
   const redirectUrl = '/user/register'
@@ -237,7 +238,7 @@ describe('registerPost function', function () {
     }, 50)
   })
 
-  it('A user with a short ownername', function (done) {
+  it('A user with a short ownername, should redirect only', function (done) {
     sampleValidUser.ownerName = 'dd'
     requestMock.body = sampleValidUser
     userController.registerPost(requestMock, responseMock)
@@ -255,8 +256,8 @@ describe('registerPost function', function () {
       })
     }, 50)
   })
-  
-  it('A user with too long of an ownerName', function (done) {
+
+  it('A user with too long of an ownerName, should redirect onl', function (done) {
     sampleValidUser.ownerName = 'Hubert Blaine Wolfeschlegelsteinhausenbergerdorff, Sr.'
     requestMock.body = sampleValidUser
     userController.registerPost(requestMock, responseMock)
@@ -264,6 +265,25 @@ describe('registerPost function', function () {
     setTimeout(function () {
       expect(requestMock.session.errorMsg).to.not.be.undefined
       expect(requestMock.session.errorMsg).to.be.equal(invalidOwnerNameMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+
+      User.findOne({}).then(user => {
+        // Assure that no user has been created
+        expect(user).to.be.null
+        done()
+      })
+    }, 50)
+  })
+
+  it('A user without a password field, should redirect only', function (done) {
+    delete sampleValidUser.password
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPasswordMessage)
       expect(responseMock.redirected).to.be.true
       expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
 
