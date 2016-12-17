@@ -403,7 +403,7 @@ describe('addComment function', function () {
 
   it('add comment, should be saved in DB', function (done) {
     let commentContent = 'never going to jail'
-    requestMock.body = {content: commentContent}
+    requestMock.body = { content: commentContent }
     postController.addComment(requestMock, responseMock)
 
     setTimeout(function () {
@@ -422,6 +422,36 @@ describe('addComment function', function () {
         })
       })
     }, 50)
+  })
+
+  it('multiple comments, should be saved in DB', function (done) {
+    let commentContent = 'never going to jail'
+    requestMock.body = { content: commentContent }
+    postController.addComment(requestMock, responseMock)
+    setTimeout(function () {
+      postController.addComment(requestMock, responseMock)
+      setTimeout(function () {
+        postController.addComment(requestMock, responseMock)
+        setTimeout(function () {
+          // Assert that the comment has been created
+          Comment_.find({}).then(createdComments => {
+            expect(createdComments).to.not.be.null
+            expect(createdComments).to.be.a('array')
+            expect(createdComments.length).to.be.equal(3)
+            // Assert that the comment is in the post's comments
+            Post.findOne({}).then(post => {
+              expect(post.comments).to.not.be.undefined
+              expect(post.comments).to.be.a('array')
+              expect(post.comments.length).to.be.equal(3)
+              expect(post.comments[0].toString()).to.be.equal(createdComments[0].id)
+              expect(post.comments[1].toString()).to.be.equal(createdComments[1].id)
+              expect(post.comments[2].toString()).to.be.equal(createdComments[2].id)
+              done()
+            })
+          })
+        }, 50)
+      }, 15)
+    }, 15)
   })
 
   // delete all the created models
