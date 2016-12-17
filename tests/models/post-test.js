@@ -28,6 +28,7 @@ describe('Post', function () {
   let reqUser = null
   const publicPost = 'publicvisible'
   const nonPublicPost = 'groupvisible'
+  const shortContentErrorMsg = "Your post's content is too short! It must be longer than 3 characters."
 
   beforeEach(function (done) {
     User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
@@ -64,7 +65,7 @@ describe('Post', function () {
     }
     postController.addPost(requestMock, responseMock)
     setTimeout(function () {
-      Post.findOne({content: postContent}).then(post => {
+      Post.findOne({ content: postContent }).then(post => {
         expect(post.public).to.not.be.null
         expect(post.public).to.be.false
         done()
@@ -72,6 +73,27 @@ describe('Post', function () {
     }, 50)
   })
 
+  it('short post content, should not be created', function (done) {
+    let postContent = 'sh'
+    requestMock.body = {
+      publicPost: publicPost,
+      content: postContent
+    }
+    postController.addPost(requestMock, responseMock)
+    setTimeout(function () {
+      Post.findOne({ content: postContent }).then(post => {
+        // the post should not be created
+        expect(post).to.be.null
+        // our request must have an errorMessage and the failed post attached to it!
+        expect(requestMock.session.errorMsg).to.not.be.null
+        expect(requestMock.session.errorMsg).to.be.equal(shortContentErrorMsg)
+        expect(requestMock.session.failedPost).to.not.be.null
+        expect(requestMock.session.failedPost.content).to.be.equal(postContent)
+        expect(responseMock.redirected).to.be.true
+        done()
+      })
+    })
+  })
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
