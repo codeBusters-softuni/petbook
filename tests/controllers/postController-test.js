@@ -1058,8 +1058,25 @@ describe('removeLike function', function () {
     })
   })
 
+  it('Remove a paw from a post with a paw like', function (done) {
+    postController.removeLike(requestMock, responseMock)
 
+    setTimeout(function () {
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
 
+      Like.findOne({}).then(like => {
+        // like should be deleted
+        expect(like).to.be.null
+        Post.findOne({}).then(post => {
+          expect(post.likes).to.not.be.undefined
+          expect(post.likes.length).to.be.equal(0)
+          done()
+        })
+      })
+    }, 40)
+  })
+})
 
 // delete all the created models
 afterEach(function (done) {
