@@ -250,9 +250,10 @@ function displayPhotosInLightBox() {
             indexArticle = indexImg; //define index of the article that contains clicked image and its buttons
 
             $('#box-photos').css('display', 'block'); // lightbox become visible
-            $('.custom-header').css('display', 'none');
-            $('#cstm-stl-ftr').css('display', 'none');
-            $('.pic-up-container').css('display', 'none');
+            $('#backdrop-photos').css('display', 'block');
+            // $('.custom-header').css('display', 'none');
+            // $('#cstm-stl-ftr').css('display', 'none');
+            // $('.pic-up-container').css('display', 'none');
 
             display(); // call display function
 
@@ -325,9 +326,10 @@ function displayPhotosInLightBox() {
             // }
 
             $('#box-photos').css('display', 'none'); // give style display: none to lightbox so that it is not visible
-            $('.custom-header').css('display', 'block');
-            $('#cstm-stl-ftr').css('display', 'block');
-            $('.pic-up-container').css('display', 'block');
+            $('#backdrop-photos').css('display', 'none');
+            // $('.custom-header').css('display', 'block');
+            // $('#cstm-stl-ftr').css('display', 'block');
+            // $('.pic-up-container').css('display', 'block');
         });
 
         function removeByClass(classParent, className) { // on click on next or prev button, remove the current article(that contains img and buttons)
@@ -340,6 +342,20 @@ function displayPhotosInLightBox() {
         }
     }
 }
+
+// function to show lightbox and backdrop at the position of the scroll
+$(document).ready(function () {
+
+    $(window).on("scroll", function () {
+        var scrollPoint = $(this).scrollTop();
+        pictureBoxPosition(scrollPoint)
+    });
+
+    function pictureBoxPosition(scroll) {
+        $('#box-photos').css('top', scroll+100+'px' );
+        $('#backdrop-photos').css('top', scroll+'px' );
+    }
+})
 
 
 // });

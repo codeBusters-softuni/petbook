@@ -25,7 +25,7 @@ function createPhotoHTMLinPost() {
     var textarea = document.createElement("textarea");
     textarea.className += "cstm-input-register-style input-cstm-style";
     textarea.setAttribute("placeholder", "Say something about this photo...");
-    textarea.setAttribute("name", photoIndex.toString() ); //  the photo's unique index, used to pair it with it's description
+    textarea.setAttribute("name", photoIndex.toString()); //  the photo's unique index, used to pair it with it's description
     textarea.setAttribute("rows", "3");
     textarea.setAttribute("cols", "30");
     section.appendChild(textarea);
@@ -62,7 +62,7 @@ function showPhotoInPost() {
 function uploadPhotosFromPost() {
     var filesInputInPost = document.getElementById('addPhotoToPost');
     // console.log("Yes")
-    if (filesInputInPost!=null){
+    if (filesInputInPost != null) {
         filesInputInPost.addEventListener("change", showPhotoInPost);
     }
 
@@ -70,13 +70,19 @@ function uploadPhotosFromPost() {
 
 // show images when click on them and move next and prev
 
-$(document).ready(function() {
+$(document).ready(function () {
     var img = $('.newsfeed-post-images .newsfeed-images img'); // selects all images
     var imgArticles = $('.newsfeed-post-images .newsfeed-images article'); // select all articles that contain images and buttons
     var lightBox = document.getElementById('box'); // select lightbox
-    if(lightBox!=null){
+
+
+
+
+
+
+    if (lightBox != null) {
         var boxImages = document.createElement('div') // create div that contains the image
-        boxImages.className +=" box-image" // give that div class
+        boxImages.className += " box-image" // give that div class
         lightBox.insertBefore(boxImages, null) // insert that div in the lightbox
 
         var currImgClone; // initialize the clone of the article with img and buttons what we will show in the lightbox
@@ -95,7 +101,7 @@ $(document).ready(function() {
         var indexArticle = 0; //initialize index of the article that contains clicked image and its buttons
 
         //open first image
-        img.on('click', function() {
+        img.on('click', function () {
             indexImg = img.index($(this)); // assign var to the index of the image that user clicked on
             indexArticle = indexImg; // assign var to the index of the image that user clicked on - they are the same
 
@@ -118,18 +124,15 @@ $(document).ready(function() {
             indexArticle = indexImg; //define index of the article that contains clicked image and its buttons
 
             $('#box').css('display', 'block'); // lightbox become visible
-            $('.custom-header').css('display', 'none');
-            $('#cstm-stl-ftr').css('display', 'none');
-            $('.newsfeed-wrapper').css('display', 'none');
-
+            $('#backdrop').css('display', 'block');
 
             display(); // call display function
 
         });
 
 //    click on NEXT button
-        nextBtn.on('click', function(e) {
-            if(!nextImg.is('img')) { //if next img is undefined
+        nextBtn.on('click', function (e) {
+            if (!nextImg.is('img')) { //if next img is undefined
                 nextImg = img.first(); // next img becomes the first from the img array
             }
             removeByClass('box-image', 'selected') //on next click we should remove the article with the special "selected" class
@@ -151,8 +154,8 @@ $(document).ready(function() {
         });
 
 //    click on PREV button  // same as next!!
-        prevBtn.on('click', function() {
-            if(!prevImg.is('img')) {
+        prevBtn.on('click', function () {
+            if (!prevImg.is('img')) {
                 prevImg = img.last();
             }
 
@@ -173,11 +176,11 @@ $(document).ready(function() {
         });
 
 //    click on CLOSE button
-        closeLightBox.on('click', function() {
+        closeLightBox.on('click', function () {
             removeByClass('box-image', 'selected') //on close click we should remove the article with the special "selected" class
             imgArticles.eq(indexArticle).removeClass("selected") //remove special class from the articles Array too,
 //so that when we give that special class to the next image when click on it
-            if(img.length>=1){
+            if (img.length >= 1) {
                 currentImg.parent().closest('.post-view').siblings().addClass('newsfeed-post-images'); // add to all post that class so that user can click on another img from another post and start lightbox again
             }
 
@@ -185,13 +188,11 @@ $(document).ready(function() {
             imgArticles = $('.newsfeed-post-images .newsfeed-images article');  // select all articles that contain images and buttons
 
             $('#box').css('display', 'none'); // give style display: none to lightbox so that it is not visible
-            $('.custom-header').css('display', 'block');
-            $('#cstm-stl-ftr').css('display', 'block');
-            $('.newsfeed-wrapper').css('display', 'block');
+            $('#backdrop').css('display', 'none');
         });
 
         function removeByClass(classParent, className) { // on click on next or prev button, remove the current article(that contains img and buttons)
-            $("." +classParent +" " + "."+className).remove();
+            $("." + classParent + " " + "." + className).remove();
         }
 
         //display LIGHT BOX IMAGE
@@ -201,4 +202,20 @@ $(document).ready(function() {
     }
 
 });
+
+// function to show lightbox and backdrop at the position of the scroll
+$(document).ready(function () {
+
+    $(window).on("scroll", function () {
+        var scrollPoint = $(this).scrollTop();
+        pictureBoxPosition(scrollPoint)
+    });
+
+    function pictureBoxPosition(scroll) {
+        $('#box').css('top', scroll+100+'px' );
+        $('#backdrop').css('top', scroll+'px' );
+    }
+})
+
+
 

@@ -109,9 +109,7 @@ $(document).ready(function() {
             indexArticle = indexImg; //define index of the article that contains clicked image and its buttons
 
             $('#box-profile-photos').css('display', 'block'); // lightbox become visible
-            $('.custom-header').css('display', 'none');
-            $('#cstm-stl-ftr').css('display', 'none');
-            $('.profile-all-container').css('display', 'none');
+            $('#backdrop-profile-photos').css('display', 'block')
 
             display(); // call display function
 
@@ -175,9 +173,7 @@ $(document).ready(function() {
             imgArticles = $('.profile-post-images .profile-images article');  // select all articles that contain images and buttons
 
             $('#box-profile-photos').css('display', 'none'); // give style display: none to lightbox so that it is not visible
-            $('.custom-header').css('display', 'block');
-            $('#cstm-stl-ftr').css('display', 'block');
-            $('.profile-all-container').css('display', 'block');
+            $('#backdrop-profile-photos').css('display', 'none');
 
         });
 
@@ -192,3 +188,17 @@ $(document).ready(function() {
     }
 
 });
+
+// function to show lightbox and backdrop at the position of the scroll
+$(document).ready(function () {
+
+    $(window).on("scroll", function () {
+        var scrollPoint = $(this).scrollTop();
+        pictureBoxPosition(scrollPoint)
+    });
+
+    function pictureBoxPosition(scroll) {
+        $('#box-profile-photos').css('top', scroll+100+'px' );
+        $('#backdrop-profile-photos').css('top', scroll+'px' );
+    }
+})
