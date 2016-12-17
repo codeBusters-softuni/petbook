@@ -930,6 +930,24 @@ describe('addLike function', function () {
     }, 40)
   })
 
+  it('Add an like with an invalid postid, should redirect without saving anything', function (done) {
+    requestMock.params[0] = 'grindin'
+    postController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal('Invalid post id!')
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal(returnUrl)
+
+      Like.findOne({}).then(like => {
+        // No like should have been created
+        expect(like).to.be.null
+        done()
+      })
+    }, 40)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
