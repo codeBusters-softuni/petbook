@@ -382,6 +382,7 @@ describe('registerPost function', function () {
 })
 
 describe('loginPost function, logging in a user', function () {
+  const invalidLogInMessage = 'Invalid e-mail/password.'
   const invalidEmailMessage = 'Your e-mail is invalid!'
   const invalidPasswordMessage = 'Your password has invalid length! It should be between 4 and 20 characters.'
   let sampleValidUser = null
@@ -518,6 +519,32 @@ describe('loginPost function, logging in a user', function () {
     setTimeout(function () {
       expect(requestMock.session.errorMsg).to.not.be.undefined
       expect(requestMock.session.errorMsg).to.be.equal(invalidPasswordMessage)
+      expect(loggedIn).to.be.false
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      done()
+    }, 50)
+  })
+
+  it('Log in with an e-mail that is not in the db, should redirect', function (done) {
+    requestMock.body.email = 'youdonthave@hotmail.com'
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidLogInMessage)
+      expect(loggedIn).to.be.false
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      done()
+    }, 50)
+  })
+
+  it('Log in with a password that is not the correct one, should redirect', function (done) {
+    requestMock.body.password = '12345as'
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidLogInMessage)
       expect(loggedIn).to.be.false
       expect(responseMock.redirectUrl).to.be.equal('/')
       done()
