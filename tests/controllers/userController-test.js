@@ -910,6 +910,26 @@ describe('profilePageGet, loading the profile page of a user', function () {
     })
   })
 
+  it('Visit from a person who is the same categories but are not friends, should see all posts', function (done) {
+    // even though all the profile user's posts are private, they are of the same category, therefore should be visible
+    User.register('Firstname', 'Firstname@son.bg', 'OwnerMan', '12345', secondUserCategory).then(newUser => {
+      requestMock.user = newUser
+      userController.profilePageGet(requestMock, responseMock)
+
+      setTimeout(function () {
+        // assert received posts
+        expect(receivedPosts).to.be.a('array')
+        expect(receivedPosts.length).to.be.equal(maxPostsPerPage)
+        expect(receivedPages).to.be.a('array')
+        expect(receivedPages).to.deep.equal([1, 2])
+        expect(receivedHbsPage).to.deep.equal(expectedHbsPage)
+        // assure that it rendered the correct user
+        expect(renderedUser.id).to.equal(secondUser.id)
+        done()
+      }, 50)
+    })
+  })
+
   afterEach(function (done) {
     User.remove({}).then(() => {
       Post.remove({}).then(() => {
