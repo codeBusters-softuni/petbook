@@ -1105,6 +1105,19 @@ describe('profilePageGet, loading the profile page of a user', function () {
     }, 40)
   })
 
+  it('Visit a profile with a float id, should give out an error message and redirect', function (done) {
+    requestMock.params.id = '1.1'
+    userController.profilePageGet(requestMock, responseMock)
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidUserIdMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      expect(renderedUser).to.be.null
+      done()
+    }, 40)
+  })
+
   afterEach(function (done) {
     User.remove({}).then(() => {
       Post.remove({}).then(() => {
