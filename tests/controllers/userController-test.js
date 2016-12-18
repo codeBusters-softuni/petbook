@@ -4,6 +4,8 @@ require('../../config/database')(config)  // load the DB models
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const Post = mongoose.model('Post')
+const Photo = mongoose.model('Photo')
+const Album = mongoose.model('Album')
 const Category = mongoose.model('Category')
 const Like = mongoose.model('Like')
 const userController = require('../../controllers/user-controller')
@@ -967,6 +969,53 @@ describe('profilePageGet, loading the profile page of a user', function () {
           done()
         }, 40)
       })
+    })
+  })
+
+  it('Visit a profile with a profilePicture, it should be displayed', function (done) {
+    // save a profile picture to the user
+    let saveProfilePicturePromise = new Promise((resolve, reject) => {
+      new Promise((resolve, reject) => {
+        Album.create({
+          name: 'profiles',
+          author: secondUser.id,
+          public: true,
+          photos: [],
+          classCss: 'someCLass'
+        }).then(album => { resolve(album) })
+      }).then(album => {
+        new Promise((resolve, reject) => {
+          let profilePic = new Photo({
+            fieldname: "addProfilePhoto",
+            originalname: "WIN_20161210_10_23_56_Pro.jpg",
+            encoding: "7bit",
+            mimetype: "image/jpeg",
+            filename: "a31328e9ebbb340ca64f9d42f7f0aa68",
+            path: ":\\Work\\SoftUni\\Team Project\\petbook\\public\\uploads\\a31328e9ebbb340ca64f9d42f7f0aa68",
+            size: 145203,
+            author: secondUser.id,
+            album: album.id,
+            public: true
+          })
+          Photo.create(profilePic).then(photo => {
+            resolve(photo)
+          })
+        }).then(profilePic => {
+          secondUser.profilePic = profilePic.id
+          secondUser.save().then(() => {
+            resolve(profilePic)
+          })
+        })
+      })
+    }).then(profilePic => {
+      userController.profilePageGet(requestMock, responseMock)
+
+      setTimeout(function () {
+        expect(renderedUser.profilePic).to.not.be.undefined
+        expect(renderedUser.profilePic.id).to.be.equal(profilePic.id)
+        expect(renderedUser.profilePic.filename).to.not.be.undefined
+        done()
+      }, 40)
     })
   })
 
