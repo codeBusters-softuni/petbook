@@ -608,6 +608,9 @@ describe('cancelFriendship function, cancelling a friendship between users', fun
   /* Have two users be friends, one will be attached to the request.user and the
      other will have his ID in the req.params.id */
   const invalidFriendshipMessage = 'You are not friends with that user.'
+  const nonExistingUserMessage = 'Such a user does not exist.'
+  const invalidFriendIdMessage = 'Invalid friend id!'
+
   let firstUserName = 'FirstDog'
   let firstUserEmail = 'somebody@abv.bg'
   let firstUserOwner = 'TheOwner'
@@ -706,6 +709,18 @@ describe('cancelFriendship function, cancelling a friendship between users', fun
         }, 40)
       })
     })
+  })
+
+  it('Try to cancel with an invalid mongoose object id, should give out an error message and redirect', function (done) {
+    requestMock.params.id = 'grindin'
+    userController.cancelFriendship(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidFriendIdMessage)
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+      done()
+    }, 40)
   })
 
   afterEach(function (done) {
