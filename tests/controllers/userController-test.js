@@ -716,10 +716,40 @@ describe('cancelFriendship function, cancelling a friendship between users', fun
     userController.cancelFriendship(requestMock, responseMock)
 
     setTimeout(function () {
-      expect(requestMock.session.errorMsg).to.not.be.undefined
-      expect(requestMock.session.errorMsg).to.be.equal(invalidFriendIdMessage)
-      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
-      done()
+      User.find({}).then(users => {
+        // Assert that the users are still friends
+        let userOne = users[0]
+        let userTwo = users[1]
+        expect(userOne.friends).to.be.a('array')
+        expect(userTwo.friends).to.be.a('array')
+        expect(userOne.friends.length).to.be.equal(1)
+        expect(userTwo.friends.length).to.be.equal(1)
+        expect(requestMock.session.errorMsg).to.not.be.undefined
+        expect(requestMock.session.errorMsg).to.be.equal(invalidFriendIdMessage)
+        expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+        done()
+      })
+    }, 40)
+  })
+
+  it('Try to cancel a friendship with a friendId that is not in the DB, should give out an error message and redirect', function (done) {
+    requestMock.params.id = '4edd40c86762e0fb12000003'
+    userController.cancelFriendship(requestMock, responseMock)
+
+    setTimeout(function () {
+      User.find({}).then(users => {
+        // Assert that the users are still friends
+        let userOne = users[0]
+        let userTwo = users[1]
+        expect(userOne.friends).to.be.a('array')
+        expect(userTwo.friends).to.be.a('array')
+        expect(userOne.friends.length).to.be.equal(1)
+        expect(userTwo.friends.length).to.be.equal(1)
+        expect(requestMock.session.errorMsg).to.not.be.undefined
+        expect(requestMock.session.errorMsg).to.be.equal(nonExistingUserMessage)
+        expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+        done()
+      })
     }, 40)
   })
 
