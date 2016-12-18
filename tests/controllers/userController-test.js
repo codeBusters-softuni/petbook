@@ -3,12 +3,13 @@ const config = require('../../config/config')['test']
 require('../../config/database')(config)  // load the DB models
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
+const Post = mongoose.model('Post')
 const Category = mongoose.model('Category')
 const userController = require('../../controllers/user-controller')
 
 describe('registerGet function', function () {
-  /* the registerGet function renders the register page with 
-  an optional candidateUser( for when he failed to register ), 
+  /* the registerGet function renders the register page with
+  an optional candidateUser( for when he failed to register ),
   the possible categories he can  register as,
   a special layout for the register page */
   let successfullCandidateUserMessage = 'USER OK!'
@@ -756,6 +757,143 @@ describe('cancelFriendship function, cancelling a friendship between users', fun
   afterEach(function (done) {
     User.remove({}).then(() => {
       done()
+    })
+  })
+})
+
+describe('profilePageGet, loading the profile page of a user', function () {
+  /* The function should render the page of a user, showing him and all of the posts that the req.user can
+    see from him with pagination. */
+  require('../../config/config').initialize()  // function uses some prototype function we register
+  let firstUserName = 'FirstDog'
+  let firstUserEmail = 'somebody@abv.bg'
+  let firstUserOwner = 'TheOwner'
+  let firstUserPassword = '12345'
+  let firstUserCategory = 'Dog'
+
+  let secondUserName = 'FirstCat'
+  let secondUserEmail = 'somecat@abv.bg'
+  let secondUserOwner = 'TheOwner'
+  let secondUserPassword = '12345'
+  let secondUserCategory = 'Cat'
+
+  const maxPostsPerPage = 20
+  let expectedFriendStatus = null
+  const expectedHbsPage = 'user/profile'
+
+  let reqUser = null
+  let secondUser = null
+  let secondUserPosts = null
+  let requestMock = null
+  let responseMock = null
+  let receivedHbsPage = null
+  let renderedUser = null
+  let receivedFriendStatus = null
+  let receivedPosts = null
+  let receivedCategories = null
+  let receivedPages = null
+
+  beforeEach(function (done) {
+    requestMock = {
+      user: {},
+      params: {},
+      headers: {},
+      session: {},
+      query: {}
+    }
+
+    responseMock = {
+      locals: {},
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl },
+      render: function (hbsPage, argumentsPassed) {
+        receivedHbsPage = hbsPage
+        renderedUser = argumentsPassed.profileUser
+        receivedFriendStatus = argumentsPassed.friendStatus
+        receivedPosts = argumentsPassed.posts
+        receivedCategories = argumentsPassed.categories
+        receivedPages = argumentsPassed.pages
+      }
+    }
+
+    expectedFriendStatus = {
+      sentRequest: false,
+      areFriends: true,
+      friendRequest: false,
+      receivedRequest: false,
+      receivedFriendRequest: false
+    }
+
+    // Register both users and make them friends
+    User.register(firstUserName, firstUserEmail, firstUserOwner, firstUserPassword, firstUserCategory).then(firstUser => {
+      User.register(secondUserName, secondUserEmail, secondUserOwner, secondUserPassword, secondUserCategory).then(secUser => {
+        // Create 25 posts from the secondUser
+        let postPromises = []
+        for (let i = 0; i < 25; i++) {
+          postPromises.push(new Promise((resolve, reject) => {
+            Post.create({ content: i, public: true, author: secUser._id, category: secUser.id })
+              .then(newPost => {
+                resolve(newPost)
+              })
+          }))
+        }
+
+        firstUser.friends.push(secUser)
+        secUser.friends.push(firstUser)
+
+        firstUser.save().then(() => {
+          secUser.save().then(() => {
+            reqUser = firstUser
+            secondUser = secUser
+            requestMock.params.id = secondUser.userId
+            requestMock.user = reqUser
+            expect(reqUser.friends.length).to.be.equal(1)
+            expect(secondUser.friends.length).to.be.equal(1)
+            Promise.all(postPromises).then((posts) => {
+              secondUserPosts = posts
+              done()
+            })
+          })
+        })
+      })
+    })
+  })
+
+  it('Normal render, all should work', function (done) {
+    // Because we're friends with the user, we should see all of his posts
+    // but the maximum for a page is 20
+    userController.profilePageGet(requestMock, responseMock)
+
+    setTimeout(function () {
+      // assert received posts
+      expect(receivedPosts).to.be.a('array')
+      expect(receivedPosts.length).to.be.equal(maxPostsPerPage)
+      // Assert that the posts are sorted, the first post in receivedPost should be the newest
+      let newestPost = secondUserPosts.sort((postOne, postTwo) => {
+        return postTwo.date - postOne.date
+      })[0]
+      expect(newestPost.content).to.be.equal(receivedPosts[0].content)
+      // assure that there are two pages
+      expect(receivedPages).to.be.a('array')
+      expect(receivedPages).to.deep.equal([1, 2])
+      expect(receivedFriendStatus).to.deep.equal(expectedFriendStatus)
+      expect(receivedHbsPage).to.deep.equal(expectedHbsPage)
+      // assure that it rendered the correct user
+      expect(renderedUser.id).to.equal(secondUser.id)
+      // assure that he has receivedLikes objects
+      expect(renderedUser.receivedPawsCount).to.not.be.undefined
+      expect(renderedUser.receivedDislikesCount).to.not.be.undefined
+      expect(renderedUser.receivedLovesCount).to.not.be.undefined
+      done()
+    }, 200)
+  })
+
+  afterEach(function (done) {
+    User.remove({}).then(() => {
+      Post.remove({}).then(() => {
+        done()
+      })
     })
   })
 })
