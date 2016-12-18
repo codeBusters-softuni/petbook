@@ -663,7 +663,7 @@ describe('cancelFriendship function, cancelling a friendship between users', fun
     })
   })
 
-  it('Cancel valid friendship, users should not be friends anymore', function () {
+  it('Cancel valid friendship, users should not be friends anymore', function (done) {
     userController.cancelFriendship(requestMock, responseMock)
 
     setTimeout(function () {
@@ -675,6 +675,7 @@ describe('cancelFriendship function, cancelling a friendship between users', fun
         expect(userOne.friends.length).to.be.equal(0)
         expect(userTwo.friends.length).to.be.equal(0)
         expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+        done()
       })
     }, 50)
   })
