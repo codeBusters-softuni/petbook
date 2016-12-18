@@ -806,6 +806,7 @@ describe('profilePageGet, loading the profile page of a user', function () {
     receivedPosts = null
     receivedCategories = null
     receivedPages = null
+    secondUserPosts = null
 
     requestMock = {
       user: {},
@@ -1089,6 +1090,19 @@ describe('profilePageGet, loading the profile page of a user', function () {
         done()
       }, 40)
     })
+  })
+
+  it('Visit a profile with an invalid id, should give out an error message and redirect', function (done) {
+    requestMock.params.id = 'grindin'
+    userController.profilePageGet(requestMock, responseMock)
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidUserIdMessage)
+      expect(responseMock.redirected).to.be.true
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      expect(renderedUser).to.be.null
+      done()
+    }, 40)
   })
 
   afterEach(function (done) {
