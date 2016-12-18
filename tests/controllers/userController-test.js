@@ -605,6 +605,9 @@ describe('logout function, logging out a user', function () {
 })
 
 describe('cancelFriendship function, cancelling a friendship between users', function () {
+  /* Have two users be friends, one will be attached to the request.user and the
+     other will have his ID in the req.params.id */
+  const invalidFriendshipMessage = 'You are not friends with that user.'
   let firstUserName = 'FirstDog'
   let firstUserEmail = 'somebody@abv.bg'
   let firstUserOwner = 'TheOwner'
@@ -649,6 +652,8 @@ describe('cancelFriendship function, cancelling a friendship between users', fun
           secUser.save().then(() => {
             reqUser = firstUser
             secondUser = secUser
+            requestMock.params.id = secondUser.id
+            requestMock.user = reqUser
             expect(reqUser.friends.length).to.be.equal(1)
             expect(secondUser.friends.length).to.be.equal(1)
             done()
@@ -659,7 +664,6 @@ describe('cancelFriendship function, cancelling a friendship between users', fun
   })
 
   it('Cancel valid friendship, users should not be friends anymore', function () {
-    requestMock.params.id = secondUser.id
     userController.cancelFriendship(requestMock, responseMock)
 
     setTimeout(function () {
@@ -670,8 +674,37 @@ describe('cancelFriendship function, cancelling a friendship between users', fun
         expect(userTwo.friends).to.be.a('array')
         expect(userOne.friends.length).to.be.equal(0)
         expect(userTwo.friends.length).to.be.equal(0)
+        expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
       })
+    }, 50)
+  })
+
+  it('Try to cancel a friendship where the reqUser does not have the other user as a friend, should give out an errorMsg and redirect', function (done) {
+    requestMock.user.friends = []
+    userController.cancelFriendship(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidFriendshipMessage)
+      expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+      done()
     }, 40)
+  })
+
+  it('Try to cancel a friendship where other user does not have the requser as a friend, should give out an errorMsg and redirect', function (done) {
+    User.findById(requestMock.params.id).then(user => {
+      user.friends = []
+      user.save().then(() => {
+        userController.cancelFriendship(requestMock, responseMock)
+
+        setTimeout(function () {
+          expect(requestMock.session.errorMsg).to.not.be.undefined
+          expect(requestMock.session.errorMsg).to.be.equal(invalidFriendshipMessage)
+          expect(responseMock.redirectUrl).to.be.equal(redirectUrl)
+          done()
+        }, 40)
+      })
+    })
   })
 
   afterEach(function (done) {
