@@ -557,3 +557,49 @@ describe('loginPost function, logging in a user', function () {
     })
   })
 })
+
+describe('logout function, logging out a user', function () {
+  let sampleValidUser = null
+  let requestMock = null
+  let responseMock = null
+  let reqUser = null
+  let validUserEmail = 'somebody@abv.bg'
+  let validUserPassword = '12345'
+  let loggedOut = null
+  let redirectUrl = 'demJohns'
+
+  beforeEach(function (done) {
+    requestMock = {
+      user: {},
+      loggedOut: false,
+      logOut: function () {
+        loggedOut = true
+      }
+    }
+    responseMock = {
+      locals: { returnUrl: redirectUrl },
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+    User.register('Guyssmart', validUserEmail, 'TheOwner', validUserPassword, 'Dog').then(dog => {
+      reqUser = dog
+      requestMock.user = reqUser
+      done()
+    })
+  })
+
+  it('Normal call, should call req.logOut', function (done) {
+    userController.logout(requestMock, responseMock)
+    setTimeout(function () {
+      // Assert that req.logOut has been called
+      expect(requestMock.loggedOut).to.be.true
+    }, 40)
+  })
+
+  afterEach(function (done) {
+    User.remove({}).then(() => {
+      done()
+    })
+  })
+})
