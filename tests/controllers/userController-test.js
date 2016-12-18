@@ -783,6 +783,8 @@ describe('profilePageGet, loading the profile page of a user', function () {
   const maxPostsPerPage = 20
   let expectedFriendStatus = null
   const expectedHbsPage = 'user/profile'
+  const nonExistingUserMessage = 'No such user exists.'
+  const invalidUserIdMessage = 'Invalid user id!'
 
   let reqUser = null
   let secondUser = null
@@ -797,6 +799,14 @@ describe('profilePageGet, loading the profile page of a user', function () {
   let receivedPages = null
 
   beforeEach(function (done) {
+    // Nullify all the received values
+    receivedHbsPage = null
+    renderedUser = null
+    receivedFriendStatus = null
+    receivedPosts = null
+    receivedCategories = null
+    receivedPages = null
+
     requestMock = {
       user: {},
       params: {},
@@ -940,7 +950,7 @@ describe('profilePageGet, loading the profile page of a user', function () {
   })
 
   it('Visit page -3105, should see 0 posts', function (done) {
-     // Because we're friends with the user, we should see all of his posts
+    // Because we're friends with the user, we should see all of his posts
     // but because we're at an invalid page, we should not see any posts
     requestMock.query.page = '-3105'
     userController.profilePageGet(requestMock, responseMock)
@@ -1084,7 +1094,13 @@ describe('profilePageGet, loading the profile page of a user', function () {
   afterEach(function (done) {
     User.remove({}).then(() => {
       Post.remove({}).then(() => {
-        done()
+        Photo.remove({}).then(() => {
+          Album.remove({}).then(() => {
+            Like.remove({}).then(() => {
+              done()
+            })
+          })
+        })
       })
     })
   })
