@@ -925,6 +925,34 @@ describe('profilePageGet, loading the profile page of a user', function () {
     }, 100)
   })
 
+  it('Visit page 20414, should see 0 posts', function (done) {
+    // Because we're friends with the user, we should see all of his posts
+    // but because we're at an invalid page, we should not see any posts
+    requestMock.query.page = '21514'
+    userController.profilePageGet(requestMock, responseMock)
+
+    setTimeout(function () {
+      // assert received posts
+      expect(receivedPosts).to.be.a('array')
+      expect(receivedPosts.length).to.be.equal(0)
+      done()
+    }, 100)
+  })
+
+  it('Visit page -3105, should see 0 posts', function (done) {
+     // Because we're friends with the user, we should see all of his posts
+    // but because we're at an invalid page, we should not see any posts
+    requestMock.query.page = '-3105'
+    userController.profilePageGet(requestMock, responseMock)
+
+    setTimeout(function () {
+      // assert received posts
+      expect(receivedPosts).to.be.a('array')
+      expect(receivedPosts.length).to.be.equal(0)
+      done()
+    }, 100)
+  })
+
   it('Visit from a person who is not his friend and different category, should not see any posts', function (done) {
     // Because we are not his friend, are different categories and all his posts are private, 
     // we should not see any posts
