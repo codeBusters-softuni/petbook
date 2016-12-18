@@ -114,6 +114,13 @@ module.exports = {
   cancelFriendship: (req, res) => {
     let returnUrl = res.locals.returnUrl || '/'
     let friendId = req.params.id
+
+    if (!mongoose.Types.ObjectId.isValid(friendId)) {
+      req.session.errorMsg = 'Invalid friend id!'
+      res.redirect(returnUrl)
+      return
+    }
+
     User.findById(friendId).then(friend => {
       if (!friend) {
         req.session.errorMsg = 'Such a user does not exist.'
