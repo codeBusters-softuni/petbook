@@ -383,6 +383,7 @@ describe('registerPost function', function () {
 
 describe('loginPost function, logging in a user', function () {
   const invalidEmailMessage = 'Your e-mail is invalid!'
+  const invalidPasswordMessage = 'Your password has invalid length! It should be between 4 and 20 characters.'
   let sampleValidUser = null
   let requestMock = null
   let responseMock = null
@@ -432,7 +433,7 @@ describe('loginPost function, logging in a user', function () {
     }, 50)
   })
 
-  it('Log in a user without the email field', function (done) {
+  it('Log in a user without the email field, should redirect', function (done) {
     delete requestMock.body.email
     userController.loginPost(requestMock, responseMock)
 
@@ -445,7 +446,7 @@ describe('loginPost function, logging in a user', function () {
     }, 50)
   })
 
-  it('Log in a user with an invalid email', function (done) {
+  it('Log in a user with an invalid email, should redirect', function (done) {
     requestMock.body.email = 'dogman.com'
     userController.loginPost(requestMock, responseMock)
 
@@ -458,7 +459,7 @@ describe('loginPost function, logging in a user', function () {
     }, 50)
   })
 
-  it('Log in a user with a short email', function (done) {
+  it('Log in a user with a short email, should redirect', function (done) {
     requestMock.body.email = 'd@b.c'
     userController.loginPost(requestMock, responseMock)
 
@@ -471,13 +472,26 @@ describe('loginPost function, logging in a user', function () {
     }, 50)
   })
 
-  it('Log in a user with a too long email', function (done) {
+  it('Log in a user with a too long email, should redirect', function (done) {
     requestMock.body.email = 'dFettyWapMyNameThoNoDaysOffMyGameThoWatchWhatYousayThoWatchWhatYouSayThoThoYOuWillSay@Thob.compact'
     userController.loginPost(requestMock, responseMock)
 
     setTimeout(function () {
       expect(requestMock.session.errorMsg).to.not.be.undefined
       expect(requestMock.session.errorMsg).to.be.equal(invalidEmailMessage)
+      expect(loggedIn).to.be.false
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      done()
+    }, 50)
+  })
+
+  it('Log in without a password field, should redirect', function (done) {
+    delete requestMock.body.password
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPasswordMessage)
       expect(loggedIn).to.be.false
       expect(responseMock.redirectUrl).to.be.equal('/')
       done()
