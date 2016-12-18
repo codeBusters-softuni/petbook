@@ -832,7 +832,7 @@ describe('profilePageGet, loading the profile page of a user', function () {
         let postPromises = []
         for (let i = 0; i < 25; i++) {
           postPromises.push(new Promise((resolve, reject) => {
-            Post.create({ content: i, public: false, author: secUser._id, category: secUser.id })
+            Post.create({ content: i, public: false, author: secUser._id, category: secUser.category })
               .then(newPost => {
                 resolve(newPost)
               })
