@@ -950,7 +950,7 @@ describe('profilePageGet, loading the profile page of a user', function () {
     }, 100)
   })
 
-  it('Visit page -3105, should see 0 posts', function (done) {
+  it('Visit page -3105, should load the first page', function (done) {
     // Because we're friends with the user, we should see all of his posts
     // but because we're at an invalid page, we should not see any posts
     requestMock.query.page = '-3105'
@@ -959,9 +959,25 @@ describe('profilePageGet, loading the profile page of a user', function () {
     setTimeout(function () {
       // assert received posts
       expect(receivedPosts).to.be.a('array')
-      expect(receivedPosts.length).to.be.equal(0)
+      expect(receivedPosts.length).to.be.equal(maxPostsPerPage)
+      expect(receivedPages).to.be.a('array')
+      expect(receivedPages).to.deep.equal([1, 2])
       done()
-    }, 100)
+    }, 40)
+  })
+
+  it('Visit page 1.1, should load the first page', function (done) {
+    requestMock.query.page = '1.1'
+    userController.profilePageGet(requestMock, responseMock)
+
+    setTimeout(function () {
+      // assert received posts
+      expect(receivedPosts).to.be.a('array')
+      expect(receivedPosts.length).to.be.equal(maxPostsPerPage)
+      expect(receivedPages).to.be.a('array')
+      expect(receivedPages).to.deep.equal([1, 2])
+      done()
+    }, 40)
   })
 
   it('Visit from a person who is not his friend and different category, should not see any posts', function (done) {
