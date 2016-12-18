@@ -980,6 +980,20 @@ describe('profilePageGet, loading the profile page of a user', function () {
     }, 40)
   })
 
+  it('Visit page "SOMEPAGE", should load the first page', function (done) {
+    requestMock.query.page = 'SOMEPAGE'
+    userController.profilePageGet(requestMock, responseMock)
+
+    setTimeout(function () {
+      // assert received posts
+      expect(receivedPosts).to.be.a('array')
+      expect(receivedPosts.length).to.be.equal(maxPostsPerPage)
+      expect(receivedPages).to.be.a('array')
+      expect(receivedPages).to.deep.equal([1, 2])
+      done()
+    }, 40)
+  })
+
   it('Visit from a person who is not his friend and different category, should not see any posts', function (done) {
     // Because we are not his friend, are different categories and all his posts are private, 
     // we should not see any posts
