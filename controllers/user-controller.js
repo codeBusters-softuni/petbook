@@ -74,7 +74,7 @@ module.exports = {
       req.session.errorMsg = 'Your e-mail is invalid!'
       res.redirect('/')
       return
-    } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
+    } else if (!candidateUser.password || (candidateUser.password.length < 4 || candidateUser.password.length > 20)) {
       req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
       res.redirect('/')
       return
