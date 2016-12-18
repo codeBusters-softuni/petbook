@@ -498,6 +498,32 @@ describe('loginPost function, logging in a user', function () {
     }, 50)
   })
 
+  it('Log in with too short of a password, should redirect', function (done) {
+    requestMock.body.password = '123'
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPasswordMessage)
+      expect(loggedIn).to.be.false
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      done()
+    }, 50)
+  })
+
+  it('Log in with too long of a password, should redirect', function (done) {
+    requestMock.body.password = '123456789101112131415161711920'
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPasswordMessage)
+      expect(loggedIn).to.be.false
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      done()
+    }, 50)
+  })
+
   afterEach(function (done) {
     User.remove({}).then(() => {
       done()
