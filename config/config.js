@@ -24,4 +24,8 @@ module.exports.initialize = () => {
     }
     return pages
   }
+
+  Number.prototype.isNumeric = function (value) {
+    return /^\d+$/.test(value)
+  }
 }
