@@ -112,14 +112,16 @@ module.exports = {
   },
 
   cancelFriendship: (req, res) => {
+    let returnUrl = res.locals.returnUrl || '/'
     let friendId = req.params.id
     User.findById(friendId).then(friend => {
       if (!friend) {
         req.session.errorMsg = 'Such a user does not exist.'
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       } else if (!req.user.hasFriend(friendId) || !friend.hasFriend(req.user.id)) {
-        res.redirect('/')
+        req.session.errorMsg = 'You are not friends with that user.'
+        res.redirect(returnUrl)
         return
       }
       // remove friends
@@ -128,7 +130,7 @@ module.exports = {
 
       Promise.all([cancelFriendPromise, cancelFriendPromise2]).then(() => {
         // Success - Attach message
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       })
     })
