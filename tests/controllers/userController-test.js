@@ -865,7 +865,7 @@ describe('profilePageGet, loading the profile page of a user', function () {
     })
   })
 
-  it('Friend of diff category visits, all should work', function (done) {
+  it('Friend of diff category visits page 0, all should work', function (done) {
     // Because we're friends with the user, we should see all of his posts
     // but the maximum for a page is 20
     userController.profilePageGet(requestMock, responseMock)
@@ -892,6 +892,37 @@ describe('profilePageGet, loading the profile page of a user', function () {
       expect(renderedUser.receivedLovesCount).to.not.be.undefined
       done()
     }, 200)
+  })
+
+  it('Friend of diff category visits page 2, should see 5 posts', function (done) {
+    // Because we're friends with the user, we should see all of his posts
+    // but the maximum for a page is 20, he has 25 posts,
+    // so on the second post we should see 5 posts
+    requestMock.query.page = '2'
+    userController.profilePageGet(requestMock, responseMock)
+
+    setTimeout(function () {
+      // assert received posts
+      expect(receivedPosts).to.be.a('array')
+      expect(receivedPosts.length).to.be.equal(5)
+      // Assert that the posts are sorted, the first post in receivedPost should be the newest
+      let newestPost = secondUserPosts.sort((postOne, postTwo) => {
+        return postTwo.date - postOne.date
+      })[20] // <-------------- take the first post that should be on the second page
+      expect(newestPost.content).to.be.equal(receivedPosts[0].content)
+      // assure that there are two pages
+      expect(receivedPages).to.be.a('array')
+      expect(receivedPages).to.deep.equal([1, 2])
+      expect(receivedFriendStatus).to.deep.equal(expectedFriendStatus)
+      expect(receivedHbsPage).to.deep.equal(expectedHbsPage)
+      // assure that it rendered the correct user
+      expect(renderedUser.id).to.equal(secondUser.id)
+      // assure that he has receivedLikes objects
+      expect(renderedUser.receivedPawsCount).to.not.be.undefined
+      expect(renderedUser.receivedDislikesCount).to.not.be.undefined
+      expect(renderedUser.receivedLovesCount).to.not.be.undefined
+      done()
+    }, 100)
   })
 
   it('Visit from a person who is not his friend and different category, should not see any posts', function (done) {
@@ -974,8 +1005,9 @@ describe('profilePageGet, loading the profile page of a user', function () {
 
   it('Visit a profile with a profilePicture, it should be displayed', function (done) {
     // save a profile picture to the user
-    let saveProfilePicturePromise = new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
       new Promise((resolve, reject) => {
+        // Create the album
         Album.create({
           name: 'profiles',
           author: secondUser.id,
@@ -986,21 +1018,23 @@ describe('profilePageGet, loading the profile page of a user', function () {
       }).then(album => {
         new Promise((resolve, reject) => {
           let profilePic = new Photo({
-            fieldname: "addProfilePhoto",
-            originalname: "WIN_20161210_10_23_56_Pro.jpg",
-            encoding: "7bit",
-            mimetype: "image/jpeg",
-            filename: "a31328e9ebbb340ca64f9d42f7f0aa68",
-            path: ":\\Work\\SoftUni\\Team Project\\petbook\\public\\uploads\\a31328e9ebbb340ca64f9d42f7f0aa68",
+            fieldname: 'addProfilePhoto',
+            originalname: 'WIN_20161210_10_23_56_Pro.jpg',
+            encoding: '7bit',
+            mimetype: 'image/jpeg',
+            filename: 'a31328e9ebbb340ca64f9d42f7f0aa68',
+            path: ':\\Work\\SoftUni\\Team Project\\petbook\\public\\uploads\\a31328e9ebbb340ca64f9d42f7f0aa68',
             size: 145203,
             author: secondUser.id,
             album: album.id,
             public: true
           })
+          // Create the profile picture
           Photo.create(profilePic).then(photo => {
             resolve(photo)
           })
         }).then(profilePic => {
+          // Attach the profile picture
           secondUser.profilePic = profilePic.id
           secondUser.save().then(() => {
             resolve(profilePic)
