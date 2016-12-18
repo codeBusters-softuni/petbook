@@ -832,7 +832,7 @@ describe('profilePageGet, loading the profile page of a user', function () {
         let postPromises = []
         for (let i = 0; i < 25; i++) {
           postPromises.push(new Promise((resolve, reject) => {
-            Post.create({ content: i, public: true, author: secUser._id, category: secUser.id })
+            Post.create({ content: i, public: false, author: secUser._id, category: secUser.id })
               .then(newPost => {
                 resolve(newPost)
               })
@@ -860,7 +860,7 @@ describe('profilePageGet, loading the profile page of a user', function () {
     })
   })
 
-  it('Normal render, all should work', function (done) {
+  it('Friend of diff category visits, all should work', function (done) {
     // Because we're friends with the user, we should see all of his posts
     // but the maximum for a page is 20
     userController.profilePageGet(requestMock, responseMock)
@@ -887,6 +887,27 @@ describe('profilePageGet, loading the profile page of a user', function () {
       expect(renderedUser.receivedLovesCount).to.not.be.undefined
       done()
     }, 200)
+  })
+
+  it('Visit from a person who is not his friend and different category, should not see any posts', function (done) {
+    // Because we are not his friend, are different categories and all his posts are private, 
+    // we should not see any posts
+    User.register('Firstname', 'Firstname@son.bg', 'OwnerMan', '12345', 'Dog').then(newUser => {
+      requestMock.user = newUser
+      userController.profilePageGet(requestMock, responseMock)
+
+      setTimeout(function () {
+        // assert received posts
+        expect(receivedPosts).to.be.a('array')
+        expect(receivedPosts.length).to.be.equal(0)
+        expect(receivedPages).to.be.a('array')
+        expect(receivedPages).to.deep.equal([])
+        expect(receivedHbsPage).to.deep.equal(expectedHbsPage)
+        // assure that it rendered the correct user
+        expect(renderedUser.id).to.equal(secondUser.id)
+        done()
+      }, 50)
+    })
   })
 
   afterEach(function (done) {
