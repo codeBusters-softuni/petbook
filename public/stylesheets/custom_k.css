@@ -1466,6 +1466,14 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     display: none;
 }
 
+.newsfeed-images>article, .profile-images>article{
+    display: none;
+}
+
+.newsfeed-images>article:nth-child(-n+3), .profile-images>article:nth-child(-n+3){
+    display: block;
+}
+
 
 /*Footer styling*/
 
