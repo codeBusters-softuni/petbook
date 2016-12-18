@@ -8,6 +8,7 @@ const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
 const Category = mongoose.model('Category')
 const Like = mongoose.model('Like')
+const FriendRequest = mongoose.model('FriendRequest')
 const userController = require('../../controllers/user-controller')
 
 describe('registerGet function', function () {
@@ -1172,6 +1173,26 @@ describe('profilePageGet, loading the profile page of a user', function () {
       expect(renderedUser).to.be.null
       done()
     }, 40)
+  })
+
+  it("Visit a user profile which you have sent a friend request to, should have a property that describes that you've sent a friend request", function (done) {
+    User.register('Firstname', 'Firstname@son.bg', 'OwnerMan', '12345', 'Dog').then(newUser => {
+      FriendRequest.create({ sender: newUser.id, receiver: secondUser.id }).then(frReq => {
+        User.findById(newUser.id).then(newUser => {  // user should now have a friend request in him
+          User.populate(newUser, 'category pendingFriendRequests').then(newUser => {
+            requestMock.user = newUser
+            userController.profilePageGet(requestMock, responseMock)
+            setTimeout(function () {
+              expect(receivedFriendStatus.areFriends).to.be.false
+              expect(receivedFriendStatus.sentRequest).to.be.true
+              expect(receivedFriendStatus.receivedRequest).to.be.false
+              expect(receivedFriendStatus.friendRequest.id).to.be.equal(frReq.id)
+              done()
+            }, 40)
+          })
+        })
+      })
+    })
   })
 
   afterEach(function (done) {
