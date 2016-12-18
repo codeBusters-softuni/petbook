@@ -603,3 +603,80 @@ describe('logout function, logging out a user', function () {
     })
   })
 })
+
+describe('cancelFriendship function, cancelling a friendship between users', function () {
+  let firstUserName = 'FirstDog'
+  let firstUserEmail = 'somebody@abv.bg'
+  let firstUserOwner = 'TheOwner'
+  let firstUserPassword = '12345'
+  let firstUserCategory = 'Dog'
+
+  let secondUserName = 'FirstCat'
+  let secondUserEmail = 'somecat@abv.bg'
+  let secondUserOwner = 'TheOwner'
+  let secondUserPassword = '12345'
+  let secondUserCategory = 'Cat'
+
+  let requestMock = null
+  let responseMock = null
+  let reqUser = null
+  let secondUser = null
+  let redirectUrl = 'demJohns'
+
+  beforeEach(function (done) {
+    requestMock = {
+      body: {},
+      user: {},
+      files: [],
+      headers: {},
+      session: {},
+      params: {}
+    }
+    responseMock = {
+      locals: { returnUrl: redirectUrl },
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+
+    // Register both users and make them friends
+    User.register(firstUserName, firstUserEmail, firstUserOwner, firstUserPassword, firstUserCategory).then(firstUser => {
+      User.register(secondUserName, secondUserEmail, secondUserOwner, secondUserPassword, secondUserCategory).then(secUser => {
+        firstUser.friends.push(secUser)
+        secUser.friends.push(firstUser)
+
+        firstUser.save().then(() => {
+          secUser.save().then(() => {
+            reqUser = firstUser
+            secondUser = secUser
+            expect(reqUser.friends.length).to.be.equal(1)
+            expect(secondUser.friends.length).to.be.equal(1)
+            done()
+          })
+        })
+      })
+    })
+  })
+
+  it('Cancel valid friendship, users should not be friends anymore', function () {
+    requestMock.params.id = secondUser.id
+    userController.cancelFriendship(requestMock, responseMock)
+
+    setTimeout(function () {
+      User.find({}).then(users => {
+        let userOne = users[0]
+        let userTwo = users[1]
+        expect(userOne.friends).to.be.a('array')
+        expect(userTwo.friends).to.be.a('array')
+        expect(userOne.friends.length).to.be.equal(0)
+        expect(userTwo.friends.length).to.be.equal(0)
+      })
+    }, 40)
+  })
+
+  afterEach(function (done) {
+    User.remove({}).then(() => {
+      done()
+    })
+  })
+})
