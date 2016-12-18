@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const Post = mongoose.model('Post')
 const Category = mongoose.model('Category')
+const Like = mongoose.model('Like')
 const userController = require('../../controllers/user-controller')
 
 describe('registerGet function', function () {
@@ -901,6 +902,7 @@ describe('profilePageGet, loading the profile page of a user', function () {
 
         setTimeout(function () {
           // assert received posts
+          expect(receivedFriendStatus.areFriends).to.be.false
           expect(receivedPosts).to.be.a('array')
           expect(receivedPosts.length).to.be.equal(0)
           expect(receivedPages).to.be.a('array')
@@ -932,6 +934,38 @@ describe('profilePageGet, loading the profile page of a user', function () {
           expect(renderedUser.id).to.equal(secondUser.id)
           done()
         }, 50)
+      })
+    })
+  })
+
+  it('Visit a profile of a user who has likes on his posts, should be shown on his profile', function (done) {
+    // create the user
+    User.register('ChickOnGlance', 'DontDrip@abv.bg', secondUserOwner, secondUserPassword, secondUserCategory).then(newUser => {
+      // Create 25 posts from the newUser, all with a love on them
+      let postPromises = []
+      for (let i = 0; i < 25; i++) {
+        postPromises.push(new Promise((resolve, reject) => {
+          Like.create({ type: 'Love', author: reqUser.id }).then(loveLike => {
+            Post.create({ content: i, public: false, author: newUser._id, category: newUser.category, likes: [loveLike.id] })
+              .then(newPost => {
+                resolve(newPost)
+              })
+          })
+        }))
+      }
+      Promise.all(postPromises).then(posts => {
+        requestMock.params.id = newUser.userId  // visit the new user's profile
+        userController.profilePageGet(requestMock, responseMock)
+
+        setTimeout(function () {
+          expect(renderedUser.receivedPawsCount).to.not.be.undefined
+          expect(renderedUser.receivedPawsCount).to.be.equal(0)
+          expect(renderedUser.receivedLovesCount).to.not.be.undefined
+          expect(renderedUser.receivedLovesCount).to.be.equal(25)  // the number of posts he has (every post is loved once)
+          expect(renderedUser.receivedDislikesCount).to.not.be.undefined
+          expect(renderedUser.receivedDislikesCount).to.be.equal(0)
+          done()
+        }, 40)
       })
     })
   })
