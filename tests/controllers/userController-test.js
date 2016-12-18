@@ -406,7 +406,7 @@ describe('loginPost function, logging in a user', function () {
       }
     }
     responseMock = {
-      locals: {returnUrl: redirectUrl},
+      locals: { returnUrl: redirectUrl },
       redirected: false,
       redirectUrl: null,
       redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
@@ -434,6 +434,45 @@ describe('loginPost function, logging in a user', function () {
 
   it('Log in a user without the email field', function (done) {
     delete requestMock.body.email
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidEmailMessage)
+      expect(loggedIn).to.be.false
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      done()
+    }, 50)
+  })
+
+  it('Log in a user with an invalid email', function (done) {
+    requestMock.body.email = 'dogman.com'
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidEmailMessage)
+      expect(loggedIn).to.be.false
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      done()
+    }, 50)
+  })
+
+  it('Log in a user with a short email', function (done) {
+    requestMock.body.email = 'd@b.c'
+    userController.loginPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidEmailMessage)
+      expect(loggedIn).to.be.false
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      done()
+    }, 50)
+  })
+
+  it('Log in a user with a too long email', function (done) {
+    requestMock.body.email = 'dFettyWapMyNameThoNoDaysOffMyGameThoWatchWhatYousayThoWatchWhatYouSayThoThoYOuWillSay@Thob.compact'
     userController.loginPost(requestMock, responseMock)
 
     setTimeout(function () {
