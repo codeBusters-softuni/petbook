@@ -152,7 +152,6 @@ module.exports = {
         res.redirect('/')
         return
       }
-
       // find the relation between the users
       let areFriends = req.user.friends.indexOf(user.id) !== -1
       let friendRequestId = req.user.getFriendRequestTo(user._id)
@@ -166,26 +165,17 @@ module.exports = {
         receivedRequest: hasReceivedRequest,
         receivedFriendRequest: receivedFriendRequestId
       }
+
       new Promise((resolve, reject) => {
-        if (areFriends) {
-          // if they're friends, the user should see all the posts
+        if (areFriends || req.user.category._id.equals(user.category)) {
+          // if they're friends or of the same category, all the posts should be visible
           Post.find({ author: user._id }).then(userPosts => {
             resolve(userPosts)
           })
         } else {
-          // load all the articles that the user should see
-          Post.find({ category: req.user.category, author: user._id }).then(categoryPosts => {
-            Post.find({ public: true, author: user._id }).then(publicPosts => {
-              // save the public posts that are not already in the category posts
-              publicPosts = publicPosts.filter((item) => {  // for every public post
-                return categoryPosts.findIndex((post) => {  // get his index in categoryPosts
-                  return post._id.equals(item._id)          // using _id comparison
-                }) === -1                                   // if it's -1, it's not in categoryPosts, so its left publicPosts
-              })
-              // join the two arrays
-              let postsToSee = categoryPosts.concat(publicPosts)
-              resolve(postsToSee)
-            })
+          // load all the public posts from the user
+          Post.find({ public: true, author: user._id }).then(publicPosts => {
+            resolve(publicPosts)
           })
         }
       }).then(posts => {
@@ -195,12 +185,13 @@ module.exports = {
         let postPages = Post.getPostsInPage(page, posts)
         let postsInPage = postPages.posts
         let pages = postPages.pages  // array of possible pages [1,2,3]
+
         Post.populate(postsInPage, 'author comments likes photos').then(() => {
           // populate each comment's author. Must be done after the initial populate
           Post.populate(postsInPage, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
             Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
               postsInPage = Post.initializeForView(postsInPage).then(postsInPage => {
-                user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user
+                user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user                  
                   res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsInPage, categories: categories, pages: pages })
                 })
               })
