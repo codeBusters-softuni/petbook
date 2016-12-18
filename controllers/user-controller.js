@@ -144,8 +144,21 @@ module.exports = {
   },
 
   profilePageGet: (req, res) => {
-    let page = parseInt(req.query.page || '1') - 1
+    let page = null
+    if (!Number.prototype.isNumeric(req.query.page)) {
+      page = 0  // default to the first page
+    } else {
+      page = parseInt(req.query.page || '1') - 1
+      if (page < 0) {
+        page = 0
+      }
+    }
     let userId = req.params.id
+    if (!Number.prototype.isNumeric(userId)) {
+      req.session.errorMsg = 'Invalid user id!'
+      res.redirect('/')
+      return
+    }
     User.findOne({ userId: userId }).populate('profilePic').then(user => {
       if (!user) {
         req.session.errorMsg = 'No such user exists.'
@@ -172,8 +185,7 @@ module.exports = {
           Post.find({ author: user._id }).then(userPosts => {
             resolve(userPosts)
           })
-        } else {
-          // load all the public posts from the user
+        } else {  // load all the public posts from the user
           Post.find({ public: true, author: user._id }).then(publicPosts => {
             resolve(publicPosts)
           })
@@ -191,7 +203,7 @@ module.exports = {
           Post.populate(postsInPage, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
             Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
               postsInPage = Post.initializeForView(postsInPage).then(postsInPage => {
-                user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user                  
+                user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user
                   res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsInPage, categories: categories, pages: pages })
                 })
               })
