@@ -1810,6 +1810,18 @@ describe('userSearchPost, searching for users', function () {
       }, 50)
     })
   })
+  
+
+  it('Search for a username that is not in the db, should not load anybody', function (done) {
+    requestMock.body.searchValue = 'Wallace'
+    userController.userSearchPost(requestMock, responseMock)
+    setTimeout(function () {
+        expect(renderedUsers).to.not.be.null
+        expect(renderedUsers).to.be.a('array')
+        expect(renderedUsers.length).to.be.equal(0)
+        done()
+      }, 50)
+  })
 
   afterEach(function (done) {
     User.remove({}).then(() => {
