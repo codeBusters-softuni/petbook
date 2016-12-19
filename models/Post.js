@@ -11,8 +11,9 @@ function initializeForView (posts) {
         post.splitLikes()
         Photo.initializeForView(post.photos).then(photos => {
           post.photos = photos
+        }).then(() => {
+          resolve(post)
         })
-        resolve(post)
       })
     })
     Promise.all(posts).then(posts => {
