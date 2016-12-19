@@ -1106,7 +1106,7 @@ describe('profilePageGet, loading the profile page of a user', function () {
     })
   })
 
-  it('Visit a profile with a user that has likes on his posts, the posts should display their likes', function (done) {
+  it('Visit a profile with a user that has likes on his posts and photos, the posts should display their likes', function (done) {
     // This display is done by the Post model's initializeForView function
     // wwhich basically attaches likes to the post and to it's photos
     // create the user
@@ -1327,6 +1327,184 @@ describe('profilePageGet, loading the profile page of a user', function () {
         })
       })
     })
+  })
+
+  afterEach(function (done) {
+    User.remove({}).then(() => {
+      Post.remove({}).then(() => {
+        Photo.remove({}).then(() => {
+          Album.remove({}).then(() => {
+            Like.remove({}).then(() => {
+              done()
+            })
+          })
+        })
+      })
+    })
+  })
+})
+
+describe('userPhotosGet, loading the photos of a user', function () {
+  require('../../config/config').initialize()  // function uses some prototype function we register
+  let firstUserName = 'FirstDog'
+  let firstUserEmail = 'somebody@abv.bg'
+  let firstUserOwner = 'TheOwner'
+  let firstUserPassword = '12345'
+  let firstUserCategory = 'Dog'
+
+  let secondUserName = 'FirstCat'
+  let secondUserEmail = 'somecat@abv.bg'
+  let secondUserOwner = 'TheOwner'
+  let secondUserPassword = '12345'
+  let secondUserCategory = 'Cat'
+
+  const expectedPhotosCount = 25
+  const expectedAlbumsCount = 25
+  const expectedHbsPage = 'user/viewPhotos'
+  const nonExistingUserMessage = 'No such user exists!'
+  const invalidUserIdMessage = 'Invalid user id!'
+
+  let reqUser = null
+  let secondUser = null
+  let secondUserPhotos = null
+  let requestMock = null
+  let responseMock = null
+  let receivedHbsPage = null
+  let renderedUser = null
+  let receivedFriendStatus = null
+  let receivedPhotos = null
+  let receivedAlbums = null
+  let receivedCategories = null
+  let receivedPages = null
+
+  beforeEach(function (done) {
+    // Nullify all the received values
+    reqUser = null
+    secondUser = null
+    secondUserPhotos = null
+    requestMock = null
+    responseMock = null
+    receivedHbsPage = null
+    renderedUser = null
+    receivedFriendStatus = null
+    receivedPhotos = null
+    receivedAlbums = null
+    receivedCategories = null
+    receivedPages = null
+
+    requestMock = {
+      user: {},
+      params: {},
+      headers: {},
+      session: {},
+      query: {}
+    }
+
+    responseMock = {
+      locals: {},
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl },
+      render: function (hbsPage, argumentsPassed) {
+        receivedHbsPage = hbsPage
+        renderedUser = argumentsPassed.profileUser
+        receivedFriendStatus = argumentsPassed.friendStatus
+        receivedPhotos = argumentsPassed.photos
+        receivedAlbums = argumentsPassed.albums
+        receivedCategories = argumentsPassed.categories
+      }
+    }
+
+    // Register both users and make them friends
+    User.register(firstUserName, firstUserEmail, firstUserOwner, firstUserPassword, firstUserCategory).then(firstUser => {
+      User.register(secondUserName, secondUserEmail, secondUserOwner, secondUserPassword, secondUserCategory).then(secUser => {
+        // Create 25 photos from the secondUser and 25 different albums
+        let photoPromises = []
+        for (let i = 0; i < 25; i++) {
+          photoPromises.push(new Promise((resolve, reject) => {
+            new Promise((resolve, reject) => {
+              Album.create({
+                name: 'newsfeed' + i.toString(),
+                author: secUser.id,
+                public: true,
+                photos: [],
+                classCss: 'someCLass'
+              }).then(album => {
+                album.addToUser().then(() => {
+                  resolve(album)
+                })
+              })
+            }).then(album => {
+              let albumPic = new Photo({
+                fieldname: 'somePh',
+                originalname: 'WIN_20161210_10_23_56_Pro.jpg',
+                encoding: '7bit',
+                mimetype: 'image/jpeg',
+                filename: 'a31328e9ebbb340ca64f9d42f7f0aa68',
+                path: ':\\Work\\SoftUni\\Team Project\\petbook\\public\\uploads\\a31328e9ebbb340ca64f9d42f7f0aa68',
+                size: 145203,
+                author: secUser.id,
+                album: album.id,
+                public: true
+              })
+              Photo.create(albumPic)
+                .then(photo => {
+                  resolve(photo)
+                })
+            })
+          }))
+        }
+
+        firstUser.friends.push(secUser)
+        secUser.friends.push(firstUser)
+
+        firstUser.save().then(() => {
+          secUser.save().then(() => {
+            User.populate(firstUser, 'category').then(firstUser => {  // the req.user always has a populated category
+              reqUser = firstUser
+              secondUser = secUser
+              requestMock.params.id = secondUser.userId
+              requestMock.user = reqUser
+              expect(reqUser.friends.length).to.be.equal(1)
+              expect(secondUser.friends.length).to.be.equal(1)
+              Promise.all(photoPromises).then((photos) => {
+                secondUserPhotos = photos
+                done()
+              })
+            })
+          })
+        })
+      })
+    })
+  })
+
+  it('Normal visit, should load all albums and photos', function (done) {
+    userController.userPhotosGet(requestMock, responseMock)
+    setTimeout(function () {
+      expect(receivedPhotos).to.not.be.null
+      expect(receivedPhotos).to.be.a('array')
+      expect(receivedPhotos.length).to.be.equal(expectedPhotosCount)
+      expect(receivedAlbums).to.not.be.null
+      expect(receivedAlbums).to.be.a('array')
+      expect(receivedAlbums.length).to.be.equal(expectedAlbumsCount)
+      expect(renderedUser).to.not.be.null
+      expect(renderedUser.id.toString()).to.be.equal(secondUser.id)
+
+      receivedAlbums.forEach(album => {
+        expect(album.photos).to.not.be.undefined
+        expect(album.photos).to.be.a('array')
+        expect(album.photos.length).to.be.equal(1)  // 1 photo per album
+      })
+      // assert that each photo has a reference to an album we've received
+      receivedPhotos.forEach(photo => {
+        expect(photo.album).to.not.be.null
+        let albumIsValid = receivedAlbums.findIndex(album => {
+          return album.id.toString() === photo.album.toString()
+        }) !== -1
+        expect(albumIsValid).to.be.true
+      })
+      done()
+    }, 40)
   })
 
   afterEach(function (done) {
