@@ -344,7 +344,7 @@ $(document).ready(function () {
     });
 
     function pictureBoxPosition(scroll) {
-        $('#box-photos').css('top', scroll+100+'px' );
+        $('#box-photos').css('top', scroll+20+'px' );
         $('#backdrop-photos').css('top', scroll+'px' );
     }
 })

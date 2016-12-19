@@ -1545,16 +1545,75 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 }
 #box, #box-photos, #box-profile-photos{
     position: absolute;
-    top: 20%;
-    left: 30%;
-    width: 600px;
-    height: 400px;
+    /*top: 20%;*/
+    left: 10%;
+    right: 10%;
+    /*top:10%;*/
+    height: 95%;
     background: #fff;
     z-index: 21;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 5px #555;
     display: none;
+}
+
+#box .next-newsfeed, #box .prev-newsfeed {
+    position: absolute;
+    top: 50%;
+    font-size: 30px;
+    color: #FFF;
+    cursor: pointer;
+}
+#box .prev-newsfeed{
+    left: -25px;
+}
+
+#box .box-image {
+    width: 100%;
+    height: 90%;
+}
+#box .box-image .selected {
+    height:100%;
+}
+
+#box .box-image .selected .photo-cntnr {
+    width:100%;
+    height: 100%;
+    margin-bottom: 0;
+    position: relative;
+}
+#box .box-image .selected .photo-cntnr .album-photo-content {
+    display: block;
+    margin: 0 auto;
+    height: 71%;
+}
+#box .box-image .selected .photo-cntnr .album-photo-content img {
+    height: auto;
+    max-height: 100%;
+    max-width: inherit;
+}
+#box .box-image .selected .photo-cntnr .description {
+    height: 100px;
+    overflow-y: scroll;
+    padding: 0 20px;
+}
+#box .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer {
+    height: 40px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+
+#box .next-newsfeed {
+    right: -25px;
+}
+
+#box .close-light-box {
+    cursor: pointer;
+    float: right;
+    padding-bottom: 10px;
 }
 
 #box img {

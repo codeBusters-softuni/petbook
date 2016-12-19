@@ -221,24 +221,12 @@ $(document).ready(function () {
     });
 
     function pictureBoxPosition(scroll) {
-        $('#box').css('top', scroll+100+'px' );
+        $('#box').css('top', scroll + 20 +'px' );
         $('#backdrop').css('top', scroll+'px' );
     }
 })
 
-// function to show lightbox and backdrop at the position of the scroll
-$(document).ready(function () {
-
-    $(window).on("scroll", function () {
-        var scrollPoint = $(this).scrollTop();
-        pictureBoxPosition(scrollPoint)
-    });
-
-    function pictureBoxPosition(scroll) {
-        $('#box').css('top', scroll+100+'px' );
-        $('#backdrop').css('top', scroll+'px' );
-    }
-})
+//dropdown menu
 
 $(document).ready(function () {
     $('.fa-search').on('click', function () {

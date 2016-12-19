@@ -25,3 +25,37 @@
         background-position: center;
     }
 }
+
+@media all and (max-width: 540px) {
+
+    /*light box*/
+
+    #box{
+        height:auto;
+    }
+    /*#box .box-image .selected .photo-cntnr {*/
+        /*width:100%;*/
+        /*height: 100%;*/
+        /*margin-bottom: 0;*/
+    /*}*/
+    #box .box-image .selected .photo-cntnr .album-photo-content {
+        display: block;
+        margin: 0 auto;
+        height: 255px;
+        width: auto;
+    }
+    #box .box-image .selected .photo-cntnr .album-photo-content img {
+        height: auto;
+        max-height: 255px;
+        width: auto;
+        max-width: 100%;
+    }
+    /*#box .box-image .selected .photo-cntnr .description {*/
+        /*height: 100px;*/
+        /*overflow-y: scroll;*/
+        /*padding: 0 20px;*/
+    /*}*/
+    #box .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer {
+        /*height: 40px;*/
+    }
+}
