@@ -240,7 +240,7 @@ module.exports = {
         user.friendStatus = req.user.getFriendStatusWith(user)  // we need the req.user's viewpoint
         return user
       })
-      res.render('searchOutput', { users: users })
+      res.render('searchOutput', { users: users, categories: categories })
     })
   }
 }
