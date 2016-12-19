@@ -122,13 +122,12 @@ describe('registerPost function', function () {
     requestMock.body = sampleValidUser
     userController.registerPost(requestMock, responseMock)
     setTimeout(function () {
-      User.findOne({}).populate('category').then(user => {
-        console.log()  // for some reason this test gives a timeout error, console log seems to fix it
+      User.findOne({}).then(user => {
         expect(user).to.not.be.null
         expect(user.ownerName).to.be.equal('nobody')
         done()
       })
-    }, 110)
+    }, 300)
   })
 
   it('A user with an invalid email address, should redirect only', function (done) {
@@ -567,9 +566,6 @@ describe('loginPost function, logging in a user', function () {
 describe('logout function, logging out a user', function () {
   let requestMock = null
   let responseMock = null
-  let validUserEmail = 'somebody@abv.bg'
-  let validUserPassword = '12345'
-  let redirectUrl = 'demJohns'
 
   beforeEach(function (done) {
     requestMock = {
@@ -579,7 +575,6 @@ describe('logout function, logging out a user', function () {
       }
     }
     responseMock = {
-      locals: { returnUrl: redirectUrl },
       redirected: false,
       redirectUrl: null,
       redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
