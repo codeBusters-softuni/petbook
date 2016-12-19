@@ -45,7 +45,7 @@ legend {
     font-style: italic;
     color: aliceblue;
     font-weight: bold;
-    font-size: 40px;
+    font-size: 35px;
     margin: 0px;
 }
 
@@ -56,7 +56,7 @@ legend {
 .left-align {
     float: right;
     text-align: right;
-    margin-top: 11px;
+    margin-top: 6px;
     margin-right: 2%;
     color: aliceblue;
     font-weight: bold;
@@ -187,6 +187,9 @@ nav > ul > li > a.custom-menu-icon {
 
 .custom-header nav .cstm-menu-header li > .fa-search {
     padding: 5px;
+}
+.custom-header nav .cstm-menu-header li > .fa-search:hover {
+    cursor: pointer;
 }
 
 .custom-header nav .cstm-menu-header li > form{
