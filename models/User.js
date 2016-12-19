@@ -268,7 +268,6 @@ module.exports.register = function (fullName, email, ownerName, password, catego
                   roles: [role.id],
                   category: potentialCategory._id
                 }
-
                 User.create(newUser).then((newUser) => {
                   resolve(newUser)
                 }).catch(() => { reject() })

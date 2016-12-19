@@ -49,9 +49,9 @@ module.exports = {
         req.logIn(newUser, function (err, newUser) {
           if (err) {
             req.session.errorMsg = 'Error while logging in after registration :('
+            res.redirect('/')
             return
           }
-
           // TODO: Add success message that the user is registered
           return res.redirect('/')
         })
