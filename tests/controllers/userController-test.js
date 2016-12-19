@@ -1073,6 +1073,87 @@ describe('profilePageGet, loading the profile page of a user', function () {
     })
   })
 
+  it('Visit a profile with a user that has likes on his posts, the posts should display their likes', function (done) {
+    // This display is done by the Post model's initializeForView function
+    // wwhich basically attaches likes to the post and to it's photos
+    // create the user
+    User.register('ChickOnGlance', 'DontDrip@abv.bg', secondUserOwner, secondUserPassword, secondUserCategory).then(newUser => {
+      new Promise((resolve, reject) => {
+        // Create the album
+        Album.create({
+          name: 'newsfeed',
+          author: newUser.id,
+          public: true,
+          photos: [],
+          classCss: 'someCLass'
+        }).then(album => { resolve(album) })
+      }).then(album => {
+        // Create 25 posts from the newUser, all with a love on them and with a picture that has a paw
+        let postPromises = []
+        for (let i = 0; i < 25; i++) {
+          postPromises.push(new Promise((resolve, reject) => {
+            Like.create({ type: 'Love', author: reqUser.id }).then(loveLike => {
+              Like.create({ type: 'Paw', author: reqUser.id }).then(pawLike => {
+                new Promise((resolve, reject) => {
+                  let postPic = new Photo({
+                    fieldname: 'addProfilePhoto',
+                    originalname: 'WIN_20161210_10_23_56_Pro.jpg',
+                    encoding: '7bit',
+                    mimetype: 'image/jpeg',
+                    filename: 'a31328e9ebbb340ca64f9d42f7f0aa68',
+                    path: ':\\Work\\SoftUni\\Team Project\\petbook\\public\\uploads\\a31328e9ebbb340ca64f9d42f7f0aa68',
+                    size: 145203,
+                    author: secondUser.id,
+                    album: album.id,
+                    likes: [pawLike.id],
+                    public: true
+                  })
+                  // Create the profile picture
+                  Photo.create(postPic).then(photo => {
+                    resolve(photo)
+                  })
+                }).then(postPic => {
+                  Post.create({ content: i, public: true, author: newUser._id, category: newUser.category, likes: [loveLike.id], photos: [postPic.id] })
+                    .then(newPost => {
+                      resolve(newPost)
+                    })
+                })
+              })
+            })
+          }))
+        }
+        Promise.all(postPromises).then(posts => {
+          requestMock.params.id = newUser.userId  // visit the new user's profile
+          userController.profilePageGet(requestMock, responseMock)
+
+          setTimeout(function () {
+            expect(renderedUser.receivedPawsCount).to.not.be.undefined
+            expect(renderedUser.receivedPawsCount).to.be.equal(0)
+            expect(renderedUser.receivedLovesCount).to.not.be.undefined
+            expect(renderedUser.receivedLovesCount).to.be.equal(25)  // the number of posts he has (every post is loved once)
+            expect(renderedUser.receivedDislikesCount).to.not.be.undefined
+            expect(renderedUser.receivedDislikesCount).to.be.equal(0)
+            // Assert that every photo has a paw on it
+            receivedPosts.forEach(post => {
+              post.photos.forEach(photo => {
+                expect(photo.paws).to.not.be.undefined
+                expect(photo.paws).to.be.a('array')
+                expect(photo.paws.length).to.be.equal(1)
+                expect(photo.loves).to.not.be.undefined
+                expect(photo.loves).to.be.a('array')
+                expect(photo.loves.length).to.be.equal(0)  // the number of posts he has (every post is loved once)
+                expect(photo.dislikes).to.not.be.undefined
+                expect(photo.dislikes).to.be.a('array')
+                expect(photo.dislikes.length).to.be.equal(0)
+              })
+            })
+            done()
+          }, 90)
+        })
+      })
+    })
+  })
+
   it('Visit a profile with a profilePicture, it should be displayed', function (done) {
     // save a profile picture to the user
     new Promise((resolve, reject) => {
