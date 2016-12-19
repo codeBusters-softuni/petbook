@@ -58,6 +58,7 @@ describe('registerPost function', function () {
   const invalidOwnerNameMessage = "Your owner's name has invalid length! It should be between 3 and 20 characters."
   const invalidPasswordMessage = 'Your password has invalid length! It should be between 4 and 20 characters.'
   const nonMatchingPasswordsMessage = 'Your passwords do not match!'
+  const logInErrorMessage = 'Error while logging in after registration :('
   let requestMock = null
   let responseMock = null
   const redirectUrl = '/user/register'
@@ -103,6 +104,33 @@ describe('registerPost function', function () {
     userController.registerPost(requestMock, responseMock)
     setTimeout(function () {
       User.findOne({}).populate('category').then(user => {
+        expect(user).to.not.be.null
+        expect(user.fullName).to.be.equal(sampleFullName)
+        expect(user.ownerName).to.be.equal(sampleOwner)
+        expect(user.email).to.be.equal(sampleEmail)
+        expect(user.category.name).to.be.equal(sampleCategory)
+        // Password should be hashed
+        expect(user.salt).to.not.be.undefined
+        expect(user.password).to.not.be.equal(samplePassword)
+        expect(user.password.length).to.be.greaterThan(samplePassword.length)
+        done()
+      })
+    }, 200)
+  })
+
+  it('Valid registration, error in logIn function, should output a message and redict, user should be created', function (done) {
+    requestMock.logIn = function (user, func) {
+      func(true, null)
+    }
+    requestMock.body = sampleValidUser
+    userController.registerPost(requestMock, responseMock)
+    setTimeout(function () {
+      User.findOne({}).populate('category').then(user => {
+        // Assure that the message has been logged
+        expect(requestMock.session.errorMsg).to.not.be.undefined
+        expect(requestMock.session.errorMsg).to.be.equal(logInErrorMessage)
+        expect(responseMock.redirectUrl).to.be.equal('/')
+
         expect(user).to.not.be.null
         expect(user.fullName).to.be.equal(sampleFullName)
         expect(user.ownerName).to.be.equal(sampleOwner)
