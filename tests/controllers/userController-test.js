@@ -1675,7 +1675,8 @@ describe('userSearchPost, searching for users', function () {
     requestMock = {
       user: {},
       params: {},
-      session: {}
+      session: {},
+      body: {}
     }
 
     responseMock = {
@@ -1709,6 +1710,19 @@ describe('userSearchPost, searching for users', function () {
         })
       })
     })
+  })
+
+  it('Normal search for exact username, should show the user', function (done) {
+    requestMock.body.searchValue = secondUserName
+    userController.userSearchPost(requestMock, responseMock)
+    setTimeout(function () {
+      expect(renderedUsers).to.not.be.null
+      expect(renderedUsers).to.be.a('array')
+      expect(renderedUsers.length).to.be.equal(1)
+      expect(renderedUsers[0].id.toString()).to.be.equal(secondUser.id)
+      expect(renderedUsers[0].friendStatus.areFriends).to.be.true
+      done()
+    }, 40)
   })
 
   afterEach(function (done) {
