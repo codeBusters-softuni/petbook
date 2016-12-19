@@ -1729,7 +1729,62 @@ describe('userSearchPost, searching for users', function () {
     }, 40)
   })
 
-  
+  it('Normal search for user, should load his profile pic', function (done) {
+    // save a profile picture to the user
+    new Promise((resolve, reject) => {
+      new Promise((resolve, reject) => {
+        // Create the album
+        Album.create({
+          name: 'profiles',
+          author: secondUser.id,
+          public: true,
+          photos: [],
+          classCss: 'someCLass'
+        }).then(album => { resolve(album) })
+      }).then(album => {
+        new Promise((resolve, reject) => {
+          let profilePic = new Photo({
+            fieldname: 'addProfilePhoto',
+            originalname: 'WIN_20161210_10_23_56_Pro.jpg',
+            encoding: '7bit',
+            mimetype: 'image/jpeg',
+            filename: 'a31328e9ebbb340ca64f9d42f7f0aa68',
+            path: ':\\Work\\SoftUni\\Team Project\\petbook\\public\\uploads\\a31328e9ebbb340ca64f9d42f7f0aa68',
+            size: 145203,
+            author: secondUser.id,
+            album: album.id,
+            public: true
+          })
+          // Create the profile picture
+          Photo.create(profilePic).then(photo => {
+            resolve(photo)
+          })
+        }).then(profilePic => {
+          // Attach the profile picture
+          secondUser.profilePic = profilePic.id
+          secondUser.save().then(() => {
+            resolve(profilePic)
+          })
+        })
+      })
+    }).then(profilePic => {
+      requestMock.body.searchValue = secondUserName
+      userController.userSearchPost(requestMock, responseMock)
+
+      setTimeout(function () {
+        expect(renderedUsers).to.not.be.null
+        expect(renderedUsers).to.be.a('array')
+        expect(renderedUsers.length).to.be.equal(1)
+        let renderedUser = renderedUsers[0]
+        expect(renderedUser.id.toString()).to.be.equal(secondUser.id)
+        expect(renderedUser.friendStatus.areFriends).to.be.true
+
+        expect(renderedUser.profilePic).to.not.be.undefined
+        expect(renderedUser.profilePic.id.toString()).to.be.equal(profilePic.id)
+        done()
+      }, 40)
+    })
+  })
 
   it('Search for users with similar name, should show all', function (done) {
     User.create([
