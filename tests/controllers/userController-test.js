@@ -1654,7 +1654,7 @@ describe('userSearchPost, searching for users', function () {
   let secondUserCategory = 'Cat'
 
   const expectedHbsPage = 'searchOutput'
-  const invalidUserIdMessage = 'Invalid user id!'
+  const invalidSearchMessage = "Sorry, we couldn't understand this search. Please try saying this another way."
 
   let reqUser = null
   let secondUser = null
@@ -1928,6 +1928,21 @@ describe('userSearchPost, searching for users', function () {
         })
       })
     })
+  })
+
+  it('Search for an empty value, should give out an error and redirect', function (done) {
+    delete requestMock.body.searchValue
+
+    userController.userSearchPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidSearchMessage)
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      expect(receivedHbsPage).to.be.null
+      expect(renderedUsers).to.be.null
+      done()
+    }, 40)
   })
 
   afterEach(function (done) {
