@@ -11,5 +11,6 @@ module.exports = {
   postsPerPage: 20,
   favIconPath: path.join(config.rootFolder, '/public/images/favicon.ico'),
   viewsDirPath: path.join(config.rootFolder, '/views'),
-  publicDirPath: path.join(config.rootFolder, 'public')
+  publicDirPath: path.join(config.rootFolder, 'public'),
+  sessionSecretKey: process.env.SESSIONSECRETKEY || 's3cr3t5tr1ng'
 }

@@ -21,8 +21,7 @@ module.exports = (app, config) => {
   app.use(cookieParser())
 
   // cookie storage
-  // TODO: Store somehwere else
-  app.use(session({ secret: 's3cr3t5tr1ng', resave: false, saveUninitialized: false }))
+  app.use(session({ secret: constants.sessionSecretKey, resave: false, saveUninitialized: false }))
 
   app.use(express.static(publicDirPath))
 
