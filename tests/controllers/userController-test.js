@@ -1561,6 +1561,41 @@ describe('userPhotosGet, loading the photos of a user', function () {
     })
   })
 
+  it('User of same category but is not friends visits, should see all posts/albums', function (done) {
+    User.register(firstUserName, 'carlos@ferregamo.com', firstUserOwner, firstUserPassword, secondUserCategory).then(diffUser => {
+      User.populate(diffUser, 'category pendingFriendRequests').then(diffUser => {
+        requestMock.user = diffUser
+        userController.userPhotosGet(requestMock, responseMock)
+
+        setTimeout(function () {
+          expect(receivedPhotos).to.not.be.null
+          expect(receivedPhotos).to.be.a('array')
+          expect(receivedPhotos.length).to.be.equal(expectedPhotosCount)
+          expect(receivedAlbums).to.not.be.null
+          expect(receivedAlbums).to.be.a('array')
+          expect(receivedAlbums.length).to.be.equal(expectedAlbumsCount)
+          expect(renderedUser).to.not.be.null
+          expect(renderedUser.id.toString()).to.be.equal(secondUser.id)
+
+          receivedAlbums.forEach(album => {
+            expect(album.photos).to.not.be.undefined
+            expect(album.photos).to.be.a('array')
+            expect(album.photos.length).to.be.equal(1)  // 1 photo per album
+          })
+          // assert that each photo has a reference to an album we've received
+          receivedPhotos.forEach(photo => {
+            expect(photo.album).to.not.be.null
+            let albumIsValid = receivedAlbums.findIndex(album => {
+              return album.id.toString() === photo.album.toString()
+            }) !== -1
+            expect(albumIsValid).to.be.true
+          })
+          done()
+        }, 40)
+      })
+    })
+  })
+
   afterEach(function (done) {
     User.remove({}).then(() => {
       Post.remove({}).then(() => {
