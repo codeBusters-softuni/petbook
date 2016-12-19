@@ -1810,7 +1810,32 @@ describe('userSearchPost, searching for users', function () {
       }, 50)
     })
   })
-  
+
+  it('Search for users with similar name by their lastname, should show all', function (done) {
+    User.create([
+      { email: 'd', password: 'd', salt: 'd', fullName: 'Carlos Ferragamo', category: dogCategoryId },
+      { email: 'da', password: 'd', salt: 'd', fullName: 'Aylos FerRAmo', category: dogCategoryId },
+      { email: 'daa', password: 'd', salt: 'd', fullName: 'Carl fER3', category: dogCategoryId },
+      { email: 'daaa', password: 'd', salt: 'd', fullName: 'Torlo fer', category: dogCategoryId },
+      { email: 'daaaa', password: 'd', salt: 'd', fullName: 'Dom FeRoDDepp', category: dogCategoryId }
+    ]).then(users => {
+      requestMock.body.searchValue = 'fer'
+      userController.userSearchPost(requestMock, responseMock)
+      setTimeout(function () {
+        expect(renderedUsers).to.not.be.null
+        expect(renderedUsers).to.be.a('array')
+        expect(renderedUsers.length).to.be.equal(5)
+        renderedUsers.forEach(user => {
+          expect(user.friendStatus.areFriends).to.not.be.undefined
+          expect(user.friendStatus.areFriends).to.be.false
+          expect(user.friendStatus.receivedRequest).to.be.false
+          expect(user.friendStatus.sentRequest).to.be.false
+        })
+        done()
+      }, 50)
+    })
+  })
+
   it('Search for users with similar name using an UPPER CASE character present in all names, should show all with letter in name', function (done) {
     User.create([
       { email: 'd', password: 'd', salt: 'd', fullName: 'Carlos Ferragamo', category: dogCategoryId },
