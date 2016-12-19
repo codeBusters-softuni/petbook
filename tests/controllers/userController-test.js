@@ -1862,11 +1862,37 @@ describe('userSearchPost, searching for users', function () {
     requestMock.body.searchValue = 'Wallace'
     userController.userSearchPost(requestMock, responseMock)
     setTimeout(function () {
-        expect(renderedUsers).to.not.be.null
-        expect(renderedUsers).to.be.a('array')
-        expect(renderedUsers.length).to.be.equal(0)
-        done()
-      }, 50)
+      expect(renderedUsers).to.not.be.null
+      expect(renderedUsers).to.be.a('array')
+      expect(renderedUsers.length).to.be.equal(0)
+      done()
+    }, 50)
+  })
+
+  it('Search for a user youve sent a request to, should show that a request is pending', function (done) {
+    requestMock.body.searchValue = 'Firstn'
+    User.register('Firstname', 'Firstname@son.bg', 'OwnerMan', '12345', 'Dog').then(newUser => {
+      FriendRequest.create({ sender: reqUser.id, receiver: newUser.id }).then(frReq => {
+        User.findById(newUser.id).then(newUser => {  // user should now have a friend request in him
+          User.findById(reqUser.id).populate('pendingFriendRequests').then(reqUser => {  // load again to update the friend requests array
+            requestMock.user = reqUser
+            userController.userSearchPost(requestMock, responseMock)
+            setTimeout(function () {
+              expect(renderedUsers).to.not.be.null
+              expect(renderedUsers).to.be.a('array')
+              expect(renderedUsers.length).to.be.equal(1)
+              expect(renderedUsers[0].id.toString()).to.be.equal(newUser.id.toString())
+              let receivedFriendStatus = renderedUsers[0].friendStatus
+              expect(receivedFriendStatus.areFriends).to.be.false
+              expect(receivedFriendStatus.sentRequest).to.be.true
+              expect(receivedFriendStatus.friendRequest.id).to.be.equal(frReq.id)
+              expect(receivedFriendStatus.receivedRequest).to.be.false
+              done()
+            }, 40)
+          })
+        })
+      })
+    })
   })
 
   afterEach(function (done) {
