@@ -1426,7 +1426,7 @@ describe('userPhotosGet, loading the photos of a user', function () {
               Album.create({
                 name: 'newsfeed' + i.toString(),
                 author: secUser.id,
-                public: true,
+                public: false,
                 photos: [],
                 classCss: 'someCLass'
               }).then(album => {
@@ -1445,7 +1445,7 @@ describe('userPhotosGet, loading the photos of a user', function () {
                 size: 145203,
                 author: secUser.id,
                 album: album.id,
-                public: true
+                public: false
               })
               Photo.create(albumPic)
                 .then(photo => {
