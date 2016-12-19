@@ -1366,31 +1366,23 @@ describe('userPhotosGet, loading the photos of a user', function () {
 
   let reqUser = null
   let secondUser = null
-  let secondUserPhotos = null
   let requestMock = null
   let responseMock = null
   let receivedHbsPage = null
   let renderedUser = null
-  let receivedFriendStatus = null
   let receivedPhotos = null
   let receivedAlbums = null
-  let receivedCategories = null
-  let receivedPages = null
 
   beforeEach(function (done) {
     // Nullify all the received values
     reqUser = null
     secondUser = null
-    secondUserPhotos = null
     requestMock = null
     responseMock = null
     receivedHbsPage = null
     renderedUser = null
-    receivedFriendStatus = null
     receivedPhotos = null
     receivedAlbums = null
-    receivedCategories = null
-    receivedPages = null
 
     requestMock = {
       user: {},
@@ -1408,10 +1400,8 @@ describe('userPhotosGet, loading the photos of a user', function () {
       render: function (hbsPage, argumentsPassed) {
         receivedHbsPage = hbsPage
         renderedUser = argumentsPassed.profileUser
-        receivedFriendStatus = argumentsPassed.friendStatus
         receivedPhotos = argumentsPassed.photos
         receivedAlbums = argumentsPassed.albums
-        receivedCategories = argumentsPassed.categories
       }
     }
 
@@ -1468,7 +1458,6 @@ describe('userPhotosGet, loading the photos of a user', function () {
               expect(reqUser.friends.length).to.be.equal(1)
               expect(secondUser.friends.length).to.be.equal(1)
               Promise.all(photoPromises).then((photos) => {
-                secondUserPhotos = photos
                 done()
               })
             })
@@ -1481,6 +1470,7 @@ describe('userPhotosGet, loading the photos of a user', function () {
   it('Normal visit, should load all albums and photos', function (done) {
     userController.userPhotosGet(requestMock, responseMock)
     setTimeout(function () {
+      expect(receivedHbsPage).to.be.equal(expectedHbsPage)
       expect(receivedPhotos).to.not.be.null
       expect(receivedPhotos).to.be.a('array')
       expect(receivedPhotos.length).to.be.equal(expectedPhotosCount)
@@ -1594,6 +1584,36 @@ describe('userPhotosGet, loading the photos of a user', function () {
         }, 40)
       })
     })
+  })
+
+  it('Using a string as a userId, should give out an errorMessage and redirect', function (done) {
+    requestMock.params.id = 'grindin'
+    userController.userPhotosGet(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidUserIdMessage)
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      expect(renderedUser).to.be.null
+      expect(receivedPhotos).to.be.null
+      expect(receivedAlbums).to.be.null
+      done()
+    }, 40)
+  })
+
+  it('Using a userId that is not in the db, should give out an errorMessage and redirect', function (done) {
+    requestMock.params.id = '1738'
+    userController.userPhotosGet(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(nonExistingUserMessage)
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      expect(renderedUser).to.be.null
+      expect(receivedPhotos).to.be.null
+      expect(receivedAlbums).to.be.null
+      done()
+    }, 40)
   })
 
   afterEach(function (done) {
