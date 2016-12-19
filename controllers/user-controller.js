@@ -166,21 +166,10 @@ module.exports = {
         return
       }
       // find the relation between the users
-      let areFriends = req.user.friends.indexOf(user.id) !== -1
-      let friendRequestId = req.user.getFriendRequestTo(user._id)
-      let hasSentRequest = Boolean(friendRequestId)
-      let receivedFriendRequestId = req.user.getFriendRequestFrom(user._id)
-      let hasReceivedRequest = Boolean(receivedFriendRequestId)
-      let friendStatus = {
-        sentRequest: hasSentRequest,
-        areFriends: areFriends,
-        friendRequest: friendRequestId,
-        receivedRequest: hasReceivedRequest,
-        receivedFriendRequest: receivedFriendRequestId
-      }
+      let fSts = req.user.getFriendStatusWith(user)  // friendStatus
 
       new Promise((resolve, reject) => {
-        if (areFriends || req.user.category._id.equals(user.category)) {
+        if (fSts.areFriends || req.user.category._id.equals(user.category)) {
           // if they're friends or of the same category, all the posts should be visible
           Post.find({ author: user._id }).then(userPosts => {
             resolve(userPosts)
@@ -197,14 +186,13 @@ module.exports = {
         let postPages = Post.getPostsInPage(page, posts)
         let postsInPage = postPages.posts
         let pages = postPages.pages  // array of possible pages [1,2,3]
-
         Post.populate(postsInPage, 'author comments likes photos').then(() => {
           // populate each comment's author. Must be done after the initial populate
           Post.populate(postsInPage, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
             Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
               postsInPage = Post.initializeForView(postsInPage).then(postsInPage => {
                 user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user
-                  res.render('user/profile', { profileUser: user, friendStatus: friendStatus, posts: postsInPage, categories: categories, pages: pages })
+                  res.render('user/profile', { profileUser: user, friendStatus: fSts, posts: postsInPage, categories: categories, pages: pages })
                 })
               })
             })
@@ -246,22 +234,10 @@ module.exports = {
       res.redirect('/')
     }
 
-    User.find({ fullName: { $regex: searchValue, $options: 'i' } }).populate('category profilePic').then(users => {
+    User.find({ fullName: { $regex: searchValue, $options: 'i' } }).populate('category profilePic pendingFriendRequests').then(users => {
       // attach a friendStatus object to each user, displaying thier relationship with the user doing the search
       users = users.map(user => {
-        let areFriends = req.user.friends.indexOf(user.id) !== -1
-        let friendRequestId = req.user.getFriendRequestTo(user._id)
-        let hasSentRequest = Boolean(friendRequestId)
-        let receivedFriendRequestId = req.user.getFriendRequestFrom(user._id)
-        let hasReceivedRequest = Boolean(receivedFriendRequestId)
-        let friendStatus = {
-          sentRequest: hasSentRequest,
-          areFriends: areFriends,
-          friendRequest: friendRequestId,
-          receivedRequest: hasReceivedRequest,
-          receivedFriendRequest: receivedFriendRequestId
-        }
-        user.friendStatus = friendStatus
+        user.friendStatus = req.user.getFriendStatusWith(user)  // we need the req.user's viewpoint
         return user
       })
       res.render('searchOutput', { users: users })

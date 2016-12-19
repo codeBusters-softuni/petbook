@@ -131,6 +131,38 @@ userSchema.method({
     return this.friends.indexOf(friendId) !== -1
   },
 
+
+  /**
+   * @returns a FriendStatus object consisting of
+   *   @param {boolean} areFriends - areFriends: - boolean indicating if you are friends with the user
+   *   @param {boolean} sentRequest - boolean indicating if you have sent a still-pending friend request to that user
+   *   @param {object} friendRequest - the sent Friend Request object
+   *   @param {boolean} receivedRequest - boolean indicating if you have received a still-pending friend request from that user
+   *   @param {object} receivedFriendRequest - the received Friend Request Object
+   *
+   * Obviously only three variants of the object can be found -
+   * one with areFriends to true,
+   * one with sentRequest and friendRequest
+   * and one with receivedRequest and receivedFriendRequest
+   */
+  getFriendStatusWith: function (friendObj) {
+    let areFriends = this.friends.indexOf(friendObj.id) !== -1
+    let friendRequestId = this.getFriendRequestTo(friendObj._id)
+    let hasSentRequest = Boolean(friendRequestId)
+    let receivedFriendRequestId = this.getFriendRequestFrom(friendObj._id)
+    let hasReceivedRequest = Boolean(receivedFriendRequestId)
+
+    let friendStatus = {
+      sentRequest: hasSentRequest,
+      areFriends: areFriends,
+      friendRequest: friendRequestId,
+      receivedRequest: hasReceivedRequest,
+      receivedFriendRequest: receivedFriendRequestId
+    }
+
+    return friendStatus
+  },
+
   updateProfilePicture: function (photoId) {
     return new Promise((resolve, reject) => {
       this.profilePic = photoId
