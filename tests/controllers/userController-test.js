@@ -1725,6 +1725,7 @@ describe('userSearchPost, searching for users', function () {
       expect(renderedUsers.length).to.be.equal(1)
       expect(renderedUsers[0].id.toString()).to.be.equal(secondUser.id)
       expect(renderedUsers[0].friendStatus.areFriends).to.be.true
+      expect(receivedHbsPage).to.be.equal(expectedHbsPage)
       done()
     }, 40)
   })
@@ -1781,6 +1782,7 @@ describe('userSearchPost, searching for users', function () {
 
         expect(renderedUser.profilePic).to.not.be.undefined
         expect(renderedUser.profilePic.id.toString()).to.be.equal(profilePic.id)
+        expect(receivedHbsPage).to.be.equal(expectedHbsPage)
         done()
       }, 40)
     })
@@ -1806,6 +1808,7 @@ describe('userSearchPost, searching for users', function () {
           expect(user.friendStatus.receivedRequest).to.be.false
           expect(user.friendStatus.sentRequest).to.be.false
         })
+        expect(receivedHbsPage).to.be.equal(expectedHbsPage)
         done()
       }, 50)
     })
@@ -1831,6 +1834,7 @@ describe('userSearchPost, searching for users', function () {
           expect(user.friendStatus.receivedRequest).to.be.false
           expect(user.friendStatus.sentRequest).to.be.false
         })
+        expect(receivedHbsPage).to.be.equal(expectedHbsPage)
         done()
       }, 50)
     })
@@ -1853,6 +1857,7 @@ describe('userSearchPost, searching for users', function () {
         renderedUsers.forEach(user => {
           expect(user.fullName.indexOf(requestMock.body.searchValue) !== -1).to.be.true  // assert 'a' is in the name
         })
+        expect(receivedHbsPage).to.be.equal(expectedHbsPage)        
         done()
       }, 50)
     })
@@ -1865,6 +1870,7 @@ describe('userSearchPost, searching for users', function () {
       expect(renderedUsers).to.not.be.null
       expect(renderedUsers).to.be.a('array')
       expect(renderedUsers.length).to.be.equal(0)
+      expect(receivedHbsPage).to.be.equal(expectedHbsPage)      
       done()
     }, 50)
   })
@@ -1887,6 +1893,8 @@ describe('userSearchPost, searching for users', function () {
               expect(receivedFriendStatus.sentRequest).to.be.true
               expect(receivedFriendStatus.friendRequest.id).to.be.equal(frReq.id)
               expect(receivedFriendStatus.receivedRequest).to.be.false
+
+              expect(receivedHbsPage).to.be.equal(expectedHbsPage)
               done()
             }, 40)
           })
@@ -1913,6 +1921,7 @@ describe('userSearchPost, searching for users', function () {
               expect(receivedFriendStatus.sentRequest).to.be.false
               expect(receivedFriendStatus.receivedRequest).to.be.true
               expect(receivedFriendStatus.receivedFriendRequest.id).to.be.equal(frReq.id)
+              expect(receivedHbsPage).to.be.equal(expectedHbsPage)              
               done()
             }, 40)
           })
