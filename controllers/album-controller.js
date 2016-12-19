@@ -13,7 +13,7 @@ let parseFiles = multer({
 module.exports = {
   uploadAlbum: (req, res) => {
     let returnUrl = res.locals.returnUrl || '/'
-    
+
     parseFiles(req, res, function (err) {
       if (!imagesAreValid(req, res, err, req.files)) {  // attaches error messages to req.session.errMsg
         res.redirect(returnUrl)

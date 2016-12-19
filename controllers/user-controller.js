@@ -203,7 +203,6 @@ module.exports = {
   },
 
   userPhotosGet: (req, res) => {
-    // TODO: Filter public photos based on the req.user category!
     let userId = req.params.id  // userId in the User model
     if (userId === req.user.userId.toString()) {
       // load the page with the ability to upload photos/albums
@@ -219,8 +218,27 @@ module.exports = {
           res.redirect('/')
           return
         }
-        Photo.initializeForView(user.photos).then(photos => {
-          res.render('user/viewPhotos', { profileUser: user, photos: photos, albums: user.albums, categories: categories })
+        let fSts = req.user.getFriendStatusWith(user)  // friendStatus
+
+        new Promise((resolve, reject) => {
+          if (fSts.areFriends || req.user.category._id.equals(user.category)) {
+            // if they're friends or of the same category, all the photo/albums should be visible
+            resolve([user.albums, user.photos])
+          } else {  // load all the public photo/albums from the user
+            let albums = user.albums.filter(album => {
+              return album.public
+            })
+            let photos = user.photos.filter(photo => {
+              return photo.public
+            })
+            resolve([albums, photos])
+          }
+        }).then((albumAndPhotos) => {
+          let albums = albumAndPhotos[0]
+          let photos = albumAndPhotos[1]
+          Photo.initializeForView(photos).then(photos => {
+            res.render('user/viewPhotos', { profileUser: user, photos: photos, albums: albums, categories: categories })
+          })
         })
       })
     }
