@@ -1541,6 +1541,26 @@ describe('userPhotosGet, loading the photos of a user', function () {
     }, 45)
   })
 
+  it('User of different category who is not friends visits, should not see any photos/albums', function (done) {
+    User.register(firstUserName, 'carlos@ferregamo.com', firstUserOwner, firstUserPassword, firstUserCategory).then(diffUser => {
+      User.populate(diffUser, 'category pendingFriendRequests').then(diffUser => {
+        requestMock.user = diffUser
+        userController.userPhotosGet(requestMock, responseMock)
+        setTimeout(function () {
+          expect(receivedPhotos).to.not.be.null
+          expect(receivedPhotos).to.be.a('array')
+          expect(receivedPhotos.length).to.be.equal(0)
+          expect(receivedAlbums).to.not.be.null
+          expect(receivedAlbums).to.be.a('array')
+          expect(receivedAlbums.length).to.be.equal(0)
+          expect(renderedUser).to.not.be.null
+          expect(renderedUser.id.toString()).to.be.equal(secondUser.id)
+          done()
+        }, 50)
+      })
+    })
+  })
+
   afterEach(function (done) {
     User.remove({}).then(() => {
       Post.remove({}).then(() => {
