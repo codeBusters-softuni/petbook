@@ -44,7 +44,16 @@ function showPhotoInPost() {
         }
     }
 
+    photoIndex = 0
+
+    console.log("Yesss here")
+
     var files = event.target.files; //FileList object
+    var sortedFiles = [].slice.call(files).sort(function (fileA, fileB) {
+        return fileA.size - fileB.size
+    })
+    var files = sortedFiles
+
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
 
