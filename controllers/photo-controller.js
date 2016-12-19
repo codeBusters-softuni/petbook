@@ -17,7 +17,7 @@ module.exports = {
   // function that handles photo uploads on the newsfeed
   uploadPhotosPost: (req, res) => {
     let returnUrl = res.locals.returnUrl || '/'
-    let albumName = 'newsfeed-photos-' + req.user._id
+    let albumName = 'Newsfeed Photos'
 
     // Try to find the user's album to add the picture to, otherwise create a new one
     Album.findOrCreateAlbum(albumName, req.user._id)  // custom function in Album.js
