@@ -31,7 +31,8 @@ module.exports = {
       })
 
       let newAlbum = new Album({
-        name: newPostInfo.nameAlbum,
+        name: newPostInfo.nameAlbum + req.user.id,
+        displayName: newPostInfo.nameAlbum,
         description: newPostInfo.descriptionAlbum,
         author: req.user._id,
         classCss: cssClassName,

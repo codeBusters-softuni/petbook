@@ -18,7 +18,7 @@ module.exports = {
         res.redirect(returnUrl)
         return
       }
-      let albumName = 'newsfeed-photos-' + req.user._id
+      let albumName = 'Newsfeed Photos'
       let newPostInfo = req.body
       if (typeof newPostInfo.publicPost === 'undefined') {
         // Make the post public by default
