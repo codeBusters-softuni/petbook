@@ -1641,7 +1641,7 @@ describe('userPhotosGet, loading the photos of a user', function () {
 })
 
 describe('userSearchPost, searching for users', function () {
-  let firstUserName = 'FirstDog'
+  let firstUserName = 'FirstDaog'
   let firstUserEmail = 'somebody@abv.bg'
   let firstUserOwner = 'TheOwner'
   let firstUserPassword = '12345'
@@ -1811,6 +1811,27 @@ describe('userSearchPost, searching for users', function () {
     })
   })
   
+  it('Search for users with similar name using an UPPER CASE character present in all names, should show all with letter in name', function (done) {
+    User.create([
+      { email: 'd', password: 'd', salt: 'd', fullName: 'Carlos Ferragamo', category: dogCategoryId },
+      { email: 'da', password: 'd', salt: 'd', fullName: 'Carlos FeAmo', category: dogCategoryId },
+      { email: 'daa', password: 'd', salt: 'd', fullName: 'Carl ragamo', category: dogCategoryId },
+      { email: 'daaa', password: 'd', salt: 'd', fullName: 'Carlo Krustev', category: dogCategoryId },
+      { email: 'daaaa', password: 'd', salt: 'd', fullName: 'Carlos Depp', category: dogCategoryId }
+    ]).then(users => {
+      requestMock.body.searchValue = 'a'
+      userController.userSearchPost(requestMock, responseMock)
+      setTimeout(function () {
+        expect(renderedUsers).to.not.be.null
+        expect(renderedUsers).to.be.a('array')
+        expect(renderedUsers.length).to.be.equal(7)
+        renderedUsers.forEach(user => {
+          expect(user.fullName.indexOf(requestMock.body.searchValue) !== -1).to.be.true  // assert 'a' is in the name
+        })
+        done()
+      }, 50)
+    })
+  })
 
   it('Search for a username that is not in the db, should not load anybody', function (done) {
     requestMock.body.searchValue = 'Wallace'
