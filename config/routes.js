@@ -42,7 +42,7 @@ module.exports = (app) => {
 
   app.post('/photo/profile', controllers.photoController.uploadProfilePhoto)
   // Upload single photos in default album
-  app.post('/photo/all/single', controllers.photoController.uploadPhotosPost)
+  app.post('/photo/all/single', controllers.postController.addPost)
   // Upload album with photos
   app.post('/photo/all/album', controllers.albumController.uploadAlbum)
   // Delete a photo
