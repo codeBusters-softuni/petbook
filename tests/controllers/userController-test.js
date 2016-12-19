@@ -7,6 +7,7 @@ const Post = mongoose.model('Post')
 const Photo = mongoose.model('Photo')
 const Album = mongoose.model('Album')
 const Category = mongoose.model('Category')
+const Comment_ = mongoose.model('Comment')
 const Like = mongoose.model('Like')
 const FriendRequest = mongoose.model('FriendRequest')
 const userController = require('../../controllers/user-controller')
@@ -1067,6 +1068,38 @@ describe('profilePageGet, loading the profile page of a user', function () {
           expect(renderedUser.receivedLovesCount).to.be.equal(25)  // the number of posts he has (every post is loved once)
           expect(renderedUser.receivedDislikesCount).to.not.be.undefined
           expect(renderedUser.receivedDislikesCount).to.be.equal(0)
+          done()
+        }, 40)
+      })
+    })
+  })
+
+  it('Visit a profile of a user who has comments on his posts, should be shown on his posts', function (done) {
+    // create the user
+    User.register('ChickOnGlance', 'DontDrip@abv.bg', secondUserOwner, secondUserPassword, secondUserCategory).then(newUser => {
+      // Create 25 posts from the newUser, all with a love on them
+      let postPromises = []
+      for (let i = 0; i < 25; i++) {
+        postPromises.push(new Promise((resolve, reject) => {
+          Comment_.create({ content: 'Love this man', author: reqUser.id }).then(comment => {
+            Post.create({ content: i, public: false, author: newUser._id, category: newUser.category, comments: [comment.id] })
+              .then(newPost => {
+                resolve(newPost)
+              })
+          })
+        }))
+      }
+      Promise.all(postPromises).then(posts => {
+        requestMock.params.id = newUser.userId  // visit the new user's profile
+        userController.profilePageGet(requestMock, responseMock)
+
+        setTimeout(function () {
+          receivedPosts.forEach(post => {
+            expect(post.comments).to.not.be.undefined
+            expect(post.comments).to.be.a('array')
+            expect(post.comments.length).to.be.equal(1)
+            expect(post.comments[0].author.toString()).to.be.equal(reqUser.id)
+          })
           done()
         }, 40)
       })
