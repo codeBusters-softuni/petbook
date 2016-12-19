@@ -1662,6 +1662,7 @@ describe('userSearchPost, searching for users', function () {
   let responseMock = null
   let receivedHbsPage = null
   let renderedUsers = null
+  let dogCategoryId = null
 
   beforeEach(function (done) {
     // Nullify all the received values
@@ -1671,7 +1672,7 @@ describe('userSearchPost, searching for users', function () {
     responseMock = null
     receivedHbsPage = null
     renderedUsers = null
-
+    dogCategoryId = null
     requestMock = {
       user: {},
       params: {},
@@ -1704,7 +1705,10 @@ describe('userSearchPost, searching for users', function () {
               requestMock.user = reqUser
               expect(reqUser.friends.length).to.be.equal(1)
               expect(secondUser.friends.length).to.be.equal(1)
-              done()
+              Category.findOne({ name: 'Dog' }).then(category => {
+                dogCategoryId = category.id
+                done()
+              })
             })
           })
         })
@@ -1723,6 +1727,33 @@ describe('userSearchPost, searching for users', function () {
       expect(renderedUsers[0].friendStatus.areFriends).to.be.true
       done()
     }, 40)
+  })
+
+  
+
+  it('Search for users with similar name, should show all', function (done) {
+    User.create([
+      { email: 'd', password: 'd', salt: 'd', fullName: 'Carlos Ferragamo', category: dogCategoryId },
+      { email: 'da', password: 'd', salt: 'd', fullName: 'Carlos FeAmo', category: dogCategoryId },
+      { email: 'daa', password: 'd', salt: 'd', fullName: 'Carl ragamo', category: dogCategoryId },
+      { email: 'daaa', password: 'd', salt: 'd', fullName: 'Carlo Krustev', category: dogCategoryId },
+      { email: 'daaaa', password: 'd', salt: 'd', fullName: 'Carlos Depp', category: dogCategoryId }
+    ]).then(users => {
+      requestMock.body.searchValue = 'Carl'
+      userController.userSearchPost(requestMock, responseMock)
+      setTimeout(function () {
+        expect(renderedUsers).to.not.be.null
+        expect(renderedUsers).to.be.a('array')
+        expect(renderedUsers.length).to.be.equal(5)
+        renderedUsers.forEach(user => {
+          expect(user.friendStatus.areFriends).to.not.be.undefined
+          expect(user.friendStatus.areFriends).to.be.false
+          expect(user.friendStatus.receivedRequest).to.be.false
+          expect(user.friendStatus.sentRequest).to.be.false
+        })
+        done()
+      }, 50)
+    })
   })
 
   afterEach(function (done) {
