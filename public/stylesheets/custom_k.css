@@ -215,10 +215,14 @@ nav > ul > li > a.custom-menu-icon {
     position: absolute;
     list-style-type: none;
     background-color: #3b5998;
-    width: 100px;
+    /*width: 100px;*/
     left: 25px;
     top: 27px;
     padding: 2px;
+}
+
+.dropdown-categories a{
+    width: 100px;
 }
 
 
@@ -505,7 +509,7 @@ main {
 }
 
 .cntnr-crte-albm button {
-    float: right;
+    display: block;
     margin-top: 20px;
     background-color: #3b5998;
     color: aliceblue;
@@ -681,6 +685,10 @@ overflow: hidden;
 
 .add-photo input[type="file"] {
     visibility: hidden;
+}
+
+.publish-btn-container{
+    float: right;
 }
 
 .btn-publish {
