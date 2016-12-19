@@ -73,11 +73,10 @@
 </header>
 <main>
     {{#if errorMessage}}
-        <p></p>
-        <p></p>
-        <span class="label label-danger error-label">{{errorMessage}}</span>
-        <p></p>
-        <p></p>
+        <div class="error-custom-style">
+            <span class="">{{errorMessage}}</span>
+        </div>
+
     {{/if}}
     {{{body}}}
 </main>
