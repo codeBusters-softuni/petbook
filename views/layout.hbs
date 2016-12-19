@@ -12,51 +12,51 @@
 </head>
 <body>
 <header class="custom-header">
-    <section class="col-xs-12 col-sm-1 col-md-2 col-lg-2">
+    <section class="">
         <div class="navbar-header">
             <a href="/" class="">Petbook</a>
         </div>
     </section>
     {{#if this.user}}
-        <section class="col-xs-12 col-sm-6 col-md-4 col-lg-4 left-align">
-            <form class="form-inline" method="POST" action="/search/">
-                <div class="form-group">
-                    <label class="sr-only" for="">Search Field</label>
-                    <input type="text" class="input-cstm-style search-cstm" id="" name="searchValue" placeholder="Search for other pets...">
-                    <input type="submit" class="btn btn-secondary sign-in-log-out" value="Search">
-                </div>
-
-            </form>
-            
-        </section>
-        <nav class="col-xs-12 col-sm-2 col-md-2 col-lg-3  left-align">
-          <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">List by category
-            <span class="caret"></span></button>
-            <ul class="">
-              {{#each categories}}
-              <li><a href="/category/{{this}}/">{{this}}</a></li>
-              {{/each}}
-            </ul>
-          </div>
-        </nav>
-        <nav class="col-xs-12 col-sm-3 col-md-4 col-lg-3  left-align">
+        <nav class="left-align">
             {{#if this.user.hasRequest}}
-              <a href="/friendRequests/"><span class = "label label-success">You have a pending friend request!</span></a>
+                <a href="/friendRequests/"><span
+                        class="label label-success">You have a pending friend request!</span></a>
             {{/if}}
             <ul class="cstm-menu-header">
-                <li><a href="/user/{{user.userId}}">{{user.fullName}}</a></li>
-                <li><a href="">Home</a></li>
-                <li><a href="/user/logout">LogOut</a></li>
+                <li><a href="" class="fa fa-home"></a></li>
+                <li>
+                    <div class="fa fa-search"></div>
+                    <form class="form-inline search-form" method="POST" action="/search/">
+                        <!--<label class="sr-only" for="">Search Field</label>-->
+                        <input type="text" class="input-cstm-style search-cstm" id="" name="searchValue"
+                               placeholder="Search for other pets...">
+                        <input type="submit" class="btn btn-secondary sign-in-log-out" value="Search">
+                    </form>
+                </li>
+                <li><a href="/user/{{user.userId}}" class="fa fa-paw">{{user.fullName}}</a></li>
+                <li>
+                    <div class="dropdown">List by
+                            category
+                            <span class="caret"></span>
+                            <ul class="dropdown-categories">
+                                {{#each categories}}
+                                    <li><a href="/category/{{this}}/">{{this}}</a></li>
+                                {{/each}}
+                            </ul>
+                    </div>
+                </li>
+                <li><a href="/user/logout" class="fa fa-sign-out">LogOut</a></li>
             </ul>
         </nav>
     {{/if}}
     {{#unless this.user}}
-        <section class="col-xs-12 col-sm-11 col-md-10 col-lg-10 left-align">
+    <nav class="left-align">
             <form class="form-inline" method="POST" action="/user/login">
                 <div class="form-group">
                     <label class="sr-only" for="exampleInputEmail3">Email:</label>
-                    <input type="text" class="input-cstm-style" id="" name="email" placeholder="Email" value={{candidateUser.email}}>
+                    <input type="text" class="input-cstm-style" id="" name="email" placeholder="Email"
+                           value={{candidateUser.email}}>
                 </div>
                 <div class="form-group">
                     <label class="sr-only" for="pwd">Password:</label>
@@ -67,18 +67,18 @@
                 </div>
 
             </form>
-        </section>
+        </nav>
     {{/unless}}
 
 </header>
 <main>
-  {{#if errorMessage}}
-      <p></p>
-      <p></p>
-      <span class = "label label-danger error-label">{{errorMessage}}</span>
-      <p></p>
-      <p></p>
-  {{/if}}
+    {{#if errorMessage}}
+        <p></p>
+        <p></p>
+        <span class="label label-danger error-label">{{errorMessage}}</span>
+        <p></p>
+        <p></p>
+    {{/if}}
     {{{body}}}
 </main>
 <footer id="cstm-stl-ftr">
