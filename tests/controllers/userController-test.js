@@ -1639,3 +1639,81 @@ describe('userPhotosGet, loading the photos of a user', function () {
     })
   })
 })
+
+describe('userSearchPost, searching for users', function () {
+  let firstUserName = 'FirstDog'
+  let firstUserEmail = 'somebody@abv.bg'
+  let firstUserOwner = 'TheOwner'
+  let firstUserPassword = '12345'
+  let firstUserCategory = 'Dog'
+
+  let secondUserName = 'FirstCat'
+  let secondUserEmail = 'somecat@abv.bg'
+  let secondUserOwner = 'TheOwner'
+  let secondUserPassword = '12345'
+  let secondUserCategory = 'Cat'
+
+  const expectedHbsPage = 'searchOutput'
+  const invalidUserIdMessage = 'Invalid user id!'
+
+  let reqUser = null
+  let secondUser = null
+  let requestMock = null
+  let responseMock = null
+  let receivedHbsPage = null
+  let renderedUsers = null
+
+  beforeEach(function (done) {
+    // Nullify all the received values
+    reqUser = null
+    secondUser = null
+    requestMock = null
+    responseMock = null
+    receivedHbsPage = null
+    renderedUsers = null
+
+    requestMock = {
+      user: {},
+      params: {},
+      session: {}
+    }
+
+    responseMock = {
+      locals: {},
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl },
+      render: function (hbsPage, argumentsPassed) {
+        receivedHbsPage = hbsPage
+        renderedUsers = argumentsPassed.users
+      }
+    }
+
+    // Register both users and make them friends
+    User.register(firstUserName, firstUserEmail, firstUserOwner, firstUserPassword, firstUserCategory).then(firstUser => {
+      User.register(secondUserName, secondUserEmail, secondUserOwner, secondUserPassword, secondUserCategory).then(secUser => {
+        firstUser.friends.push(secUser)
+        secUser.friends.push(firstUser)
+
+        firstUser.save().then(() => {
+          secUser.save().then(() => {
+            User.populate(firstUser, 'category').then(firstUser => {  // the req.user always has a populated category
+              reqUser = firstUser
+              secondUser = secUser
+              requestMock.user = reqUser
+              expect(reqUser.friends.length).to.be.equal(1)
+              expect(secondUser.friends.length).to.be.equal(1)
+              done()
+            })
+          })
+        })
+      })
+    })
+  })
+
+  afterEach(function (done) {
+    User.remove({}).then(() => {
+      done()
+    })
+  })
+})
