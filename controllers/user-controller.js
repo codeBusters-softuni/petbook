@@ -74,7 +74,7 @@ module.exports = {
       req.session.errorMsg = 'Your e-mail is invalid!'
       res.redirect('/')
       return
-    } else if (candidateUser.password.length < 4 || candidateUser.password.length > 20) {
+    } else if (!candidateUser.password || (candidateUser.password.length < 4 || candidateUser.password.length > 20)) {
       req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
       res.redirect('/')
       return
@@ -112,14 +112,23 @@ module.exports = {
   },
 
   cancelFriendship: (req, res) => {
+    let returnUrl = res.locals.returnUrl || '/'
     let friendId = req.params.id
+
+    if (!mongoose.Types.ObjectId.isValid(friendId)) {
+      req.session.errorMsg = 'Invalid friend id!'
+      res.redirect(returnUrl)
+      return
+    }
+
     User.findById(friendId).then(friend => {
       if (!friend) {
         req.session.errorMsg = 'Such a user does not exist.'
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       } else if (!req.user.hasFriend(friendId) || !friend.hasFriend(req.user.id)) {
-        res.redirect('/')
+        req.session.errorMsg = 'You are not friends with that user.'
+        res.redirect(returnUrl)
         return
       }
       // remove friends
@@ -128,22 +137,34 @@ module.exports = {
 
       Promise.all([cancelFriendPromise, cancelFriendPromise2]).then(() => {
         // Success - Attach message
-        res.redirect('/')
+        res.redirect(returnUrl)
         return
       })
     })
   },
 
   profilePageGet: (req, res) => {
-    let page = parseInt(req.query.page || '1') - 1
+    let page = null
+    if (!Number.prototype.isNumeric(req.query.page)) {
+      page = 0  // default to the first page
+    } else {
+      page = parseInt(req.query.page || '1') - 1
+      if (page < 0) {
+        page = 0
+      }
+    }
     let userId = req.params.id
+    if (!Number.prototype.isNumeric(userId)) {
+      req.session.errorMsg = 'Invalid user id!'
+      res.redirect('/')
+      return
+    }
     User.findOne({ userId: userId }).populate('profilePic').then(user => {
       if (!user) {
         req.session.errorMsg = 'No such user exists.'
         res.redirect('/')
         return
       }
-
       // find the relation between the users
       let areFriends = req.user.friends.indexOf(user.id) !== -1
       let friendRequestId = req.user.getFriendRequestTo(user._id)
@@ -157,26 +178,16 @@ module.exports = {
         receivedRequest: hasReceivedRequest,
         receivedFriendRequest: receivedFriendRequestId
       }
+
       new Promise((resolve, reject) => {
-        if (areFriends) {
-          // if they're friends, the user should see all the posts
+        if (areFriends || req.user.category._id.equals(user.category)) {
+          // if they're friends or of the same category, all the posts should be visible
           Post.find({ author: user._id }).then(userPosts => {
             resolve(userPosts)
           })
-        } else {
-          // load all the articles that the user should see
-          Post.find({ category: req.user.category, author: user._id }).then(categoryPosts => {
-            Post.find({ public: true, author: user._id }).then(publicPosts => {
-              // save the public posts that are not already in the category posts
-              publicPosts = publicPosts.filter((item) => {  // for every public post
-                return categoryPosts.findIndex((post) => {  // get his index in categoryPosts
-                  return post._id.equals(item._id)          // using _id comparison
-                }) === -1                                   // if it's -1, it's not in categoryPosts, so its left publicPosts
-              })
-              // join the two arrays
-              let postsToSee = categoryPosts.concat(publicPosts)
-              resolve(postsToSee)
-            })
+        } else {  // load all the public posts from the user
+          Post.find({ public: true, author: user._id }).then(publicPosts => {
+            resolve(publicPosts)
           })
         }
       }).then(posts => {
@@ -186,6 +197,7 @@ module.exports = {
         let postPages = Post.getPostsInPage(page, posts)
         let postsInPage = postPages.posts
         let pages = postPages.pages  // array of possible pages [1,2,3]
+
         Post.populate(postsInPage, 'author comments likes photos').then(() => {
           // populate each comment's author. Must be done after the initial populate
           Post.populate(postsInPage, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
