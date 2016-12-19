@@ -1195,6 +1195,26 @@ describe('profilePageGet, loading the profile page of a user', function () {
     })
   })
 
+  it("Visit the profile of a user who has sent a friend request to you, should have a property confirming that", function (done) {
+    User.register('Firstname', 'Firstname@son.bg', 'OwnerMan', '12345', 'Dog').then(newUser => {
+      FriendRequest.create({ sender: secondUser.id, receiver: newUser.id }).then(frReq => {
+        User.findById(newUser.id).then(newUser => {  // user should now have a friend request in him
+          User.populate(newUser, 'category pendingFriendRequests').then(newUser => {
+            requestMock.user = newUser
+            userController.profilePageGet(requestMock, responseMock)
+            setTimeout(function () {
+              expect(receivedFriendStatus.areFriends).to.be.false
+              expect(receivedFriendStatus.sentRequest).to.be.false
+              expect(receivedFriendStatus.receivedRequest).to.be.true
+              expect(receivedFriendStatus.receivedFriendRequest.id).to.be.equal(frReq.id)
+              done()
+            }, 40)
+          })
+        })
+      })
+    })
+  })
+
   afterEach(function (done) {
     User.remove({}).then(() => {
       Post.remove({}).then(() => {
