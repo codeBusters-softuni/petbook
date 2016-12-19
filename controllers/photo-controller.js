@@ -8,85 +8,16 @@ const constants = require('../config/constants')
 const photoUploadsPath = constants.photoUploadsPath
 const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like
 const imagesAreValid = mongoose.model('Photo').validateImages
-let parseReqBody = multer({ dest: photoUploadsPath,
-   limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */})
-   .array('uploadedPhotos')
-
+let parseReqBody = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */ }).single('addProfilePhoto')
 
 module.exports = {
-  // function that handles photo uploads on the newsfeed
-  uploadPhotosPost: (req, res) => {
-    let returnUrl = res.locals.returnUrl || '/'
-    let albumName = 'Newsfeed Photos'
-
-    // Try to find the user's album to add the picture to, otherwise create a new one
-    Album.findOrCreateAlbum(albumName, req.user._id)  // custom function in Album.js
-      .then(album => {
-        parseReqBody(req, res, function (err) {  // middleware to parse the uploaded files to req.files and save them on the server
-          if (!imagesAreValid(req, res, err, req.files)) {  // attached error messages to req.session.errMsg
-            res.redirect(returnUrl)
-            return
-          }
-          // logic for the post
-          let newPostInfo = req.body
-          let postIsPublic = newPostInfo.photocheck.toString() === 'publicvisible'
-          let newPost = new Post({
-            author: req.user._id,
-            category: req.user.category,
-            content: newPostInfo.descriptionPostPhotos,
-            public: postIsPublic
-          })
-          if (newPost.content.length <= 2) {
-            req.session.errorMsg = 'Post content must be longer than 2 characters!'
-            req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
-            res.redirect('/')
-            return
-          }
-          // the newPostInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
-          let photoIndex = 1
-
-          // sort the files by their size because that's how their descriptions are paired in the front-end
-          req.files = req.files.sort((fileA, fileB) => {
-            return fileA.size - fileB.size
-          })
-
-          let photoUploadPromises = req.files.map(function (photo) {
-            return new Promise((resolve, reject) => {
-              let photoUp = Object.assign(photo, {
-                // merge the photo's metadata and the data tied with the server
-                author: newPost.author,
-                description: newPostInfo[photoIndex.toString()],
-                album: album._id,
-                classCss: album.classCss,
-                public: postIsPublic
-              })
-
-              photoIndex += 1
-
-              Photo.create(photoUp).then(photo => {
-                resolve(photo._id)
-              })
-            })
-          })
-
-          Promise.all(photoUploadPromises).then((uploadedPhotos) => {
-            newPost.photos = uploadedPhotos
-            Post.create(newPost).then(post => {
-              res.redirect('/')
-            })
-          })
-        })
-      })
-  },
-
   uploadProfilePhoto: (req, res) => {
     let returnUrl = res.locals.returnUrl || '/'
-    let parseProfilePhoto = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */ }).single('addProfilePhoto')
     let albumName = 'profile-photos-' + req.user._id
     // create or find said album
     Album.findOrCreateAlbum(albumName, req.user._id) // custom function in Album.js
       .then(album => {
-        parseProfilePhoto(req, res, function (err) {
+        parseReqBody(req, res, function (err) {
           if (!imagesAreValid(req, res, err, req.file)) {  // attached error messages to req.session.errMsg
             res.redirect(returnUrl)
             return
