@@ -55,6 +55,11 @@ module.exports = {
           // the newAlbumInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
           let photoIndex = 1
 
+          // create a photo object for each uploaded photo
+          req.files = req.files.sort((fileA, fileB) => {
+            return fileA.size - fileB.size
+          })
+
           // hold a promise for each photo that resolves when the photo is uploaded, returns an array of their ids
           let photoUploadPromises = req.files.map(function (photo) {
             return new Promise((resolve, reject) => {

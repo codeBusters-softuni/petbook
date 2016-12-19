@@ -17,7 +17,9 @@ function createPhotoHTML(event) {  // picReader.addEventListener("load",function
     var div = document.createElement("div");
     div.className += "album-photo-content";
     section.appendChild(div);
+
     photoIndex += 1;
+    picFile.photoIndexx = photoIndex
     div.innerHTML = "<img class='' src='" + picFile.result + "'" + "title='" + photoIndex + "'/>"
 
     var textarea = document.createElement("textarea");
@@ -37,11 +39,17 @@ function showPhoto(event) {
     for (var i = picContainerArticle.length - 1; i >= 0; i--) {
         if (picContainerArticle[i] && picContainerArticle[i].parentNode) {
             picContainerArticle[i].parentNode.removeChild(picContainerArticle[i]);
-
         }
     }
+    photoIndex = 0
 
+console.log("Yesss here")
     var files = event.target.files; //FileList object
+    var sortedFiles = [].slice.call(files).sort(function (fileA, fileB) {
+        return fileA.size - fileB.size
+    })
+    var files = sortedFiles
+
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
 
@@ -161,14 +169,11 @@ $(document).ready(function () {
     });
 
     if (tabContainer.length > 0) {
-        // console.log(tabIndex)
         // tabIndex = 0;
 
         tabContainer.on('click', function () { //.on('click', function () {
-            // console.log($(this));
             tabIndex = $(this).index();
-            // console.log(tabIndex)
-            //
+
 
             activeTab.eq(tabIndex).addClass('active-tab')
                 .siblings().removeClass('active-tab');
@@ -177,13 +182,10 @@ $(document).ready(function () {
                 .addClass('active-tab-section')
                 .siblings().removeClass('active-tab-section');
 
-            console.log("yes")
             displayPhotosInLightBox()
         //
 
         });
-
-        // console.log(tabIndex);
 
     }
 
@@ -198,7 +200,6 @@ $(document).ready(function () {
 
 function displayPhotosInLightBox() {
     var img = $('.active-tab-section .images .in-album img'); // selects all images
-    // console.log(img)
     var imgArticles = $('.active-tab-section .images .in-album');
     var boxImages; // = document.createElement('div') // create div that contains the image
     // boxImages.className +=" box-image" // give that div class
@@ -218,7 +219,6 @@ function displayPhotosInLightBox() {
 
     var indexImg = 0; //initialize index of clicked image
     var indexArticle = 0; //initialize index of the article that contains clicked image and its buttons
-    // console.log(img)
     var lightBox = document.getElementById('box-photos'); // select lightbox
     if (lightBox != null) {
 
@@ -226,10 +226,8 @@ function displayPhotosInLightBox() {
         img.off("click");
         img.on('click', function () {
             img = $('.active-tab-section .images .in-album img'); // selects all images
-            // console.log(img)
             imgArticles = $('.active-tab-section .images .in-album');
 
-            console.log("IMAGE CLICKED :)")
             boxImages = document.createElement('div') // create div that contains the image
             boxImages.className += " box-image" // give that div class
             lightBox.insertBefore(boxImages, null) // insert that div in the lightbox
@@ -241,19 +239,14 @@ function displayPhotosInLightBox() {
             $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages) // clone the selected article and append it to the div container that should contain the selected image
 
             nextImg = $(this).parent().closest('.in-album').next().find('img'); //define next img
-            console.log(nextImg)
 
             prevImg = $(this).parent().closest('.in-album').prev().find('img'); //define prev img
-            // console.log(prevImg)
 
             indexImg = img.index($(this)); //define index of clicked image
             indexArticle = indexImg; //define index of the article that contains clicked image and its buttons
 
             $('#box-photos').css('display', 'block'); // lightbox become visible
             $('#backdrop-photos').css('display', 'block');
-            // $('.custom-header').css('display', 'none');
-            // $('#cstm-stl-ftr').css('display', 'none');
-            // $('.pic-up-container').css('display', 'none');
 
             display(); // call display function
 
@@ -262,7 +255,6 @@ function displayPhotosInLightBox() {
 //    click on NEXT button
         nextBtn.off("click");
         nextBtn.on('click', function (e) {
-            console.log(nextImg)
             if (!nextImg.is('img')) {  //if next img is undefined
                 nextImg = img.first(); // next img becomes the first from the img array
             }
@@ -392,7 +384,7 @@ $(document).ready(function () {
     for (var i = 0; i < photosDisplayed.length; i++) {
         var attributeClass = photosDisplayed[i].getAttribute('class').split(' ');
         var classNeeded = attributeClass[attributeClass.length - 1];
-        // console.log(classNeeded)
+
         for (var k = 0; k < uniqueClasses.length; k++) {
             if (uniqueClasses[k].toString() === classNeeded.toString()) {
                 access = false;
@@ -408,7 +400,6 @@ $(document).ready(function () {
 
 
     var filterVars = uniqueClasses; // define filter categories here
-    console.log(filterVars)
     var filterItems = document.querySelectorAll('.filter-wrap .filter-item');
     for (var i = 0; i < filterVars.length; i++) {
 

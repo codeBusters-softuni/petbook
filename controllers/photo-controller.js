@@ -46,6 +46,10 @@ module.exports = {
           let photoIndex = 1
 
           // create a photo object for each uploaded photo
+          req.files = req.files.sort((fileA, fileB) => {
+            return fileA.size - fileB.size
+          })
+
           let photoUploadPromises = req.files.map(function (photo) {
             return new Promise((resolve, reject) => {
               let photoUp = Object.assign(photo, {

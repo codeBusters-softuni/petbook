@@ -44,7 +44,16 @@ function showPhotoInPost() {
         }
     }
 
+    photoIndex = 0
+
+    console.log("Yesss here")
+
     var files = event.target.files; //FileList object
+    var sortedFiles = [].slice.call(files).sort(function (fileA, fileB) {
+        return fileA.size - fileB.size
+    })
+    var files = sortedFiles
+
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
 
@@ -216,6 +225,36 @@ $(document).ready(function () {
         $('#backdrop').css('top', scroll+'px' );
     }
 })
+
+// function to show lightbox and backdrop at the position of the scroll
+$(document).ready(function () {
+
+    $(window).on("scroll", function () {
+        var scrollPoint = $(this).scrollTop();
+        pictureBoxPosition(scrollPoint)
+    });
+
+    function pictureBoxPosition(scroll) {
+        $('#box').css('top', scroll+100+'px' );
+        $('#backdrop').css('top', scroll+'px' );
+    }
+})
+
+$(document).ready(function () {
+    $('.fa-search').on('click', function () {
+        $('.search-form').fadeToggle()
+
+        $('.dropdown-categories').fadeOut()
+    });
+
+    $('.dropdown').on('click', function () {
+        $('.dropdown-categories').fadeToggle();
+        $('.search-form').fadeOut()
+
+    })
+})
+
+
 
 
 
