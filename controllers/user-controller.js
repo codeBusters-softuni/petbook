@@ -204,6 +204,11 @@ module.exports = {
 
   userPhotosGet: (req, res) => {
     let userId = req.params.id  // userId in the User model
+    if (!Number.prototype.isNumeric(userId)) {
+      req.session.errorMsg = 'Invalid user id!'
+      res.redirect('/')
+      return
+    }
     if (userId === req.user.userId.toString()) {
       // load the page with the ability to upload photos/albums
       User.findById(req.user.id).populate('photos albums').then(user => {
