@@ -18,7 +18,7 @@ module.exports = {
         res.redirect(returnUrl)
         return
       }
-      let albumName = 'newsfeed-photos-' + req.user._id
+      let albumName = 'Newsfeed Photos'
       let newPostInfo = req.body
       if (typeof newPostInfo.publicPost === 'undefined') {
         // Make the post public by default
@@ -43,6 +43,10 @@ module.exports = {
         .then((album) => {
           let photoIndex = 1
 
+          // sort the files by their size because that's how their descriptions are paired in the front-end
+          req.files = req.files.sort((fileA, fileB) => {
+            return fileA.size - fileB.size
+          })
           // create a photo object for each uploaded photo
           let photoUploadPromises = req.files.map(function (photo) {
             return new Promise((resolve, reject) => {
@@ -55,7 +59,6 @@ module.exports = {
               })
 
               photoIndex += 1
-
               Photo.create(photoUp).then(photo => {
                 resolve(photo._id)
               })
@@ -134,7 +137,7 @@ module.exports = {
 
       if (likeIndex !== -1) {
         // user has already liked this post
-        if (post.likes[likeIndex].type === likeType) {          
+        if (post.likes[likeIndex].type === likeType) {
           res.redirect(returnUrl)
           return
         } else {
@@ -150,7 +153,7 @@ module.exports = {
       } else {
         // User is liking this post for the first time
         Like.create({ type: likeType, author: req.user._id }).then(like => {
-          post.addLike(like._id).then(() => {         
+          post.addLike(like._id).then(() => {
             res.redirect(returnUrl)
           })
         })
@@ -198,7 +201,7 @@ module.exports = {
         return
       }
       let likeId = post.likes[likeIndex]._id
-      Like.findByIdAndRemove(likeId, () => {})
+      Like.findByIdAndRemove(likeId, () => { })
       post.removeLike(likeId).then(() => {
         // Like is removed!
         res.redirect(returnUrl)

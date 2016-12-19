@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 let albumSchema = mongoose.Schema(
   {
     name: String,
+    displayName: String,
     description: String,
     author: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     photos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Photo' }],
@@ -34,6 +35,8 @@ const Album = mongoose.model('Album', albumSchema)
 module.exports = Album
 // Tries to find an album with the given name, otherwise creates it
 module.exports.findOrCreateAlbum = (albumName, potentialAuthor) => {
+  let displayName = albumName
+  albumName = albumName + potentialAuthor  // the album's name always has the author id at the end
   return new Promise((resolve, reject) => {
     Album.findOne({ name: albumName }).then(album => {
       if (!album) {
@@ -42,6 +45,7 @@ module.exports.findOrCreateAlbum = (albumName, potentialAuthor) => {
         // create the new album
         let newAlbum = new Album({
           name: albumName,
+          displayName: displayName,
           author: potentialAuthor,
           public: true,
           classCss: cssClassName

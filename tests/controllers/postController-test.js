@@ -25,6 +25,7 @@ describe('addPost function', function () {
   const shortContentErrorMsg = "Your post's content is too short! It must be longer than 3 characters."
   const unsupportedImageTypeErrorMsg = 'Supported image types are PNG, JPG and JPEG!'
   let newsfeedAlbumName = null
+  let newsfeedAlbumDisplayName = null
 
   beforeEach(function (done) {
     requestMock = {
@@ -53,7 +54,8 @@ describe('addPost function', function () {
     User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
       User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
         reqUser = user
-        newsfeedAlbumName = 'newsfeed-photos-' + user.id
+        newsfeedAlbumName = 'Newsfeed Photos' + user.id
+        newsfeedAlbumDisplayName = 'Newsfeed Photos'
         requestMock.user = reqUser
         done()
       })
@@ -181,7 +183,7 @@ describe('addPost function', function () {
           done()
         })
       })
-    }, 60)
+    }, 80)
   })
 
   it('multiple posts, should be saved in the DB', function (done) {
@@ -210,6 +212,7 @@ describe('addPost function', function () {
       Album.findOne({}).then(album => {
         expect(album).to.not.be.null
         expect(album.author.toString()).to.be.equal(reqUser.id)
+        expect(album.displayName).to.be.equal(newsfeedAlbumDisplayName)
         expect(album.name).to.be.equal(newsfeedAlbumName)
         done()
       })
@@ -229,6 +232,7 @@ describe('addPost function', function () {
             expect(album).to.not.be.null
             expect(album.author.toString()).to.be.equal(reqUser.id)
             expect(album.name).to.be.equal(newsfeedAlbumName)
+            expect(album.displayName).to.be.equal(newsfeedAlbumDisplayName)
             expect(album.photos).to.be.a('array')
             expect(album.photos).to.not.be.null
             expect(album.photos.length).to.be.equal(1)
@@ -253,9 +257,10 @@ describe('addPost function', function () {
           Album.find({}).then(albums => {
             expect(albums).to.be.a('array')
             expect(albums.length).to.be.equal(1)
-            let album = albums[0]
+            let album = albums[0]            
             expect(album).to.not.be.null
             expect(album.author.toString()).to.be.equal(reqUser.id)
+            expect(album.displayName).to.be.equal(newsfeedAlbumDisplayName)
             expect(album.name).to.be.equal(newsfeedAlbumName)
             done()
           })

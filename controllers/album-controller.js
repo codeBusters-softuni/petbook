@@ -31,7 +31,8 @@ module.exports = {
       })
 
       let newAlbum = new Album({
-        name: newPostInfo.nameAlbum,
+        name: newPostInfo.nameAlbum + req.user.id,
+        displayName: newPostInfo.nameAlbum,
         description: newPostInfo.descriptionAlbum,
         author: req.user._id,
         classCss: cssClassName,
@@ -55,7 +56,7 @@ module.exports = {
           // the newAlbumInfo holds the description for each photo, the key being their number. We start from 1 and for each photo increment
           let photoIndex = 1
 
-          // create a photo object for each uploaded photo
+          // sort the files by their size because that's how their descriptions are paired in the front-end
           req.files = req.files.sort((fileA, fileB) => {
             return fileA.size - fileB.size
           })
