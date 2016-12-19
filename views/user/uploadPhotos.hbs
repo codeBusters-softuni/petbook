@@ -277,7 +277,7 @@
                     </div>
                     <div>
                       <input type="radio" name="photocheckAlbum" id="single-category-friends" value="groupvisible">
-                      <label for="single-category">Or is it visible to your category and
+                      <label for="single-category-friends">Or is it visible to your category and
                                                 friends?</label>
                     </div>
                   </div>
@@ -296,10 +296,12 @@
                   </article>
                 </article>
               </section>
-              <input type="checkbox" id="check-before-send-album" class="check-before-send-btn" /> I want to publish these
-              photos.
-              <button type="submit" id="publish-album" class="btn btn-secondary sign-in-log-out btn-publish">Publish
-                            </button>
+                <div class="publish-btn-container">
+                    <input type="checkbox" id="check-before-send-album" class="check-before-send-btn" /> <label for="check-before-send-album">I want to publish these
+                    photos.</label>
+                    <button type="submit" id="publish-album" class="btn btn-secondary sign-in-log-out btn-publish">Publish
+                    </button>
+                </div>
             </fieldset>
           </form>
         </article>
@@ -317,12 +319,12 @@
                   </div>
                   <div class="radio-questions">
                     <div>
-                      <input type="radio" name="photocheck" id="single-public" value="publicvisible" checked="checked">
-                      <label for="single-public">Are these photos public?</label>
+                      <input type="radio" name="photocheck" id="album-public" value="publicvisible" checked="checked">
+                      <label for="album-public">Are these photos public?</label>
                     </div>
                     <div>
-                      <input type="radio" name="photocheck" id="single-category-friends" value="groupvisible">
-                      <label for="single-category">Or are they visible to your category and
+                      <input type="radio" name="photocheck" id="album-category-friends" value="groupvisible">
+                      <label for="album-category-friends">Or are they visible to your category and
                                                 friends?</label>
                     </div>
                   </div>
@@ -341,9 +343,12 @@
                   </article>
                 </article>
               </section>
-              <input type="checkbox" id="check-before-send" class="check-before-send-btn" /> I want to publish these photos.
-              <button type="submit" id="publish-photos" class="btn btn-secondary sign-in-log-out btn-publish">Publish
-                            </button>
+                <div class="publish-btn-container">
+                    <input type="checkbox" id="check-before-send" class="check-before-send-btn" /> <label for="check-before-send">I want to publish these photos.</label>
+                    <button type="submit" id="publish-photos" class="btn btn-secondary sign-in-log-out btn-publish">Publish
+                    </button>
+                </div>
+
 
             </fieldset>
           </form>
