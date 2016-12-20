@@ -230,17 +230,16 @@ module.exports = {
             // if they're friends or of the same category, all the photo/albums should be visible
             resolve([user.albums, user.photos])
           } else {  // load all the public photo/albums from the user
-            let albums = user.albums.filter(album => {
+            let publicAlbums = user.albums.filter(album => {
               return album.public
             })
-            let photos = user.photos.filter(photo => {
+            let publicPhotos = user.photos.filter(photo => {
               return photo.public
             })
-            resolve([albums, photos])
+            resolve([publicAlbums, publicPhotos])
           }
         }).then((albumAndPhotos) => {
-          let albums = albumAndPhotos[0]
-          let photos = albumAndPhotos[1]
+          let [albums, photos] = albumAndPhotos
           Photo.initializeForView(photos).then(photos => {
             res.render('user/viewPhotos', { profileUser: user, photos: photos, albums: albums, categories: categories })
           })

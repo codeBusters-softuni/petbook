@@ -8,17 +8,19 @@ const multer = require('multer')
 const photoUploadsPath = require('../config/constants').photoUploadsPath
 const likeIsValid = mongoose.model('Like').likeIsValid  // function that validates a like
 const imagesAreValid = mongoose.model('Photo').validateImages
-let parseReqBody = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */ }).array('addPhotoToPost')
+let parseReqBody = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000, files: 10 } /* max file size is 2MB */ }).array('uploadedPhotos')
 
 module.exports = {
   addPost: (req, res) => {
     let returnUrl = res.locals.returnUrl || '/'
+    let albumName = 'Newsfeed Photos'
+
     parseReqBody(req, res, function (err) {
-      if (!imagesAreValid(req, res, err, req.files)) {  // attached error messages to req.session.errMsg
+      if (!imagesAreValid(req, res, err, req.files)) {
+        // attached error messages to req.session.errMsg
         res.redirect(returnUrl)
         return
       }
-      let albumName = 'Newsfeed Photos'
       let newPostInfo = req.body
       if (typeof newPostInfo.publicPost === 'undefined') {
         // Make the post public by default

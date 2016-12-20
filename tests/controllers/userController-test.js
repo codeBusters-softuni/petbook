@@ -1639,3 +1639,315 @@ describe('userPhotosGet, loading the photos of a user', function () {
     })
   })
 })
+
+describe('userSearchPost, searching for users', function () {
+  let firstUserName = 'FirstDaog'
+  let firstUserEmail = 'somebody@abv.bg'
+  let firstUserOwner = 'TheOwner'
+  let firstUserPassword = '12345'
+  let firstUserCategory = 'Dog'
+
+  let secondUserName = 'FirstCat'
+  let secondUserEmail = 'somecat@abv.bg'
+  let secondUserOwner = 'TheOwner'
+  let secondUserPassword = '12345'
+  let secondUserCategory = 'Cat'
+
+  const expectedHbsPage = 'searchOutput'
+  const invalidSearchMessage = "Sorry, we couldn't understand this search. Please try saying this another way."
+
+  let reqUser = null
+  let secondUser = null
+  let requestMock = null
+  let responseMock = null
+  let receivedHbsPage = null
+  let renderedUsers = null
+  let dogCategoryId = null
+
+  beforeEach(function (done) {
+    // Nullify all the received values
+    reqUser = null
+    secondUser = null
+    requestMock = null
+    responseMock = null
+    receivedHbsPage = null
+    renderedUsers = null
+    dogCategoryId = null
+    requestMock = {
+      user: {},
+      params: {},
+      session: {},
+      body: {}
+    }
+
+    responseMock = {
+      locals: {},
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl },
+      render: function (hbsPage, argumentsPassed) {
+        receivedHbsPage = hbsPage
+        renderedUsers = argumentsPassed.users
+      }
+    }
+
+    // Register both users and make them friends
+    User.register(firstUserName, firstUserEmail, firstUserOwner, firstUserPassword, firstUserCategory).then(firstUser => {
+      User.register(secondUserName, secondUserEmail, secondUserOwner, secondUserPassword, secondUserCategory).then(secUser => {
+        firstUser.friends.push(secUser)
+        secUser.friends.push(firstUser)
+
+        firstUser.save().then(() => {
+          secUser.save().then(() => {
+            User.populate(firstUser, 'category').then(firstUser => {  // the req.user always has a populated category
+              reqUser = firstUser
+              secondUser = secUser
+              requestMock.user = reqUser
+              expect(reqUser.friends.length).to.be.equal(1)
+              expect(secondUser.friends.length).to.be.equal(1)
+              Category.findOne({ name: 'Dog' }).then(category => {
+                dogCategoryId = category.id
+                done()
+              })
+            })
+          })
+        })
+      })
+    })
+  })
+
+  it('Normal search for exact username, should show the user', function (done) {
+    requestMock.body.searchValue = secondUserName
+    userController.userSearchPost(requestMock, responseMock)
+    setTimeout(function () {
+      expect(renderedUsers).to.not.be.null
+      expect(renderedUsers).to.be.a('array')
+      expect(renderedUsers.length).to.be.equal(1)
+      expect(renderedUsers[0].id.toString()).to.be.equal(secondUser.id)
+      expect(renderedUsers[0].friendStatus.areFriends).to.be.true
+      expect(receivedHbsPage).to.be.equal(expectedHbsPage)
+      done()
+    }, 40)
+  })
+
+  it('Normal search for user, should load his profile pic', function (done) {
+    // save a profile picture to the user
+    new Promise((resolve, reject) => {
+      new Promise((resolve, reject) => {
+        // Create the album
+        Album.create({
+          name: 'profiles',
+          author: secondUser.id,
+          public: true,
+          photos: [],
+          classCss: 'someCLass'
+        }).then(album => { resolve(album) })
+      }).then(album => {
+        new Promise((resolve, reject) => {
+          let profilePic = new Photo({
+            fieldname: 'addProfilePhoto',
+            originalname: 'WIN_20161210_10_23_56_Pro.jpg',
+            encoding: '7bit',
+            mimetype: 'image/jpeg',
+            filename: 'a31328e9ebbb340ca64f9d42f7f0aa68',
+            path: ':\\Work\\SoftUni\\Team Project\\petbook\\public\\uploads\\a31328e9ebbb340ca64f9d42f7f0aa68',
+            size: 145203,
+            author: secondUser.id,
+            album: album.id,
+            public: true
+          })
+          // Create the profile picture
+          Photo.create(profilePic).then(photo => {
+            resolve(photo)
+          })
+        }).then(profilePic => {
+          // Attach the profile picture
+          secondUser.profilePic = profilePic.id
+          secondUser.save().then(() => {
+            resolve(profilePic)
+          })
+        })
+      })
+    }).then(profilePic => {
+      requestMock.body.searchValue = secondUserName
+      userController.userSearchPost(requestMock, responseMock)
+
+      setTimeout(function () {
+        expect(renderedUsers).to.not.be.null
+        expect(renderedUsers).to.be.a('array')
+        expect(renderedUsers.length).to.be.equal(1)
+        let renderedUser = renderedUsers[0]
+        expect(renderedUser.id.toString()).to.be.equal(secondUser.id)
+        expect(renderedUser.friendStatus.areFriends).to.be.true
+
+        expect(renderedUser.profilePic).to.not.be.undefined
+        expect(renderedUser.profilePic.id.toString()).to.be.equal(profilePic.id)
+        expect(receivedHbsPage).to.be.equal(expectedHbsPage)
+        done()
+      }, 40)
+    })
+  })
+
+  it('Search for users with similar name, should show all', function (done) {
+    User.create([
+      { email: 'd', password: 'd', salt: 'd', fullName: 'Carlos Ferragamo', category: dogCategoryId },
+      { email: 'da', password: 'd', salt: 'd', fullName: 'Carlos FeAmo', category: dogCategoryId },
+      { email: 'daa', password: 'd', salt: 'd', fullName: 'Carl ragamo', category: dogCategoryId },
+      { email: 'daaa', password: 'd', salt: 'd', fullName: 'Carlo Krustev', category: dogCategoryId },
+      { email: 'daaaa', password: 'd', salt: 'd', fullName: 'Carlos Depp', category: dogCategoryId }
+    ]).then(users => {
+      requestMock.body.searchValue = 'Carl'
+      userController.userSearchPost(requestMock, responseMock)
+      setTimeout(function () {
+        expect(renderedUsers).to.not.be.null
+        expect(renderedUsers).to.be.a('array')
+        expect(renderedUsers.length).to.be.equal(5)
+        renderedUsers.forEach(user => {
+          expect(user.friendStatus.areFriends).to.not.be.undefined
+          expect(user.friendStatus.areFriends).to.be.false
+          expect(user.friendStatus.receivedRequest).to.be.false
+          expect(user.friendStatus.sentRequest).to.be.false
+        })
+        expect(receivedHbsPage).to.be.equal(expectedHbsPage)
+        done()
+      }, 50)
+    })
+  })
+
+  it('Search for users with similar name by their lastname, should show all', function (done) {
+    User.create([
+      { email: 'd', password: 'd', salt: 'd', fullName: 'Carlos Ferragamo', category: dogCategoryId },
+      { email: 'da', password: 'd', salt: 'd', fullName: 'Aylos FerRAmo', category: dogCategoryId },
+      { email: 'daa', password: 'd', salt: 'd', fullName: 'Carl fER3', category: dogCategoryId },
+      { email: 'daaa', password: 'd', salt: 'd', fullName: 'Torlo fer', category: dogCategoryId },
+      { email: 'daaaa', password: 'd', salt: 'd', fullName: 'Dom FeRoDDepp', category: dogCategoryId }
+    ]).then(users => {
+      requestMock.body.searchValue = 'fer'
+      userController.userSearchPost(requestMock, responseMock)
+      setTimeout(function () {
+        expect(renderedUsers).to.not.be.null
+        expect(renderedUsers).to.be.a('array')
+        expect(renderedUsers.length).to.be.equal(5)
+        renderedUsers.forEach(user => {
+          expect(user.friendStatus.areFriends).to.not.be.undefined
+          expect(user.friendStatus.areFriends).to.be.false
+          expect(user.friendStatus.receivedRequest).to.be.false
+          expect(user.friendStatus.sentRequest).to.be.false
+        })
+        expect(receivedHbsPage).to.be.equal(expectedHbsPage)
+        done()
+      }, 50)
+    })
+  })
+
+  it('Search for users with similar name using an UPPER CASE character present in all names, should show all with letter in name', function (done) {
+    User.create([
+      { email: 'd', password: 'd', salt: 'd', fullName: 'Carlos Ferragamo', category: dogCategoryId },
+      { email: 'da', password: 'd', salt: 'd', fullName: 'Carlos FeAmo', category: dogCategoryId },
+      { email: 'daa', password: 'd', salt: 'd', fullName: 'Carl ragamo', category: dogCategoryId },
+      { email: 'daaa', password: 'd', salt: 'd', fullName: 'Carlo Krustev', category: dogCategoryId },
+      { email: 'daaaa', password: 'd', salt: 'd', fullName: 'Carlos Depp', category: dogCategoryId }
+    ]).then(users => {
+      requestMock.body.searchValue = 'a'
+      userController.userSearchPost(requestMock, responseMock)
+      setTimeout(function () {
+        expect(renderedUsers).to.not.be.null
+        expect(renderedUsers).to.be.a('array')
+        expect(renderedUsers.length).to.be.equal(7)
+        renderedUsers.forEach(user => {
+          expect(user.fullName.indexOf(requestMock.body.searchValue) !== -1).to.be.true  // assert 'a' is in the name
+        })
+        expect(receivedHbsPage).to.be.equal(expectedHbsPage)        
+        done()
+      }, 50)
+    })
+  })
+
+  it('Search for a username that is not in the db, should not load anybody', function (done) {
+    requestMock.body.searchValue = 'Wallace'
+    userController.userSearchPost(requestMock, responseMock)
+    setTimeout(function () {
+      expect(renderedUsers).to.not.be.null
+      expect(renderedUsers).to.be.a('array')
+      expect(renderedUsers.length).to.be.equal(0)
+      expect(receivedHbsPage).to.be.equal(expectedHbsPage)      
+      done()
+    }, 50)
+  })
+
+  it('Search for a user youve sent a request to, should show that a request is pending', function (done) {
+    requestMock.body.searchValue = 'Firstn'
+    User.register('Firstname', 'Firstname@son.bg', 'OwnerMan', '12345', 'Dog').then(newUser => {
+      FriendRequest.create({ sender: reqUser.id, receiver: newUser.id }).then(frReq => {
+        User.findById(newUser.id).then(newUser => {  // user should now have a friend request in him
+          User.findById(reqUser.id).populate('pendingFriendRequests').then(reqUser => {  // load again to update the friend requests array
+            requestMock.user = reqUser
+            userController.userSearchPost(requestMock, responseMock)
+            setTimeout(function () {
+              expect(renderedUsers).to.not.be.null
+              expect(renderedUsers).to.be.a('array')
+              expect(renderedUsers.length).to.be.equal(1)
+              expect(renderedUsers[0].id.toString()).to.be.equal(newUser.id.toString())
+              let receivedFriendStatus = renderedUsers[0].friendStatus
+              expect(receivedFriendStatus.areFriends).to.be.false
+              expect(receivedFriendStatus.sentRequest).to.be.true
+              expect(receivedFriendStatus.friendRequest.id).to.be.equal(frReq.id)
+              expect(receivedFriendStatus.receivedRequest).to.be.false
+
+              expect(receivedHbsPage).to.be.equal(expectedHbsPage)
+              done()
+            }, 40)
+          })
+        })
+      })
+    })
+  })
+
+  it('Search for a user youve received a request from, should show that a request is pending', function (done) {
+    requestMock.body.searchValue = 'Firstn'
+    User.register('Firstname', 'Firstname@son.bg', 'OwnerMan', '12345', 'Dog').then(newUser => {
+      FriendRequest.create({ sender: newUser.id, receiver: reqUser.id }).then(frReq => {
+        User.findById(newUser.id).then(newUser => {  // user should now have a friend request in him
+          User.findById(reqUser.id).populate('pendingFriendRequests').then(reqUser => {  // load again to update the friend requests array
+            requestMock.user = reqUser
+            userController.userSearchPost(requestMock, responseMock)
+            setTimeout(function () {
+              expect(renderedUsers).to.not.be.null
+              expect(renderedUsers).to.be.a('array')
+              expect(renderedUsers.length).to.be.equal(1)
+              expect(renderedUsers[0].id.toString()).to.be.equal(newUser.id.toString())
+              let receivedFriendStatus = renderedUsers[0].friendStatus
+              expect(receivedFriendStatus.areFriends).to.be.false
+              expect(receivedFriendStatus.sentRequest).to.be.false
+              expect(receivedFriendStatus.receivedRequest).to.be.true
+              expect(receivedFriendStatus.receivedFriendRequest.id).to.be.equal(frReq.id)
+              expect(receivedHbsPage).to.be.equal(expectedHbsPage)              
+              done()
+            }, 40)
+          })
+        })
+      })
+    })
+  })
+
+  it('Search for an empty value, should give out an error and redirect', function (done) {
+    delete requestMock.body.searchValue
+
+    userController.userSearchPost(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidSearchMessage)
+      expect(responseMock.redirectUrl).to.be.equal('/')
+      expect(receivedHbsPage).to.be.null
+      expect(renderedUsers).to.be.null
+      done()
+    }, 40)
+  })
+
+  afterEach(function (done) {
+    User.remove({}).then(() => {
+      done()
+    })
+  })
+})

@@ -19,7 +19,6 @@ function createPhotoHTML(event) {  // picReader.addEventListener("load",function
     section.appendChild(div);
 
     photoIndex += 1;
-    picFile.photoIndexx = photoIndex
     div.innerHTML = "<img class='' src='" + picFile.result + "'" + "title='" + photoIndex + "'/>"
 
     var textarea = document.createElement("textarea");
