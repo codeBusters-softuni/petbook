@@ -44,6 +44,7 @@ describe('showArticles function', function () {
   let receivedPosts = null
   let receivedCategories = null
   let receivedPages = null
+  let receivedSelectedPage = null
 
   beforeEach(function (done) {
     // Nullify all the received values
@@ -53,6 +54,7 @@ describe('showArticles function', function () {
     receivedPosts = null
     receivedCategories = null
     receivedPages = null
+    receivedSelectedPage = null
     secondUserPosts = null
 
     requestMock = {
@@ -73,6 +75,7 @@ describe('showArticles function', function () {
         receivedPosts = argumentsPassed.posts
         receivedCategories = argumentsPassed.categories
         receivedPages = argumentsPassed.pages
+        receivedSelectedPage = argumentsPassed.selectedPage
       }
     }
 
@@ -205,9 +208,8 @@ describe('showArticles function', function () {
   })
 
   it('Dog loads categories of Dogs, should see every post', function (done) {
-    // Register both users and make them friends
     User.register('Started', 'botom@abv.bg', secondUserOwner, secondUserPassword, 'Dog').then(secUser => {
-      // Create 5 posts from the secondUser
+      // Create 4 posts from the secondUser
       let postPromises = []
       for (let i = 0; i < 4; i++) {
         postPromises.push(new Promise((resolve, reject) => {
@@ -253,6 +255,39 @@ describe('showArticles function', function () {
       expect(receivedPages).to.be.deep.equal([])
       done()
     }, 40)
+  })
+
+  it('Dog loads page 2 of Dog posts, should see some posts', function (done) {
+    User.register('Started', 'botom@abv.bg', secondUserOwner, secondUserPassword, 'Dog').then(secUser => {
+      // Create 25 posts from the secondUser
+      let postPromises = []
+      for (let i = 0; i < 24; i++) {
+        postPromises.push(new Promise((resolve, reject) => {
+          Post.create({ content: i, public: false, author: secUser._id, category: secUser.category })
+            .then(newPost => {
+              resolve(newPost)
+            })
+        }))
+      }
+      postPromises.push(new Promise((resolve, reject) => {
+        Post.create({ content: '5', public: true, author: secUser._id, category: secUser.category })
+          .then(newPost => {
+            resolve(newPost)
+          })
+      }))
+      Promise.all(postPromises).then(posts => {
+        requestMock.query.page = '2'
+        requestMock.params.category = 'dog'
+        categoryController.showArticles(requestMock, responseMock)
+
+        setTimeout(function () {
+          expect(receivedPosts.length).to.be.equal(5) // max posts per page are 20, so the second should have 5
+          expect(receivedPages).to.be.deep.equal([1, 2])
+          expect(receivedSelectedPage).to.be.equal(2)
+          done()
+        }, 40)
+      })
+    })
   })
 
   afterEach(function (done) {
