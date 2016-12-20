@@ -126,6 +126,8 @@ describe('showArticles function', function () {
     setTimeout(function () {
       expect(receivedPosts).to.be.deep.equal([])
       expect(receivedPages).to.be.deep.equal([])
+      expect(receivedHbsPage).to.be.equal(expectedHbsPage)
+      expect(receivedHbsPage).to.be.equal(expectedHbsPage)
       done()
     }, 40)
   })
@@ -151,6 +153,7 @@ describe('showArticles function', function () {
           receivedPosts.forEach(post => {
             expect(post.category.toString()).to.be.equal(secondUser.category.toString())
           })
+          expect(receivedHbsPage).to.be.equal(expectedHbsPage)
           done()
         }, 40)
       })
@@ -179,6 +182,7 @@ describe('showArticles function', function () {
           receivedPosts.forEach(post => {
             expect(post.category.toString()).to.be.equal(secondUser.category.toString())
           })
+          expect(receivedHbsPage).to.be.equal(expectedHbsPage)
           done()
         }, 40)
       })
@@ -201,6 +205,7 @@ describe('showArticles function', function () {
           receivedPosts.forEach(post => {
             expect(post.category.toString()).to.be.equal(secondUser.category.toString())
           })
+          expect(receivedHbsPage).to.be.equal(expectedHbsPage)
           done()
         }, 40)
       })
@@ -239,6 +244,7 @@ describe('showArticles function', function () {
             receivedPosts.forEach(post => {
               expect(post.category.toString()).to.be.equal(reqUser.category.id)
             })
+            expect(receivedHbsPage).to.be.equal(expectedHbsPage)
             done()
           }, 40)
         })
@@ -253,6 +259,7 @@ describe('showArticles function', function () {
     setTimeout(function () {
       expect(receivedPosts).to.be.deep.equal([])
       expect(receivedPages).to.be.deep.equal([])
+      expect(receivedHbsPage).to.be.equal(expectedHbsPage)
       done()
     }, 40)
   })
@@ -284,6 +291,7 @@ describe('showArticles function', function () {
           expect(receivedPosts.length).to.be.equal(5) // max posts per page are 20, so the second should have 5
           expect(receivedPages).to.be.deep.equal([1, 2])
           expect(receivedSelectedPage).to.be.equal(2)
+          expect(receivedHbsPage).to.be.equal(expectedHbsPage)
           done()
         }, 40)
       })
