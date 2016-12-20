@@ -25,6 +25,7 @@ describe('uploadProfilePhoto function', function () {
   const unsupportedImageTypeErrorMsg = 'Supported image types are PNG, JPG and JPEG!'
   const expectedAlbumDisplayName = 'Profile Photos'
   const expectedPostContent = 'I updated my profile picture!'
+  const expectedErrorRedirectUrl = 'lalala'
   let expectedSuccessfulRedirectURL = null
   let expectedAlbumName = null
   let originalSamplePhotoName
@@ -49,7 +50,7 @@ describe('uploadProfilePhoto function', function () {
       session: {}
     }
     responseMock = {
-      locals: {},
+      locals: {returnUrl: expectedErrorRedirectUrl},
       redirected: false,
       redirectUrl: null,
       redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
@@ -68,7 +69,6 @@ describe('uploadProfilePhoto function', function () {
 
   it('Normal post, should update profile picture and create album', function (done) {
     photoController.uploadProfilePhoto(requestMock, responseMock)
-
     setTimeout(function () {
       expect(responseMock.redirectUrl).to.be.equal(expectedSuccessfulRedirectURL)
 
@@ -95,6 +95,23 @@ describe('uploadProfilePhoto function', function () {
         })
       })
     }, 150)
+  })
+
+  it('Invalid file upload, should and give out an error message', function (done) {
+    requestMock.file.mimetype = 'image/gif'
+    photoController.uploadProfilePhoto(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(unsupportedImageTypeErrorMsg)
+
+      // Assure no profile pic has been updated
+      User.findOne({}).then(user => {
+        expect(user.profilePic).to.be.undefined
+        done()
+      })
+    }, 90)
   })
 
   // delete all the created models
