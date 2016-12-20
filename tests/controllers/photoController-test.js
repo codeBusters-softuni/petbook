@@ -512,6 +512,23 @@ describe('removeLike function', function () {
     }, 50)
   })
 
+  it('Try to remove another like type, should simply redirect', function (done) {
+    requestMock.params = [samplePhotoId, 'Love']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal("You can't unLove this post because your like is a Paw!")
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      Photo.findOne({}).then(photo => {
+        // Assert that the like is still there
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(1)
+        done()
+      })
+    }, 50)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
