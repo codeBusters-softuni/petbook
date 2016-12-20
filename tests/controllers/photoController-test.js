@@ -394,6 +394,18 @@ describe('addLike function', function () {
     }, 40)
   })
 
+  it('invalid photoId, should redirect', function (done) {
+    requestMock.params = ['grindin', 'Paw']
+    photoController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal('Invalid photo id!')
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      done()
+    }, 40)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
