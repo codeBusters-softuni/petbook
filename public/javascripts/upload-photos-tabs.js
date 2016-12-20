@@ -42,7 +42,7 @@ function showPhoto(event) {
     }
     photoIndex = 0
 
-console.log("Yesss here")
+// console.log("Yesss here")
     var files = event.target.files; //FileList object
     var sortedFiles = [].slice.call(files).sort(function (fileA, fileB) {
         return fileA.size - fileB.size
@@ -117,7 +117,7 @@ $(document).ready(function () {
             }
 
             switchTab(titleIndex);
-            // console.log(activeTitle[titleIndex].parentNode)
+            // console.log(titleIndex)
             // swapElements(activeTitle[activeTitle.length-1], activeTitle[titleIndex])
 
             var checker;
@@ -245,7 +245,7 @@ function displayPhotosInLightBox() {
             indexArticle = indexImg; // assign var to the index of the image that user clicked on - they are the same
 
             currImgClone = imgArticles.eq(indexArticle).addClass("selected") //add class "selected" to the article that contains the selected image and buttons
-            $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages) // clone the selected article and append it to the div container that should contain the selected image
+            $('.selected').clone().removeClass("col-xs-12 col-sm-12 col-md-6 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages) // clone the selected article and append it to the div container that should contain the selected image
 
             nextImg = $(this).parent().closest('.in-album').next().find('img'); //define next img
 
@@ -277,7 +277,7 @@ function displayPhotosInLightBox() {
             indexArticle = indexImg;  //define index of the article that contains clicked image and its buttons
 
             currImgClone = imgArticles.eq(indexArticle).addClass("selected") //add class "selected" to the article that contains the selected image and buttons
-            $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages) // clone the selected article and append it to the div container that should contain the selected image
+            $('.selected').clone().removeClass("col-xs-12 col-sm-12 col-md-6 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages) // clone the selected article and append it to the div container that should contain the selected image
 
             prevImg = $(currentImg).parent().closest('.in-album').prev().find('img');  //define prev img
             nextImg = $(currentImg).parent().closest('.in-album').next().find('img'); //define next img
@@ -301,7 +301,7 @@ function displayPhotosInLightBox() {
             indexArticle = indexImg;
 
             currImgClone = imgArticles.eq(indexArticle).addClass("selected")
-            $('.selected').clone().removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages)
+            $('.selected').clone().removeClass("col-xs-12 col-sm-12 col-md-6 col-lg-3").removeClass("col-xs-12 col-sm-6 col-md-4 col-lg-4").appendTo(boxImages)
 
             nextImg = $(currentImg).parent().closest('.in-album').next().find('img');
             prevImg = $(currentImg).parent().closest('.in-album').prev().find('img');

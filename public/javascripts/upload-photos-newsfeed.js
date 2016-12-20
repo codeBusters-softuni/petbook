@@ -81,9 +81,11 @@ function uploadPhotosFromPost() {
 
 $(document).ready(function () {
     var img = $('.newsfeed-post-images .newsfeed-images img'); // selects all images
+    console.log(img)
     var imgArticles = $('.newsfeed-post-images .newsfeed-images article'); // select all articles that contain images and buttons
+    console.log(imgArticles)
     var lightBox = document.getElementById('box'); // select lightbox
-
+    var currentImg = img.eq(0); //it is needed because if user open 1 pic and then click on close, it gives error
     if (lightBox != null) {
         var boxImages = document.createElement('div') // create div that contains the image
         boxImages.className += " box-image" // give that div class
@@ -97,7 +99,7 @@ $(document).ready(function () {
         var closeLightBox = $('.close-light-box'); // get close button
 
         // initialize images to swap
-        var currentImg = img.eq(1); //it is needed because if user open 1 pic and then click on close, it gives error
+
         var nextImg = '';
         var prevImg = '';
 
@@ -106,6 +108,7 @@ $(document).ready(function () {
 
         //open first image
         img.on('click', function () {
+            currentImg = $(this);
             indexImg = img.index($(this)); // assign var to the index of the image that user clicked on
             indexArticle = indexImg; // assign var to the index of the image that user clicked on - they are the same
 
@@ -184,9 +187,9 @@ $(document).ready(function () {
             removeByClass('box-image', 'selected') //on close click we should remove the article with the special "selected" class
             imgArticles.eq(indexArticle).removeClass("selected") //remove special class from the articles Array too,
 //so that when we give that special class to the next image when click on it
-            if (img.length >= 1) {
+//             if (img.length >= 0) {
                 currentImg.parent().closest('.post-view').siblings().addClass('newsfeed-post-images'); // add to all post that class so that user can click on another img from another post and start lightbox again
-            }
+            // }
 
             img = $('.newsfeed-post-images .newsfeed-images img'); // selects all images
             imgArticles = $('.newsfeed-post-images .newsfeed-images article');  // select all articles that contain images and buttons
