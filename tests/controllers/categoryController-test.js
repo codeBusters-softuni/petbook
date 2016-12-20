@@ -152,6 +152,10 @@ describe('showArticles function', function () {
           expect(receivedPages).to.be.deep.equal([1])
           receivedPosts.forEach(post => {
             expect(post.category.toString()).to.be.equal(secondUser.category.toString())
+            // Check if the post is initialized for the view (has his likes shown)
+            expect(post.paws).to.not.be.undefined
+            expect(post.loves).to.not.be.undefined
+            expect(post.dislikes).to.not.be.undefined
           })
           expect(receivedHbsPage).to.be.equal(expectedHbsPage)
           done()
@@ -181,6 +185,10 @@ describe('showArticles function', function () {
           expect(receivedPages).to.be.deep.equal([1])
           receivedPosts.forEach(post => {
             expect(post.category.toString()).to.be.equal(secondUser.category.toString())
+            // Check if the post is initialized for the view (has his likes shown)
+            expect(post.paws).to.not.be.undefined
+            expect(post.loves).to.not.be.undefined
+            expect(post.dislikes).to.not.be.undefined
           })
           expect(receivedHbsPage).to.be.equal(expectedHbsPage)
           done()
@@ -204,6 +212,10 @@ describe('showArticles function', function () {
           expect(receivedPages).to.be.deep.equal([1])
           receivedPosts.forEach(post => {
             expect(post.category.toString()).to.be.equal(secondUser.category.toString())
+            // Check if the post is initialized for the view (has his likes shown)
+            expect(post.paws).to.not.be.undefined
+            expect(post.loves).to.not.be.undefined
+            expect(post.dislikes).to.not.be.undefined
           })
           expect(receivedHbsPage).to.be.equal(expectedHbsPage)
           done()
@@ -243,6 +255,10 @@ describe('showArticles function', function () {
             expect(receivedPages).to.be.deep.equal([1])
             receivedPosts.forEach(post => {
               expect(post.category.toString()).to.be.equal(reqUser.category.id)
+              // Check if the post is initialized for the view (has his likes shown)
+              expect(post.paws).to.not.be.undefined
+              expect(post.loves).to.not.be.undefined
+              expect(post.dislikes).to.not.be.undefined
             })
             expect(receivedHbsPage).to.be.equal(expectedHbsPage)
             done()
@@ -292,6 +308,12 @@ describe('showArticles function', function () {
           expect(receivedPages).to.be.deep.equal([1, 2])
           expect(receivedSelectedPage).to.be.equal(2)
           expect(receivedHbsPage).to.be.equal(expectedHbsPage)
+          receivedPosts.forEach(post => {
+            // Check if the post is initialized for the view (has his likes shown)
+            expect(post.paws).to.not.be.undefined
+            expect(post.loves).to.not.be.undefined
+            expect(post.dislikes).to.not.be.undefined
+          })
           done()
         }, 40)
       })
