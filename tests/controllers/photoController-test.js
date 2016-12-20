@@ -529,6 +529,26 @@ describe('removeLike function', function () {
     }, 50)
   })
 
+  it('Try to remove a like when you have not liked the photo, should give a message and redirect', function (done) {
+    User.register(username, 'FeelAlive@abv.bg', owner, 'dogpass123', userCategory).then(dog => {
+      requestMock.user = dog
+      requestMock.params = [samplePhotoId, 'Paw']
+      photoController.removeLike(requestMock, responseMock)
+
+      setTimeout(function () {
+        expect(requestMock.session.errorMsg).to.not.be.undefined
+        expect(requestMock.session.errorMsg).to.be.equal('You cannot unPaw a post you have not liked.')
+        expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+        Photo.findOne({}).then(photo => {
+          // Assert that the like is still there
+          expect(photo.likes).to.be.a('array')
+          expect(photo.likes.length).to.be.equal(1)
+          done()
+        })
+      }, 50)
+    })
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
