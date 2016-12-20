@@ -424,7 +424,103 @@ describe('addLike function', function () {
       User.remove({}).then(() => {
         Album.remove({}).then(() => {
           Photo.remove({}).then(() => {
-            done()
+            Like.remove({}).then(() => {
+              done()
+            })
+          })
+        })
+      })
+    })
+  })
+})
+
+describe('removeLike function', function () {
+  let username = 'dog'
+  let email = 'dog@abv.bg'
+  let owner = 'OwnerMan'
+  let userCategory = 'Dog'
+  let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let samplePhoto = null
+  const expectedErrorRedirectUrl = 'lalala'
+  const nonExistingPhotoErrorMsg = 'No such photo exists.'
+  let expectedSuccessfulRedirectURL = null
+  let originalSamplePhotoName = null
+  let samplePhotoId = null
+
+  beforeEach(function (done) {
+    samplePhoto = {
+      fieldname: 'addPhotoToPost',
+      originalname: 'testpic.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'somewhere',
+      size: 2000
+    }
+    originalSamplePhotoName = 'testpic.jpg'
+    samplePhotoId = null
+
+    requestMock = {
+      body: {},
+      user: {},
+      headers: {},
+      session: {},
+      params: []
+    }
+    responseMock = {
+      locals: { returnUrl: expectedErrorRedirectUrl },
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+
+    User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
+      User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
+        Album.create({ name: 'bra', author: user.id, public: true }).then(album => {
+          Photo.create(Object.assign(samplePhoto, { author: user.id, classCss: 'dd', public: true, album: album.id })).then(photo => {
+            Like.create({ type: 'Paw', author: user.id }).then(like => {
+              photo.likes = [like.id]
+              photo.save().then(() => {
+                samplePhotoId = photo.id
+                reqUser = user
+                requestMock.user = reqUser
+                done()
+              })
+            })
+          })
+        })
+      })
+    })
+  })
+
+  it('Normal remove, should be removed', function (done) {
+    requestMock.params = [samplePhotoId, 'Paw']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      Photo.findOne({}).then(photo => {
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(0)
+        Like.findOne({}).then(like => {
+          expect(like).to.be.null
+          done()
+        })
+      })
+    }, 50)
+  })
+
+  // delete all the created models
+  afterEach(function (done) {
+    Post.remove({}).then(() => {
+      User.remove({}).then(() => {
+        Album.remove({}).then(() => {
+          Photo.remove({}).then(() => {
+            Like.remove({}).then(() => {
+              done()
+            })
           })
         })
       })
