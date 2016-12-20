@@ -198,7 +198,7 @@ $(document).ready(function () {
     });
 
     function pictureBoxPosition(scroll) {
-        $('#box-profile-photos').css('top', scroll+100+'px' );
+        $('#box-profile-photos').css('top', scroll+20+'px' );
         $('#backdrop-profile-photos').css('top', scroll+'px' );
     }
 })

@@ -1533,7 +1533,9 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 /*lightbox style*/
 
-#backdrop, #backdrop-photos, #backdrop-profile-photos {
+#backdrop,
+#backdrop-photos,
+#backdrop-profile-photos {
     position: absolute;
     top: 0;
     left: 0;
@@ -1543,12 +1545,14 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     z-index: 20;
     display: none;
 }
-#box, #box-photos, #box-profile-photos{
+#box,
+#box-photos,
+#box-profile-photos{
     position: absolute;
     /*top: 20%;*/
     left: 10%;
     right: 10%;
-    /*top:10%;*/
+    top:3%;
     height: 95%;
     background: #fff;
     z-index: 21;
@@ -1558,63 +1562,112 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     display: none;
 }
 
-#box .next-newsfeed, #box .prev-newsfeed {
+#box .next-newsfeed,
+#box .prev-newsfeed,
+#box-photos .next,
+#box-photos .prev,
+#box-profile-photos .prev-profile-photos,
+#box-profile-photos .next-profile-photos {
     position: absolute;
     top: 50%;
     font-size: 30px;
     color: #FFF;
     cursor: pointer;
 }
-#box .prev-newsfeed{
+#box .prev-newsfeed,
+#box-photos .prev,
+#box-profile-photos .prev-profile-photos {
     left: -25px;
 }
 
-#box .box-image {
-    width: 100%;
-    height: 90%;
+#box .next-newsfeed,
+#box-photos .next,
+#box-profile-photos .next-profile-photos{
+    right: -25px;
 }
-#box .box-image .selected {
+
+#box .close-light-box,
+#box-photos .close-light-box,
+#box-profile-photos .close-light-box {
+    cursor: pointer;
+    float: right;
+    padding-bottom: 10px;
+}
+
+#box .box-image,
+#box-photos .box-image,
+#box-profile-photos .box-image{
+    width: 100%;
+    height: 95%;
+}
+#box .box-image .selected,
+#box-photos .box-image .selected,
+#box-profile-photos .box-image .selected {
     height:100%;
 }
 
-#box .box-image .selected .photo-cntnr {
+#box .box-image .selected .photo-cntnr,
+#box-photos .box-image .selected .photo-cntnr,
+#box-profile-photos .box-image .selected .photo-cntnr{
     width:100%;
     height: 100%;
     margin-bottom: 0;
     position: relative;
 }
-#box .box-image .selected .photo-cntnr .album-photo-content {
+#box .box-image .selected .photo-cntnr .album-photo-content,
+#box-photos .box-image .selected .photo-cntnr .album-photo-content,
+#box-profile-photos .box-image .selected .photo-cntnr .album-photo-content{
     display: block;
     margin: 0 auto;
-    height: 71%;
+    height: 80%;
+    width: 50%;
+
+    /*check*/
+    position: relative;
 }
-#box .box-image .selected .photo-cntnr .album-photo-content img {
+#box .box-image .selected .photo-cntnr .album-photo-content img,
+#box-photos .box-image .selected .photo-cntnr .album-photo-content img,
+#box-profile-photos .box-image .selected .photo-cntnr .album-photo-content img{
     height: auto;
-    max-height: 100%;
-    max-width: inherit;
+    max-height: 90%;
+    max-width: 100%;
+    width: auto;
+
+
+    /*check*/
+    position: absolute;
+    left: 0;
+    right: 0;
+    /*top: 20px;*/
+/*20px;*/
+    bottom: 7%;
 }
-#box .box-image .selected .photo-cntnr .description {
-    height: 100px;
+#box .box-image .selected .photo-cntnr .description,
+#box-photos .box-image .selected .photo-cntnr .description,
+#box-profile-photos .box-image .selected .photo-cntnr .description{
+    height: 50px;
     overflow-y: scroll;
     padding: 0 20px;
+
+    font-style: italic;
+    font-weight: 600;
+    font-size: 20px;
+    color: #3b5998
 }
-#box .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer {
+
+#box-photos .box-image .selected .photo-cntnr .preview-photo-thumbnail-header{
+    max-height: 26px;
+}
+
+#box .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer,
+#box-photos .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer,
+#box-profile-photos .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer{
     height: 40px;
     position: absolute;
     width: 100%;
     bottom: 0;
 }
 
-
-#box .next-newsfeed {
-    right: -25px;
-}
-
-#box .close-light-box {
-    cursor: pointer;
-    float: right;
-    padding-bottom: 10px;
-}
 
 #box img {
     width: 100%;
