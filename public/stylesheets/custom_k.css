@@ -1548,7 +1548,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     /*top: 20%;*/
     left: 10%;
     right: 10%;
-    /*top:10%;*/
+    top:3%;
     height: 95%;
     background: #fff;
     z-index: 21;
@@ -1586,7 +1586,8 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 #box .box-image .selected .photo-cntnr .album-photo-content {
     display: block;
     margin: 0 auto;
-    height: 71%;
+    height: 80%;
+    width: 65%;
 }
 #box .box-image .selected .photo-cntnr .album-photo-content img {
     height: auto;
@@ -1594,7 +1595,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     max-width: inherit;
 }
 #box .box-image .selected .photo-cntnr .description {
-    height: 100px;
+    height: 50px;
     overflow-y: scroll;
     padding: 0 20px;
 }

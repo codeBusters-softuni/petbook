@@ -220,6 +220,8 @@ $(document).ready(function () {
         pictureBoxPosition(scrollPoint)
     });
 
+    // pictureBoxPosition(scrollPoint)
+
     function pictureBoxPosition(scroll) {
         $('#box').css('top', scroll + 20 +'px' );
         $('#backdrop').css('top', scroll+'px' );
