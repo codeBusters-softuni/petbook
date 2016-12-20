@@ -332,10 +332,12 @@
                 </section>
             </section>
         {{/each}}
-        <h4> Pages </h4>
+        <div class="pages-container"> Pages </div>
         <ul class="pagination">
             {{#each pages}}
-                <a href="?page={{this}}">{{this}}</a>
+                <li>
+                    <a href="?page={{this}}" class="">{{this}}</a>
+                </li>
             {{/each}}
         </ul>
         <!--end post view-->

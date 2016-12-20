@@ -83,6 +83,7 @@ legend {
     top: 2px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
+    box-shadow: 1px 1px 1px 0px #A9A9A9;
 }
 
 /*Header styling when logged in*/
@@ -195,10 +196,14 @@ nav > ul > li > a.custom-menu-icon {
 .custom-header nav .cstm-menu-header li > form{
     position: absolute;
     display: none;
-    width: 250px;
+    width: 260px;
     left: -78px;
     top: 30px;
     z-index: 9999;
+
+    padding: 5px;
+    background-color: rgba(59, 89, 152, 0.8);
+    border-radius: 5px;
 }
 .custom-header nav .cstm-menu-header li .dropdown{
     padding:2px;
@@ -214,7 +219,8 @@ nav > ul > li > a.custom-menu-icon {
     z-index: 9999;
     position: absolute;
     list-style-type: none;
-    background-color: #3b5998;
+    background: rgba(59, 89, 152, 0.9);
+    border-radius: 5px;
     /*width: 100px;*/
     left: 25px;
     top: 27px;
@@ -233,6 +239,26 @@ main {
     /*display: none;*/
 }
 
+.pages-container{
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #3b5998;
+}
+.pagination{
+    margin: 10px 0!important;
+}
+
+.pagination>li>a{
+ background-color: #3b5998;
+}
+
+.pagination>li>a:hover{
+    background-color: #224285;
+}
+.pagination>li>a.current-page{
+    background-color: #224285;
+}
 
 /*Header styling up to here*/
 
@@ -1386,9 +1412,12 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     display: inline-block;
     margin: 0!important;
     font-style: italic;
-    background: rgba(152,251,152, 0.4);
+    background: rgba(152,251,152, 0.6);
     padding: 3px;
     border-radius: 3px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #3b5998;
 }
 
 .pending-request-container>span:hover{
@@ -1667,6 +1696,13 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     width: 100%;
     bottom: 0;
 }
+
+#box .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer form,
+#box-photos .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer form,
+#box-profile-photos .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer form{
+    width: 75px;
+}
+
 
 
 #box img {
