@@ -336,7 +336,7 @@
         <ul class="pagination">
             {{#each pages}}
                 <li>
-                    <a href="?page={{this}}" class="">{{this}}</a>
+                    <a href="?page={{this}}" {{#areEqual this ../selectedPage}} class="current-page" {{/areEqual}}>{{this}}</a>
                 </li>
             {{/each}}
         </ul>

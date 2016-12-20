@@ -14,7 +14,7 @@ module.exports = {
       res.redirect('/')
       return
     }
-
+    // TODO: Refactor - populate and render the pages once!
     if (req.user.category.name === category) {
       // user is the same category
       Post.find({ category: req.user.category.id }).populate('author comments likes photos').then(posts => {
@@ -28,7 +28,7 @@ module.exports = {
           Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
             Post.initializeForView(postsInPage).then(postsInPage => {
               // sorts the posts and splits their likes
-              res.render('home/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
+              res.render('home/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages, selectedPage: page + 1 })
             })
           })
         })
@@ -63,7 +63,7 @@ module.exports = {
                 Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
                   // sorts the posts and splits their likes
                   Post.initializeForView(postsInPage).then(postsInPage => {
-                    res.render('home/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
+                    res.render('home/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages, selectedPage: page + 1 })
                   })
                 })
               })
