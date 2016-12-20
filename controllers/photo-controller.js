@@ -13,7 +13,7 @@ let parseReqBody = multer({ dest: photoUploadsPath, limits: { fileSize: 2000000,
 module.exports = {
   uploadProfilePhoto: (req, res) => {
     let returnUrl = res.locals.returnUrl || '/'
-    let albumName = 'profile-photos-' + req.user._id
+    let albumName = 'Profile Photos'
     // create or find said album
     Album.findOrCreateAlbum(albumName, req.user._id) // custom function in Album.js
       .then(album => {
