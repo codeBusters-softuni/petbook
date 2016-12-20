@@ -6,7 +6,7 @@ const categories = require('./../config/constants').categories
 module.exports = {
   // This function should show all the articles for the given category
   // if the user is not of the same category, we should only show the public posts that are in that category!
-  showArticles: (req, res) => {
+  showPosts: (req, res) => {
     let page = parseInt(req.query.page || '1') - 1
     let category = req.params.category.toLowerCase().capitalize()
     if (categories.indexOf(category) === -1) {

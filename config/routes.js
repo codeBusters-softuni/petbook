@@ -21,7 +21,7 @@ module.exports = (app) => {
     }
   })
   app.post('/search', controllers.userController.userSearchPost)
-  app.get('/category/:category', controllers.categoryController.showArticles)
+  app.get('/category/:category', controllers.categoryController.showPosts)
   app.post('/user/:id/cancelFriendship', controllers.userController.cancelFriendship)
   app.get('/user/:id/photos', controllers.userController.userPhotosGet)
 

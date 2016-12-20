@@ -10,7 +10,7 @@ const categories = require('../../config/constants').categories
 
 const categoryController = require('../../controllers/category-controller')
 
-describe('showArticles function', function () {
+describe('showPhotos function', function () {
   /* The function should render a newsfeed-like page, showing all the posts
      from the given category to the user, bearing in mind his relationship to the
      authors and the post's publicity */
@@ -121,7 +121,7 @@ describe('showArticles function', function () {
 
   it('Dog user loads categories of Cats, cats have only private posts, should not see anything', function (done) {
     requestMock.params.category = 'cat'
-    categoryController.showArticles(requestMock, responseMock)
+    categoryController.showPosts(requestMock, responseMock)
 
     setTimeout(function () {
       expect(receivedPosts).to.be.deep.equal([])
@@ -145,7 +145,7 @@ describe('showArticles function', function () {
 
       Promise.all(postPromsies).then(posts => {
         requestMock.params.category = 'cat'
-        categoryController.showArticles(requestMock, responseMock)
+        categoryController.showPosts(requestMock, responseMock)
 
         setTimeout(function () {
           expect(receivedPosts.length).to.be.equal(posts.length)
@@ -178,7 +178,7 @@ describe('showArticles function', function () {
 
       Promise.all(postPromsies).then(posts => {
         requestMock.params.category = 'cAT'
-        categoryController.showArticles(requestMock, responseMock)
+        categoryController.showPosts(requestMock, responseMock)
 
         setTimeout(function () {
           expect(receivedPosts.length).to.be.equal(posts.length)
@@ -205,7 +205,7 @@ describe('showArticles function', function () {
       requestMock.user.friends.push(secondUser.id)
       requestMock.user.save().then(() => {
         requestMock.params.category = 'cat'
-        categoryController.showArticles(requestMock, responseMock)
+        categoryController.showPosts(requestMock, responseMock)
 
         setTimeout(function () {
           expect(receivedPosts.length).to.be.equal(secondUserPosts.length)
@@ -248,7 +248,7 @@ describe('showArticles function', function () {
           secondUserPosts = posts
 
           requestMock.params.category = 'dog'
-          categoryController.showArticles(requestMock, responseMock)
+          categoryController.showPosts(requestMock, responseMock)
 
           setTimeout(function () {
             expect(receivedPosts.length).to.be.equal(posts.length)
@@ -270,7 +270,7 @@ describe('showArticles function', function () {
 
   it('Dog loads photos of category Elephant, which has no posts, should not see anything', function (done) {
     requestMock.params.category = 'elephant'
-    categoryController.showArticles(requestMock, responseMock)
+    categoryController.showPosts(requestMock, responseMock)
 
     setTimeout(function () {
       expect(receivedPosts).to.be.deep.equal([])
@@ -301,7 +301,7 @@ describe('showArticles function', function () {
       Promise.all(postPromises).then(posts => {
         requestMock.query.page = '2'
         requestMock.params.category = 'dog'
-        categoryController.showArticles(requestMock, responseMock)
+        categoryController.showPosts(requestMock, responseMock)
 
         setTimeout(function () {
           expect(receivedPosts.length).to.be.equal(5) // max posts per page are 20, so the second should have 5
