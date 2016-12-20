@@ -215,6 +215,17 @@ describe('showArticles function', function () {
     })
   })
 
+  it('Dog loads photos of category Elephant, which has no posts, should not see anything', function (done) {
+    requestMock.params.category = 'elephant'
+    categoryController.showArticles(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(receivedPosts).to.be.deep.equal([])
+      expect(receivedPages).to.be.deep.equal([])
+      done()
+    }, 40)
+  })
+
   afterEach(function (done) {
     Post.remove({}).then(() => {
       User.remove({}).then(() => {
