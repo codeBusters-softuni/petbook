@@ -445,6 +445,7 @@ describe('removeLike function', function () {
   let samplePhoto = null
   const expectedErrorRedirectUrl = 'lalala'
   const nonExistingPhotoErrorMsg = 'No such photo exists.'
+  const invalidPhotoIdErrorMsg = 'Invalid photo id!'
   let expectedSuccessfulRedirectURL = null
   let originalSamplePhotoName = null
   let samplePhotoId = null
@@ -556,6 +557,23 @@ describe('removeLike function', function () {
     setTimeout(function () {
       expect(requestMock.session.errorMsg).to.not.be.undefined
       expect(requestMock.session.errorMsg).to.be.equal(nonExistingPhotoErrorMsg)
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      Photo.findOne({}).then(photo => {
+        // Assert that the like is still there
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(1)
+        done()
+      })
+    }, 40)
+  })
+
+  it('Try to remove a like from a photo with a totally invalid object ID, should give a message and redirect', function (done) {
+    requestMock.params = ['grindin', 'Love']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPhotoIdErrorMsg)
       expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
       Photo.findOne({}).then(photo => {
         // Assert that the like is still there
