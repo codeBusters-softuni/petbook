@@ -127,6 +127,32 @@ describe('showArticles function', function () {
     }, 40)
   })
 
+  it('Dog user loads categories of Cats, cats have only public posts, should see all of them', function (done) {
+    Post.find({}).then(posts => {
+      let postPromsies = posts.map(post => {
+        return new Promise((resolve, reject) => {
+          post.public = true
+          post.save().then(() => {
+            resolve(post)
+          })
+        })
+      })
+
+      Promise.all(postPromsies).then(posts => {
+        requestMock.params.category = 'cat'
+        categoryController.showArticles(requestMock, responseMock)
+
+        setTimeout(function () {
+          expect(receivedPosts.length).to.be.equal(posts.length)
+          expect(receivedPages).to.be.deep.equal([1])
+          receivedPosts.forEach(post => {
+            expect(post.category.toString()).to.be.equal(secondUser.category.toString())
+          })
+          done()
+        }, 40)
+      })
+    })
+  })
 
   afterEach(function (done) {
     Post.remove({}).then(() => {
