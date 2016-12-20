@@ -549,6 +549,23 @@ describe('removeLike function', function () {
     })
   })
 
+  it('Try to remove a like from a photo that does not exist in the DB, shoudl give a message and redirect', function (done) {
+    requestMock.params = ['4edd40c86762e0fb12000003', 'Love']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(nonExistingPhotoErrorMsg)
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      Photo.findOne({}).then(photo => {
+        // Assert that the like is still there
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(1)
+        done()
+      })
+    }, 40)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
