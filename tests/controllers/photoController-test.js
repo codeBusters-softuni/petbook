@@ -277,6 +277,7 @@ describe('addLike function', function () {
   let responseMock = null
   let samplePhoto = null
   const expectedErrorRedirectUrl = 'lalala'
+  const nonExistingPhotoErrorMsg = 'No such photo exists.'
   let expectedSuccessfulRedirectURL = null
   let originalSamplePhotoName = null
   let samplePhotoId = null
@@ -365,7 +366,7 @@ describe('addLike function', function () {
 
     setTimeout(function () {
       requestMock.params = [samplePhotoId, 'Love']
-      
+
       photoController.addLike(requestMock, responseMock)
       setTimeout(function () {
         Photo.findOne({}).populate('likes').then(photo => {
@@ -379,6 +380,18 @@ describe('addLike function', function () {
         })
       }, 50)
     }, 50)
+  })
+
+  it('photoId that does not exist in the DB, should redirect', function (done) {
+    requestMock.params = ['4edd40c86762e0fb12000003', 'Paw']
+    photoController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(nonExistingPhotoErrorMsg)
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      done()
+    }, 40)
   })
 
   // delete all the created models
