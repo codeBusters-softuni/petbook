@@ -63,16 +63,18 @@ legend {
 }
 
 .input-cstm-style {
+    outline: none;
     padding: 7px;
-    border: 1px solid grey;
-    border-radius: 5px;
+    border: 1px solid #3b5998;
+    /*border-color: #3b5998;*/
+    border-radius: 2px;
     color: #3b5998;
     transition: border 0.1s ease-in-out;
 }
 
 .input-cstm-style:focus {
-    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-    border: 1px solid rgba(81, 203, 238, 1);
+    box-shadow: 0 0 10px rgba(59, 89, 152, 0.4);
+    border: 1px solid rgba(59, 89, 152, 0.4)
 }
 
 .search-cstm {
@@ -412,7 +414,7 @@ main {
 
 .cstm-input-register-style[type="text"], .cstm-input-register-style[type="password"] {
     border-color: #3b5998;
-    border-radius: 5px;
+    border-radius: 2px;
     padding: 7px;
     transition: border 0.3s ease-in-out !important;
 
@@ -420,8 +422,8 @@ main {
 
 .cstm-input-register-style[type="text"]:focus, .cstm-input-register-style[type="password"]:focus {
     /*    border-radius: 5px;*/
-    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-    border: 1px solid rgba(81, 203, 238, 1);
+    box-shadow: 0 0 10px rgba(59, 89, 152, 0.4);
+    border: 1px solid rgba(59, 89, 152, 0.4)
 
 }
 
@@ -580,7 +582,7 @@ main {
 
 .form-inputs-style {
     background-color: rgba(233, 235, 238, 0.5);
-    border-radius: 15px;
+    /*border-radius: 15px;*/
     padding: 15px;
 }
 
@@ -620,7 +622,7 @@ main {
 
 .cntr-cntr {
     overflow: hidden;
-    border-radius: 15px;
+    /*border-radius: 15px;*/
     padding: 15px;
     margin-right: 0;
     margin-left: 0;
@@ -1299,6 +1301,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 #comment-value{
     clear: both;
+    color: #224285;
 }
 
 .contain-profile-image-container{
@@ -1369,6 +1372,7 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
 
 .post-content{
     background: #fafafa;
+    color: #224285;
 }
 
 /*comment style under post*/
