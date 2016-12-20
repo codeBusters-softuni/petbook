@@ -550,7 +550,7 @@ describe('removeLike function', function () {
     })
   })
 
-  it('Try to remove a like from a photo that does not exist in the DB, shoudl give a message and redirect', function (done) {
+  it('Try to remove a like from a photo that does not exist in the DB, should give a message and redirect', function (done) {
     requestMock.params = ['4edd40c86762e0fb12000003', 'Love']
     photoController.removeLike(requestMock, responseMock)
 
@@ -574,6 +574,23 @@ describe('removeLike function', function () {
     setTimeout(function () {
       expect(requestMock.session.errorMsg).to.not.be.undefined
       expect(requestMock.session.errorMsg).to.be.equal(invalidPhotoIdErrorMsg)
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      Photo.findOne({}).then(photo => {
+        // Assert that the like is still there
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(1)
+        done()
+      })
+    }, 40)
+  })
+
+  it('Try to remove an invalid like type, should give a message and redirect', function (done) {
+    requestMock.params = [samplePhotoId, 'LAallala']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal('LAallala is not a valid type of like!')
       expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
       Photo.findOne({}).then(photo => {
         // Assert that the like is still there
