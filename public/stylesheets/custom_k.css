@@ -256,7 +256,7 @@ main {
 .pagination>li>a:hover{
     background-color: #224285;
 }
-.pagination>li>a.current{
+.pagination>li>a.current-page{
     background-color: #224285;
 }
 

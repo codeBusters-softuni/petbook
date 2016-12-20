@@ -240,15 +240,18 @@ $(document).ready(function () {
 })
 
 // add class current to current page number at pagination
-
-$(document).ready(function () {
-    var pages = $('.pagination a'); // selects all pages
-    console.log(pages)
-    pages.on('click', function () {
-        var indexPage = pages.index($(this));
-        pages.eq(indexPage).addClass("current").siblings().removeClass("current")
-    })
-})
+//
+// $(document).ready(function () {
+//     // $('.pagination a').each(function () {
+//     //     $(this).on('click', function () {
+//     //         console.log("Yes")
+//     //         $('.pagination a.current-page').removeClass('current-page');
+//     //         $(this).addClass('current')
+//     //     })
+//     // });
+//
+//
+// })
 
 
 
