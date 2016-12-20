@@ -406,6 +406,18 @@ describe('addLike function', function () {
     }, 40)
   })
 
+  it('invalid like type, should redirect', function (done) {
+    requestMock.params = [samplePhotoId, 'Lawl']
+    photoController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(`Lawl is not a valid type of like!`)
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      done()
+    }, 50)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
