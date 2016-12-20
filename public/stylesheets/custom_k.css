@@ -178,6 +178,7 @@ nav > ul > li > a.custom-menu-icon {
 .custom-header nav .cstm-menu-header li a {
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 600;
+    padding: 3px;
 }
 
 .custom-header nav .cstm-menu-header li a:before {
@@ -197,7 +198,7 @@ nav > ul > li > a.custom-menu-icon {
     position: absolute;
     display: none;
     width: 260px;
-    left: -78px;
+    left: -120px;
     top: 30px;
     z-index: 9999;
 
@@ -223,7 +224,7 @@ nav > ul > li > a.custom-menu-icon {
     border-radius: 5px;
     /*width: 100px;*/
     left: 25px;
-    top: 27px;
+    top: 35px;
     padding: 2px;
 }
 
@@ -627,7 +628,7 @@ main {
 }
 
 article.add-photo-button {
-    height: 322px;
+    height: 300px;
 }
 
 article.add-photo-button label {

@@ -1,7 +1,7 @@
 <div class="wrapper profile-all-container row">
     <section class="header-container col-xs-12 col-sm-12 col-md-9 col-lg-9">
         <header id="user-names" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 user-names">
-            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+            <div class="col-xs-7 col-sm-8 col-md-8 col-lg-8">
                 <ul class="info-for-user">
                     <li><a href="/user/{{profileUser.userId}}">{{profileUser.fullName}}</a></li>
                     <li>Owned by <strong>{{profileUser.ownerName}}</strong></li>
@@ -20,7 +20,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 btns-container-friend-unfriend">
+            <div class="col-xs-5 col-sm-4 col-md-4 col-lg-4 btns-container-friend-unfriend">
                 {{#if friendStatus.sentRequest}}
                     <div class="pending-request-container">
                         <span class="add-friend">Friend request pending</span>

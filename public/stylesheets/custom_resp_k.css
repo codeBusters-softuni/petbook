@@ -1,3 +1,32 @@
+@media all and (max-width: 992px) {
+    .profile-all-container .header-container{
+        border-bottom: none;
+        box-shadow: none;
+        right: 0;
+    }
+
+    #user-names{
+        border-left: 1px solid rgba(59, 89, 152, 0.4);
+    }
+
+    #profile-info {
+        border-top: none;
+        box-shadow: none;
+    }
+
+    .img-container{
+        margin: 0 auto;
+        max-width: 400px;
+    }
+
+    #large-profile-picture{
+        width: 400px!important;
+        height: inherit!important;
+        max-width: 400px!important;
+    }
+
+}
+
 @media all and (max-width: 767px) {
     /*    create album section*/
     #upload-photos ul li .cntnr-crte-albm .container-fluid .float-left-cntr form {
@@ -13,7 +42,7 @@
         display: inline-block;
         border: 1px solid #ddd;
         border-radius: 4px;
-        width: 60%;
+        /*width: 60%;*/
         min-width: 190px;
         /*        margin-bottom: 20px;*/
     }
@@ -24,6 +53,36 @@
         background-size: 200px 200px;
         background-position: center;
     }
+
+
+    /*search output*/
+    .container-info-search{
+        width: 70%!important;
+    }
+
+    .container-search-output>section:last-of-type{
+        width: 70%!important;
+    }
+
+    .btns-container-friend-unfriend form{
+        float: left;
+         margin-top: 0;
+    }
+
+    .container-search-output>section{
+        height:inherit;
+    }
+
+    /*upload-photos view*/
+    #upload-photos{
+        margin-top: 2%;
+    }
+
+    #upload-photos h2{
+        margin-top: 0!important;
+        width: 100%!important;
+    }
+
 }
 
 @media all and (max-width: 540px) {
@@ -59,6 +118,48 @@
         position: inherit;
     }
 
+    .bottom-bottom-line-post .radio-btns-container{
+         width: 100%;
+    }
 
+    .post-post-view .name-date-container{
+        width: 60%;
+    }
+
+    .post-post-view .preview-photo-thumbnail-footer ul{
+        width: 100%;
+    }
+
+    .photo-cntnr{
+        width: 100%;
+    }
+
+    #user-names .btns-container-friend-unfriend{
+        width: 100%;
+    }
+
+    #large-profile-picture{
+        height: inherit!important;
+    }
+
+    /*search output*/
+    .container-search-output>section:last-of-type{
+        width: 100%!important;
+    }
+
+    .container-search-output>section:first-of-type{
+        width: 100%!important;
+    }
+
+    .container-search-output>section{
+        width: 60%;
+    }
+
+    .container-search-output .container-info-search .info-for-user a{
+        font-size: 15px!important;
+    }
+    .container-search-output .container-info-search .info-for-user .user-name{
+        font-size: 20px!important;
+    }
 
 }

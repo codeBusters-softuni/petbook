@@ -7,7 +7,7 @@ function createPhotoHTML(event) {  // picReader.addEventListener("load",function
     var picFile = event.target;
 
     var article = document.createElement("article");
-    article.className += "pic-container-article col-xs-12 col-sm-5 col-md-4";
+    article.className += "pic-container-article col-xs-12 col-sm-12 col-md-6 col-lg-4";
     var section = document.createElement("section");
 
     section.className += " photo-cntnr";
@@ -117,7 +117,10 @@ $(document).ready(function () {
             }
 
             switchTab(titleIndex);
+            // console.log(activeTitle[titleIndex].parentNode)
+            // swapElements(activeTitle[activeTitle.length-1], activeTitle[titleIndex])
 
+            var checker;
             var sendbtn = "";
             var browsePhotos = "";
             if (titleIndex - 1 == 1) {
@@ -146,6 +149,13 @@ $(document).ready(function () {
         });
     }
 });
+
+function swapElements(obj1, obj2) {
+    obj2.nextSibling === obj1
+        ? obj1.parentNode.insertBefore(obj2, obj1.nextSibling)
+        : obj1.parentNode.insertBefore(obj2, obj1);
+}
+
 
 //add active section in tab Photos in uploadPhotos view
 $(document).ready(function () {
