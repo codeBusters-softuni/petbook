@@ -40,9 +40,12 @@
                                value="Decline Friendship">
                     </form>
                 {{else if friendStatus.areFriends}}
-                    <label class="add-friend">Friends</label>
+                    <div class="pending-request-container">
+                        <span class="add-friend">Friends</span>
+                    </div>
+                    <!--<label class="add-friend">Friends</label>-->
                     <form method="POST" action="/user/{{profileUser.id}}/cancelFriendship">
-                        <input type="submit" id="remove-friend" class="button-with-plus remove-friend"
+                        <input type="submit" id="remove-friend" class="btn-cstm-style rgstr-btn already-friends-unfriend"
                                value="Cancel Friendship">
                     </form>
                 {{else}}

@@ -84,11 +84,6 @@ $(document).ready(function () {
     var imgArticles = $('.newsfeed-post-images .newsfeed-images article'); // select all articles that contain images and buttons
     var lightBox = document.getElementById('box'); // select lightbox
 
-
-
-
-
-
     if (lightBox != null) {
         var boxImages = document.createElement('div') // create div that contains the image
         boxImages.className += " box-image" // give that div class
@@ -244,6 +239,16 @@ $(document).ready(function () {
     })
 })
 
+// add class current to current page number at pagination
+
+$(document).ready(function () {
+    var pages = $('.pagination a'); // selects all pages
+    console.log(pages)
+    pages.on('click', function () {
+        var indexPage = pages.index($(this));
+        pages.eq(indexPage).addClass("current").siblings().removeClass("current")
+    })
+})
 
 
 
