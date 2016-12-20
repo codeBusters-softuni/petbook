@@ -126,8 +126,12 @@ module.exports = {
   removeLike: (req, res) => {
     let returnUrl = res.locals.returnUrl || '/'
     // regex is: /photo\/(.+)\/remove(.{3,7})/
-    let photoId = req.params[0]
-    let likeType = req.params[1]
+    let [photoId, likeType] = req.params
+    if (!mongoose.Types.ObjectId.isValid(photoId)) {
+      req.session.errorMsg = 'Invalid photo id!'
+      res.redirect(returnUrl)
+      return
+    }
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
       res.redirect(returnUrl)
