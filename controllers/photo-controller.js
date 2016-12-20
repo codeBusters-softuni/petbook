@@ -161,7 +161,7 @@ module.exports = {
       }
 
       let likeId = photo.likes[likeIndex]._id
-      Like.findByIdAndRemove(likeId)
+      Like.findByIdAndRemove(likeId).exec()
 
       photo.removeLike(likeId).then(() => {
         // Like is removed!
