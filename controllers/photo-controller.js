@@ -75,7 +75,7 @@ module.exports = {
   addLike: (req, res) => {
     // regex is: /photo\/(.+)\/add(.{3,7})/
     let returnUrl = res.locals.returnUrl || '/'
-    let [photoId, likeType] = req.params
+    let [photoId, likeType] = req.params  // TODO: FIX
     if (!mongoose.Types.ObjectId.isValid(photoId)) {
       req.session.errorMsg = 'Invalid photo id!'
       res.redirect(returnUrl)
