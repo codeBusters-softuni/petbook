@@ -154,6 +154,27 @@ describe('showArticles function', function () {
     })
   })
 
+  it('Dog user loads categories of Cats, cats have only private posts but the Dog is friends with the authors, should see all of them', function (done) {
+    // Make the users friends
+    secondUser.friends.push(requestMock.user.id)
+    secondUser.save().then(() => {
+      requestMock.user.friends.push(secondUser.id)
+      requestMock.user.save().then(() => {
+        requestMock.params.category = 'cat'
+        categoryController.showArticles(requestMock, responseMock)
+
+        setTimeout(function () {
+          expect(receivedPosts.length).to.be.equal(secondUserPosts.length)
+          expect(receivedPages).to.be.deep.equal([1])
+          receivedPosts.forEach(post => {
+            expect(post.category.toString()).to.be.equal(secondUser.category.toString())
+          })
+          done()
+        }, 40)
+      })
+    })
+  })
+
   afterEach(function (done) {
     Post.remove({}).then(() => {
       User.remove({}).then(() => {
