@@ -339,6 +339,28 @@ describe('addLike function', function () {
     }, 50)
   })
 
+  it('Add two consecutive likes from the same user, should redirect the second time', function (done) {
+    requestMock.params = [samplePhotoId, 'Paw']
+    photoController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      Photo.findOne({}).populate('likes').then(photo => {
+        photoController.addLike(requestMock, responseMock)
+
+        setTimeout(function () {
+          expect(photo.likes).to.not.be.undefined
+          expect(photo.likes.length).to.be.equal(1)
+          let like = photo.likes[0]
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          expect(like.type).to.be.equal('Paw')
+
+          expect(responseMock.redirectUrl).to.be.equal('/')
+          done()
+        }, 50)
+      })
+    }, 50)
+  })
+
   // delete all the created models
   afterEach(function (done) {
     Post.remove({}).then(() => {
