@@ -1653,7 +1653,7 @@ describe('userSearchPost, searching for users', function () {
   let secondUserPassword = '12345'
   let secondUserCategory = 'Cat'
 
-  const expectedHbsPage = 'searchOutput'
+  const expectedHbsPage = 'user/searchOutput'
   const invalidSearchMessage = "Sorry, we couldn't understand this search. Please try saying this another way."
 
   let reqUser = null

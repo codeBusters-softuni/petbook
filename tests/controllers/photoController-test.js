@@ -67,7 +67,7 @@ describe('uploadProfilePhoto function', function () {
     })
   })
 
-  it('Normal post, should update profile picture and create album', function (done) {
+  it('Normal upload, should update profile picture and create album', function (done) {
     photoController.uploadProfilePhoto(requestMock, responseMock)
     setTimeout(function () {
       expect(responseMock.redirectUrl).to.be.equal(expectedSuccessfulRedirectURL)
@@ -97,7 +97,7 @@ describe('uploadProfilePhoto function', function () {
     }, 150)
   })
 
-  it('Consecutive valid posts, should update profile picture but have only one album', function (done) {
+  it('Consecutive valid uploads, should update profile picture but have only one album', function (done) {
     let samplePhoto2Name = 'samplephoto2.jpg'
     let samplePhoto2 = {
       fieldname: 'addPhotoToPost',
