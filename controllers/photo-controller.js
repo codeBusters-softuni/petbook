@@ -31,7 +31,6 @@ module.exports = {
             classCss: album.classCss,
             public: true
           })
-
           Photo.create(profilePhoto).then(photo => {
             req.user.updateProfilePicture(photo._id).then(() => {
               let newPost = new Post({

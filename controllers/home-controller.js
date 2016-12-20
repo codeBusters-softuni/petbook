@@ -41,7 +41,7 @@ module.exports = {
               Post.populate(postsInPage, [{ path: 'comments.author', model: 'User' }, { path: 'author.profilePic', model: 'Photo' }]).then(() => {
                 Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
                   postsInPage = Post.initializeForView(postsInPage).then(postsInPage => {
-                    res.render('user/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
+                    res.render('home/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
                   })
                 })
               })
@@ -50,10 +50,10 @@ module.exports = {
         })
       })
     } else {
-      res.render('index', { categories: categories, candidateUser: res.locals.candidateUser })
+      res.render('home/index', { categories: categories, candidateUser: res.locals.candidateUser })
     }
   },
   learnMoreGet: (req, res) => {
-    res.render('learnMore', { categories: categories, candidateUser: res.locals.candidateUser })
+    res.render('home/learnMore', { categories: categories, candidateUser: res.locals.candidateUser })
   }
 }

@@ -28,7 +28,7 @@ module.exports = {
           Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
             Post.initializeForView(postsInPage).then(postsInPage => {
               // sorts the posts and splits their likes
-              res.render('user/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
+              res.render('home/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
             })
           })
         })
@@ -63,7 +63,7 @@ module.exports = {
                 Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
                   // sorts the posts and splits their likes
                   Post.initializeForView(postsInPage).then(postsInPage => {
-                    res.render('user/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
+                    res.render('home/newsfeed', { posts: postsInPage, failedPost: res.locals.failedPost, categories: categories, pages: pages })
                   })
                 })
               })
