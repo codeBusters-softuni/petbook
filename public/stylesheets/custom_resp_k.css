@@ -46,7 +46,7 @@
     }
     #box .box-image .selected .photo-cntnr .album-photo-content img {
         height: auto;
-        max-height: 255px;
+        max-height: 235px;
         width: auto;
         max-width: 100%;
     }
@@ -56,6 +56,9 @@
         /*padding: 0 20px;*/
     /*}*/
     #box .box-image .selected .photo-cntnr .preview-photo-thumbnail-footer {
-        /*height: 40px;*/
+        position: inherit;
     }
+
+
+
 }
