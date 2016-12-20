@@ -50,7 +50,7 @@ describe('uploadProfilePhoto function', function () {
       session: {}
     }
     responseMock = {
-      locals: {returnUrl: expectedErrorRedirectUrl},
+      locals: { returnUrl: expectedErrorRedirectUrl },
       redirected: false,
       redirectUrl: null,
       redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
@@ -95,6 +95,67 @@ describe('uploadProfilePhoto function', function () {
         })
       })
     }, 150)
+  })
+
+  it('Consecutive valid posts, should update profile picture but have only one album', function (done) {
+    let samplePhoto2Name = 'samplephoto2.jpg'
+    let samplePhoto2 = {
+      fieldname: 'addPhotoToPost',
+      originalname: samplePhoto2Name,
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'somewhere',
+      size: 2000
+    }
+    let samplePhoto3Name = 'Carlos.jpg'
+    let samplePhoto3 = {
+      fieldname: 'addPhotoToPost',
+      originalname: samplePhoto3Name,
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'somewhere',
+      size: 2000
+    }
+    // first request with the sample photo
+    photoController.uploadProfilePhoto(requestMock, responseMock)
+
+    setTimeout(function () {
+      User.findOne({ fullName: username }).populate('profilePic').then(user => {
+        expect(user.profilePic).to.not.be.undefined
+        expect(user.profilePic.originalname).to.be.equal(originalSamplePhotoName)
+
+        requestMock.file = samplePhoto2
+        photoController.uploadProfilePhoto(requestMock, responseMock)
+
+        setTimeout(function () {
+          User.findOne({ fullName: username }).populate('profilePic').then(user => {
+            expect(user.profilePic).to.not.be.undefined
+            expect(user.profilePic.originalname).to.be.equal(samplePhoto2Name)
+            requestMock.file = samplePhoto3
+            photoController.uploadProfilePhoto(requestMock, responseMock)
+
+            setTimeout(function () {
+              User.findOne({ fullName: username }).populate('profilePic').then(user => {
+                expect(user.profilePic).to.not.be.undefined
+                expect(user.profilePic.originalname).to.be.equal(samplePhoto3Name)
+                Album.findOne({}).then(profileAlbum => {
+                  expect(profileAlbum).to.not.be.null
+                  expect(profileAlbum.displayName).to.be.equals(expectedAlbumDisplayName)
+                  expect(profileAlbum.photos).to.not.be.undefined
+                  expect(profileAlbum.photos).to.be.a('array')
+                  expect(profileAlbum.photos.length).to.be.equal(3)
+                  done()
+                })
+              })
+            }, 100)
+          })
+        }, 100)
+      })
+    }, 100)
   })
 
   it('Invalid file upload, should and give out an error message', function (done) {
