@@ -152,6 +152,7 @@ module.exports = {
 
       if (likeIndex === -1) {
         // ERROR - User has not liked this at all
+        req.session.errorMsg = `You cannot un${likeType} a post you have not liked.`
         res.redirect(returnUrl)
         return
       } else if (photo.likes[likeIndex].type !== likeType) {
@@ -166,7 +167,6 @@ module.exports = {
 
       photo.removeLike(likeId).then(() => {
         // Like is removed!
-
         res.redirect(returnUrl)
         return
       })
