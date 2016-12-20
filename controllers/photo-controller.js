@@ -65,6 +65,7 @@ module.exports = {
         return
       }
 
+      // Photo should be removed
       photo.remove().then(() => {
         res.redirect(returnUrl)
       })
@@ -74,9 +75,12 @@ module.exports = {
   addLike: (req, res) => {
     // regex is: /photo\/(.+)\/add(.{3,7})/
     let returnUrl = res.locals.returnUrl || '/'
-
-    let photoId = req.params[0]
-    let likeType = req.params[1]
+    let [photoId, likeType] = req.params
+    if (!mongoose.Types.ObjectId.isValid(photoId)) {
+      req.session.errorMsg = 'Invalid photo id!'
+      res.redirect(returnUrl)
+      return
+    }
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
       res.redirect(returnUrl)
@@ -94,8 +98,7 @@ module.exports = {
         return like.author.equals(userId)
       })
 
-      if (likeIndex !== -1) {
-        // user has already liked this photo
+      if (likeIndex !== -1) {  // user has already liked this photo
         if (photo.likes[likeIndex].type === likeType) {
           // user is editing the HTML
           res.redirect('/')
