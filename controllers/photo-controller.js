@@ -156,6 +156,7 @@ module.exports = {
         return
       } else if (photo.likes[likeIndex].type !== likeType) {
         // ERROR - example: User is trying to unPaw a post he has LOVED
+        req.session.errorMsg = `You can't un${likeType} this post because your like is a ${photo.likes[likeIndex].type}!`
         res.redirect(returnUrl)
         return
       }
