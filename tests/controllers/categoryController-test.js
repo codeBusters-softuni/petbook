@@ -154,6 +154,35 @@ describe('showArticles function', function () {
     })
   })
 
+  it('Dog user loads categories of category with uPpErCasE characters, should see all of them', function (done) {
+    // convert the cat posts to public
+    Post.find({}).then(posts => {
+      let postPromsies = posts.map(post => {
+        return new Promise((resolve, reject) => {
+          post.public = true
+          post.save().then(() => {
+            resolve(post)
+          })
+        })
+      })
+
+      Promise.all(postPromsies).then(posts => {
+        requestMock.params.category = 'cAT'
+        categoryController.showArticles(requestMock, responseMock)
+
+        setTimeout(function () {
+          expect(receivedPosts.length).to.be.equal(posts.length)
+          expect(receivedPages).to.be.deep.equal([1])
+          receivedPosts.forEach(post => {
+            expect(post.category.toString()).to.be.equal(secondUser.category.toString())
+          })
+          done()
+        }, 40)
+      })
+    })
+  })
+
+
   it('Dog user loads categories of Cats, cats have only private posts but the Dog is friends with the authors, should see all of them', function (done) {
     // Make the users friends
     secondUser.friends.push(requestMock.user.id)
