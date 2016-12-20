@@ -100,17 +100,10 @@ userSchema.method({
     })
   },
 
-  removeFriendRequest: function (friendReqId) {
+  addFriend: function (frReqId, friendId) {
+    // Remove the friend request and add the friend
     return new Promise((resolve, reject) => {
-      this.pendingFriendRequests.remove(friendReqId)
-      this.save().then(() => {
-        resolve()
-      })
-    })
-  },
-
-  addFriend: function (friendId) {
-    return new Promise((resolve, reject) => {
+      this.pendingFriendRequests.remove(frReqId)
       this.friends.push(friendId)
       this.save().then(() => {
         resolve()

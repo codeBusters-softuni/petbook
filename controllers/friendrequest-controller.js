@@ -10,7 +10,7 @@ module.exports = {
       return !frReq.sender.equals(req.user.id)
     })
     FriendRequest.populate(receivedFriendRequests, { path: 'sender' }).then(reqs => {
-      FriendRequest.populate(receivedFriendRequests, [{path: 'sender.profilePic', model: 'Photo'}, {path: 'sender.category', model: 'Category'}]).then(reqs => {
+      FriendRequest.populate(receivedFriendRequests, [{ path: 'sender.profilePic', model: 'Photo' }, { path: 'sender.category', model: 'Category' }]).then(reqs => {
         res.render('user/friendRequests', { friendRequests: receivedFriendRequests, categories: categories })
       })
     })
@@ -73,13 +73,9 @@ module.exports = {
       let receiver = friendRequest.receiver
       let promises = [
         // make them friends
-        sender.addFriend(receiver.id),
-        receiver.addFriend(sender.id),
-        // remove their friend requests
-        sender.removeFriendRequest(frReqId),
-        receiver.removeFriendRequest(frReqId)
+        sender.addFriend(frReqId, receiver.id),
+        receiver.addFriend(frReqId, sender.id)
       ]
-
       Promise.all(promises).then(() => {
         // Success - users are now friends, delete the FriendRequest
         friendRequest.remove()
