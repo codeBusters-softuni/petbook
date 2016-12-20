@@ -20,8 +20,6 @@ describe('uploadProfilePhoto function', function () {
   let requestMock = null
   let responseMock = null
   let samplePhoto = null
-  const publicPost = 'publicvisible'
-  const nonPublicPost = 'groupvisible'
   const unsupportedImageTypeErrorMsg = 'Supported image types are PNG, JPG and JPEG!'
   const expectedAlbumDisplayName = 'Profile Photos'
   const expectedPostContent = 'I updated my profile picture!'
@@ -67,7 +65,7 @@ describe('uploadProfilePhoto function', function () {
     })
   })
 
-  it('Normal post, should update profile picture and create album', function (done) {
+  it('Normal upload, should update profile picture and create album', function (done) {
     photoController.uploadProfilePhoto(requestMock, responseMock)
     setTimeout(function () {
       expect(responseMock.redirectUrl).to.be.equal(expectedSuccessfulRedirectURL)
@@ -97,7 +95,7 @@ describe('uploadProfilePhoto function', function () {
     }, 150)
   })
 
-  it('Consecutive valid posts, should update profile picture but have only one album', function (done) {
+  it('Consecutive valid uploads, should update profile picture but have only one album', function (done) {
     let samplePhoto2Name = 'samplephoto2.jpg'
     let samplePhoto2 = {
       fieldname: 'addPhotoToPost',
@@ -182,6 +180,436 @@ describe('uploadProfilePhoto function', function () {
         Album.remove({}).then(() => {
           Photo.remove({}).then(() => {
             done()
+          })
+        })
+      })
+    })
+  })
+})
+
+describe('deletePhoto function', function () {
+  let username = 'dog'
+  let email = 'dog@abv.bg'
+  let owner = 'OwnerMan'
+  let userCategory = 'Dog'
+  let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let samplePhoto = null
+  const expectedErrorRedirectUrl = 'lalala'
+  let expectedSuccessfulRedirectURL = null
+  let originalSamplePhotoName = null
+  let samplePhotoId = null
+
+  beforeEach(function (done) {
+    samplePhoto = {
+      fieldname: 'addPhotoToPost',
+      originalname: 'testpic.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'somewhere',
+      size: 2000
+    }
+    samplePhotoId = null
+    originalSamplePhotoName = 'testpic.jpg'
+    requestMock = {
+      body: {},
+      user: {},
+      headers: {},
+      session: {},
+      params: {}
+    }
+    responseMock = {
+      locals: { returnUrl: expectedErrorRedirectUrl },
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+
+    User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
+      User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
+        Album.create({ name: 'bra', author: user.id, public: true }).then(album => {
+          Photo.create(Object.assign(samplePhoto, { author: user.id, classCss: 'dd', public: true, album: album.id })).then((photo) => {
+            samplePhotoId = photo.id
+            reqUser = user
+            requestMock.user = reqUser
+            done()
+          })
+        })
+      })
+    })
+  })
+
+  // it('Valid delete request, should remove the photo', function (done) {
+  //   requestMock.params.id = samplePhotoId
+  //   photoController.deletePhoto(requestMock, responseMock)
+  //   setTimeout(function () {
+  //     Photo.findOne({}).then(photo => {
+  //       expect(photo).to.be.null
+  //       done()
+  //     })
+  //   }, 1350)
+  // })
+
+  // delete all the created models
+  afterEach(function (done) {
+    Post.remove({}).then(() => {
+      User.remove({}).then(() => {
+        Album.remove({}).then(() => {
+          Photo.remove({}).then(() => {
+            done()
+          })
+        })
+      })
+    })
+  })
+})
+
+describe('addLike function', function () {
+  let username = 'dog'
+  let email = 'dog@abv.bg'
+  let owner = 'OwnerMan'
+  let userCategory = 'Dog'
+  let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let samplePhoto = null
+  const expectedErrorRedirectUrl = 'lalala'
+  const nonExistingPhotoErrorMsg = 'No such photo exists.'
+  let expectedSuccessfulRedirectURL = null
+  let originalSamplePhotoName = null
+  let samplePhotoId = null
+
+  beforeEach(function (done) {
+    samplePhoto = {
+      fieldname: 'addPhotoToPost',
+      originalname: 'testpic.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'somewhere',
+      size: 2000
+    }
+    originalSamplePhotoName = 'testpic.jpg'
+    samplePhotoId = null
+
+    requestMock = {
+      body: {},
+      user: {},
+      headers: {},
+      session: {},
+      params: []
+    }
+    responseMock = {
+      locals: { returnUrl: expectedErrorRedirectUrl },
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+
+    User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
+      User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
+        Album.create({ name: 'bra', author: user.id, public: true }).then(album => {
+          Photo.create(Object.assign(samplePhoto, { author: user.id, classCss: 'dd', public: true, album: album.id })).then(photo => {
+            samplePhotoId = photo.id
+            reqUser = user
+            requestMock.user = reqUser
+            done()
+          })
+        })
+      })
+    })
+  })
+
+  it('Add like to the photo, should show up', function (done) {
+    requestMock.params = [samplePhotoId, 'Paw']
+    photoController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      Photo.findOne({}).populate('likes').then(photo => {
+        expect(photo.likes).to.not.be.undefined
+        expect(photo.likes.length).to.be.equal(1)
+        let like = photo.likes[0]
+        expect(like.author.toString()).to.be.equal(reqUser.id)
+        expect(like.type).to.be.equal('Paw')
+        done()
+      })
+    }, 50)
+  })
+
+  it('Add two consecutive likes from the same user, should redirect the second time', function (done) {
+    requestMock.params = [samplePhotoId, 'Paw']
+    photoController.addLike(requestMock, responseMock)
+    setTimeout(function () {
+      photoController.addLike(requestMock, responseMock)
+      setTimeout(function () {
+        Photo.findOne({}).populate('likes').then(photo => {
+          expect(photo.likes).to.not.be.undefined
+          expect(photo.likes.length).to.be.equal(1)
+          let like = photo.likes[0]
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          expect(like.type).to.be.equal('Paw')
+
+          expect(responseMock.redirectUrl).to.be.equal('/')
+          done()
+        })
+      }, 50)
+    }, 50)
+  })
+
+  it('Add a like, then a love from the same user, should overwrite', function (done) {
+    requestMock.params = [samplePhotoId, 'Paw']
+    photoController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      requestMock.params = [samplePhotoId, 'Love']
+
+      photoController.addLike(requestMock, responseMock)
+      setTimeout(function () {
+        Photo.findOne({}).populate('likes').then(photo => {
+          expect(photo.likes).to.not.be.undefined
+          expect(photo.likes.length).to.be.equal(1)
+          let like = photo.likes[0]
+          expect(like.author.toString()).to.be.equal(reqUser.id)
+          expect(like.type).to.be.equal('Love')
+          expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+          done()
+        })
+      }, 50)
+    }, 50)
+  })
+
+  it('photoId that does not exist in the DB, should redirect', function (done) {
+    requestMock.params = ['4edd40c86762e0fb12000003', 'Paw']
+    photoController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(nonExistingPhotoErrorMsg)
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      done()
+    }, 40)
+  })
+
+  it('invalid photoId, should redirect', function (done) {
+    requestMock.params = ['grindin', 'Paw']
+    photoController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal('Invalid photo id!')
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      done()
+    }, 40)
+  })
+
+  it('invalid like type, should redirect', function (done) {
+    requestMock.params = [samplePhotoId, 'Lawl']
+    photoController.addLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(`Lawl is not a valid type of like!`)
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      done()
+    }, 50)
+  })
+
+  // delete all the created models
+  afterEach(function (done) {
+    Post.remove({}).then(() => {
+      User.remove({}).then(() => {
+        Album.remove({}).then(() => {
+          Photo.remove({}).then(() => {
+            Like.remove({}).then(() => {
+              done()
+            })
+          })
+        })
+      })
+    })
+  })
+})
+
+describe('removeLike function', function () {
+  let username = 'dog'
+  let email = 'dog@abv.bg'
+  let owner = 'OwnerMan'
+  let userCategory = 'Dog'
+  let reqUser = null
+  let requestMock = null
+  let responseMock = null
+  let samplePhoto = null
+  const expectedErrorRedirectUrl = 'lalala'
+  const nonExistingPhotoErrorMsg = 'No such photo exists.'
+  const invalidPhotoIdErrorMsg = 'Invalid photo id!'
+  let expectedSuccessfulRedirectURL = null
+  let originalSamplePhotoName = null
+  let samplePhotoId = null
+
+  beforeEach(function (done) {
+    samplePhoto = {
+      fieldname: 'addPhotoToPost',
+      originalname: 'testpic.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'Somewhere',
+      filename: 'somefile',
+      path: 'somewhere',
+      size: 2000
+    }
+    originalSamplePhotoName = 'testpic.jpg'
+    samplePhotoId = null
+
+    requestMock = {
+      body: {},
+      user: {},
+      headers: {},
+      session: {},
+      params: []
+    }
+    responseMock = {
+      locals: { returnUrl: expectedErrorRedirectUrl },
+      redirected: false,
+      redirectUrl: null,
+      redirect: function (redirectUrl) { this.redirected = true; this.redirectUrl = redirectUrl }
+    }
+
+    User.register(username, email, owner, 'dogpass123', userCategory).then(dog => {
+      User.populate(dog, { path: 'category', model: 'Category' }).then(user => {
+        Album.create({ name: 'bra', author: user.id, public: true }).then(album => {
+          Photo.create(Object.assign(samplePhoto, { author: user.id, classCss: 'dd', public: true, album: album.id })).then(photo => {
+            Like.create({ type: 'Paw', author: user.id }).then(like => {
+              photo.likes = [like.id]
+              photo.save().then(() => {
+                samplePhotoId = photo.id
+                reqUser = user
+                requestMock.user = reqUser
+                done()
+              })
+            })
+          })
+        })
+      })
+    })
+  })
+
+  it('Normal remove, should be removed', function (done) {
+    requestMock.params = [samplePhotoId, 'Paw']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      Photo.findOne({}).then(photo => {
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(0)
+        Like.findOne({}).then(like => {
+          expect(like).to.be.null
+          done()
+        })
+      })
+    }, 50)
+  })
+
+  it('Try to remove another like type, should simply redirect', function (done) {
+    requestMock.params = [samplePhotoId, 'Love']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal("You can't unLove this post because your like is a Paw!")
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      Photo.findOne({}).then(photo => {
+        // Assert that the like is still there
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(1)
+        done()
+      })
+    }, 50)
+  })
+
+  it('Try to remove a like when you have not liked the photo, should give a message and redirect', function (done) {
+    User.register(username, 'FeelAlive@abv.bg', owner, 'dogpass123', userCategory).then(dog => {
+      requestMock.user = dog
+      requestMock.params = [samplePhotoId, 'Paw']
+      photoController.removeLike(requestMock, responseMock)
+
+      setTimeout(function () {
+        expect(requestMock.session.errorMsg).to.not.be.undefined
+        expect(requestMock.session.errorMsg).to.be.equal('You cannot unPaw a post you have not liked.')
+        expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+        Photo.findOne({}).then(photo => {
+          // Assert that the like is still there
+          expect(photo.likes).to.be.a('array')
+          expect(photo.likes.length).to.be.equal(1)
+          done()
+        })
+      }, 50)
+    })
+  })
+
+  it('Try to remove a like from a photo that does not exist in the DB, should give a message and redirect', function (done) {
+    requestMock.params = ['4edd40c86762e0fb12000003', 'Love']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(nonExistingPhotoErrorMsg)
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      Photo.findOne({}).then(photo => {
+        // Assert that the like is still there
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(1)
+        done()
+      })
+    }, 40)
+  })
+
+  it('Try to remove a like from a photo with a totally invalid object ID, should give a message and redirect', function (done) {
+    requestMock.params = ['grindin', 'Love']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal(invalidPhotoIdErrorMsg)
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      Photo.findOne({}).then(photo => {
+        // Assert that the like is still there
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(1)
+        done()
+      })
+    }, 40)
+  })
+
+  it('Try to remove an invalid like type, should give a message and redirect', function (done) {
+    requestMock.params = [samplePhotoId, 'LAallala']
+    photoController.removeLike(requestMock, responseMock)
+
+    setTimeout(function () {
+      expect(requestMock.session.errorMsg).to.not.be.undefined
+      expect(requestMock.session.errorMsg).to.be.equal('LAallala is not a valid type of like!')
+      expect(responseMock.redirectUrl).to.be.equal(expectedErrorRedirectUrl)
+      Photo.findOne({}).then(photo => {
+        // Assert that the like is still there
+        expect(photo.likes).to.be.a('array')
+        expect(photo.likes.length).to.be.equal(1)
+        done()
+      })
+    }, 40)
+  })
+
+  // delete all the created models
+  afterEach(function (done) {
+    Post.remove({}).then(() => {
+      User.remove({}).then(() => {
+        Album.remove({}).then(() => {
+          Photo.remove({}).then(() => {
+            Like.remove({}).then(() => {
+              done()
+            })
           })
         })
       })

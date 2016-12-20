@@ -1,6 +1,7 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
 const postsPerPage = require('../config/constants').postsPerPage
+
 function initializeForView (posts) {
   const Photo = mongoose.model('Photo')
   // this function initializes an array of posts to be ready to be sent to a view
@@ -32,7 +33,7 @@ function getPostsInPage (page, allPosts) {
   // get the start and end index for the appropriate posts in the array
   let startIndex = page * postsPerPage
   let endIndex = startIndex + postsPerPage
-  let pageCount = Math.ceil(allPosts.length / 20)
+  let pageCount = Math.ceil(allPosts.length / postsPerPage)
   let pages = pageCount.getPagesArray()  // an array of the pages - ex: [1,2,3] if we have 60 elements
   let postsInPage = allPosts.slice(startIndex, endIndex)  // slice here for optimization
   return {

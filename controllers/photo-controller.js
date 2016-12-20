@@ -31,7 +31,6 @@ module.exports = {
             classCss: album.classCss,
             public: true
           })
-
           Photo.create(profilePhoto).then(photo => {
             req.user.updateProfilePicture(photo._id).then(() => {
               let newPost = new Post({
@@ -66,6 +65,7 @@ module.exports = {
         return
       }
 
+      // Photo should be removed
       photo.remove().then(() => {
         res.redirect(returnUrl)
       })
@@ -75,9 +75,12 @@ module.exports = {
   addLike: (req, res) => {
     // regex is: /photo\/(.+)\/add(.{3,7})/
     let returnUrl = res.locals.returnUrl || '/'
-
-    let photoId = req.params[0]
-    let likeType = req.params[1]
+    let [photoId, likeType] = req.params
+    if (!mongoose.Types.ObjectId.isValid(photoId)) {
+      req.session.errorMsg = 'Invalid photo id!'
+      res.redirect(returnUrl)
+      return
+    }
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
       res.redirect(returnUrl)
@@ -95,8 +98,7 @@ module.exports = {
         return like.author.equals(userId)
       })
 
-      if (likeIndex !== -1) {
-        // user has already liked this photo
+      if (likeIndex !== -1) {  // user has already liked this photo
         if (photo.likes[likeIndex].type === likeType) {
           // user is editing the HTML
           res.redirect('/')
@@ -124,8 +126,12 @@ module.exports = {
   removeLike: (req, res) => {
     let returnUrl = res.locals.returnUrl || '/'
     // regex is: /photo\/(.+)\/remove(.{3,7})/
-    let photoId = req.params[0]
-    let likeType = req.params[1]
+    let [photoId, likeType] = req.params
+    if (!mongoose.Types.ObjectId.isValid(photoId)) {
+      req.session.errorMsg = 'Invalid photo id!'
+      res.redirect(returnUrl)
+      return
+    }
     if (!likeIsValid(likeType)) {
       req.session.errorMsg = `${likeType} is not a valid type of like!`
       res.redirect(returnUrl)
@@ -150,12 +156,13 @@ module.exports = {
         return
       } else if (photo.likes[likeIndex].type !== likeType) {
         // ERROR - example: User is trying to unPaw a post he has LOVED
+        req.session.errorMsg = `You can't un${likeType} this post because your like is a ${photo.likes[likeIndex].type}!`
         res.redirect(returnUrl)
         return
       }
 
       let likeId = photo.likes[likeIndex]._id
-      Like.findByIdAndRemove(likeId)
+      Like.findByIdAndRemove(likeId).exec()
 
       photo.removeLike(likeId).then(() => {
         // Like is removed!
