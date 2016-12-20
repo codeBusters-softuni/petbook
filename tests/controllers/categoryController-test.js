@@ -175,6 +175,46 @@ describe('showArticles function', function () {
     })
   })
 
+  it('Dog loads categories of Dogs, should see every post', function (done) {
+    // Register both users and make them friends
+    User.register('Started', 'botom@abv.bg', secondUserOwner, secondUserPassword, 'Dog').then(secUser => {
+      // Create 5 posts from the secondUser
+      let postPromises = []
+      for (let i = 0; i < 4; i++) {
+        postPromises.push(new Promise((resolve, reject) => {
+          Post.create({ content: i, public: false, author: secUser._id, category: secUser.category })
+            .then(newPost => {
+              resolve(newPost)
+            })
+        }))
+      }
+      postPromises.push(new Promise((resolve, reject) => {
+        Post.create({ content: '5', public: true, author: secUser._id, category: secUser.category })
+          .then(newPost => {
+            resolve(newPost)
+          })
+      }))
+
+      secUser.save().then(() => {
+        Promise.all(postPromises).then((posts) => {
+          secondUserPosts = posts
+
+          requestMock.params.category = 'dog'
+          categoryController.showArticles(requestMock, responseMock)
+
+          setTimeout(function () {
+            expect(receivedPosts.length).to.be.equal(posts.length)
+            expect(receivedPages).to.be.deep.equal([1])
+            receivedPosts.forEach(post => {
+              expect(post.category.toString()).to.be.equal(reqUser.category.id)
+            })
+            done()
+          }, 40)
+        })
+      })
+    })
+  })
+
   afterEach(function (done) {
     Post.remove({}).then(() => {
       User.remove({}).then(() => {
