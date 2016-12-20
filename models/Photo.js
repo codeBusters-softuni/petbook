@@ -93,7 +93,6 @@ photoSchema.pre('remove', true, function (next, done) {
   let Album = mongoose.model('Album')
   let Post = mongoose.model('Post')
 
-
   let userPromise = new Promise((resolve, reject) => {
     User.findById(this.author).then(user => {
       user.photos.remove(this.id)

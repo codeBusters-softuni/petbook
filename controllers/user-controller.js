@@ -192,7 +192,7 @@ module.exports = {
             Post.populate(postsInPage, [{ path: 'comments.author.profilePic', model: 'Photo' }]).then(() => {
               postsInPage = Post.initializeForView(postsInPage).then(postsInPage => {
                 user.getLikesCount().then(user => {  // attached receivedPawsCount and etc to the user
-                  res.render('user/profile', { profileUser: user, friendStatus: fSts, posts: postsInPage, categories: categories, pages: pages })
+                  res.render('user/profile', { profileUser: user, friendStatus: fSts, posts: postsInPage, categories: categories, pages: pages, selectedPage: page + 1 })
                 })
               })
             })
