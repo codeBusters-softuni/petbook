@@ -10,7 +10,7 @@ const categories = require('../../config/constants').categories
 
 const categoryController = require('../../controllers/category-controller')
 
-describe('showPhotos function', function () {
+describe('showPosts function', function () {
   /* The function should render a newsfeed-like page, showing all the posts
      from the given category to the user, bearing in mind his relationship to the
      authors and the post's publicity */

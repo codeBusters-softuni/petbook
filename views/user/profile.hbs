@@ -393,14 +393,16 @@
             </section>
         {{/each}}
         <main>
-            <div class="pages-container"> Pages </div>
-            <ul class="pagination">
-                {{#each pages}}
-                    <li>
-                        <a href="?page={{this}}" {{#areEqual this ../selectedPage}} class="current-page" {{/areEqual}}>{{this}}</a>
-                    </li>
-                {{/each}}
-            </ul>
+          {{#if pages}}
+              <div class="pages-container"> Pages </div>
+              <ul class="pagination">
+                  {{#each pages}}
+                      <li>
+                          <a href="?page={{this}}" {{#areEqual this ../selectedPage}} class="current-page" {{/areEqual}}>{{this}}</a>
+                      </li>
+                  {{/each}}
+              </ul>
+            {{/if}}
         </main>
     </section>
 </div>

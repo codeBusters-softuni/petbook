@@ -29,7 +29,7 @@
                             <li>
                                 <span>Category: </span>
                                 <!--when click - new search and display all from that category-->
-                                <a href="/category/{{category.name}}">{{category.name}}</a>
+                                <a href="/search/{{category.name}}">{{category.name}}</a>
                             </li>
                             <li>
                                 <span>Owner: </span><span class="owner-name"> {{ownerName}}</span>
@@ -84,7 +84,7 @@
         </article>
     {{/each}}
 </div>
-
+{{#if pages}}
 <div class="pages-container"> Pages </div>
 <ul class="pagination">
     {{#each pages}}
@@ -93,3 +93,4 @@
         </li>
     {{/each}}
 </ul>
+{{/if}}
