@@ -75,7 +75,9 @@ module.exports = {
   addLike: (req, res) => {
     // regex is: /photo\/(.+)\/add(.{3,7})/
     let returnUrl = res.locals.returnUrl || '/'
-    let [photoId, likeType] = req.params  // TODO: FIX
+    let photoId = req.params[0]
+    let likeType = req.params[1]
+
     if (!mongoose.Types.ObjectId.isValid(photoId)) {
       req.session.errorMsg = 'Invalid photo id!'
       res.redirect(returnUrl)
@@ -126,7 +128,9 @@ module.exports = {
   removeLike: (req, res) => {
     let returnUrl = res.locals.returnUrl || '/'
     // regex is: /photo\/(.+)\/remove(.{3,7})/
-    let [photoId, likeType] = req.params
+    let photoId = req.params[0]
+    let likeType = req.params[1]
+
     if (!mongoose.Types.ObjectId.isValid(photoId)) {
       req.session.errorMsg = 'Invalid photo id!'
       res.redirect(returnUrl)
