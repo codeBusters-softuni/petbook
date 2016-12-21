@@ -9,8 +9,6 @@ module.exports = (app) => {
   app.post('/user/register', controllers.userController.registerPost)
   app.post('/user/login', controllers.userController.loginPost)
 
-  app.get('/user/logout', controllers.userController.logout)
-
   // EVERYTHING BELOW REQUIRES AUTHENTICATION
   app.use((req, res, next) => {
     if (!req.isAuthenticated()) {
@@ -20,12 +18,13 @@ module.exports = (app) => {
       next()
     }
   })
-  app.post('/search', controllers.userController.userSearchPost)
+  app.get('/user/logout', controllers.userController.logout)
+  app.post('/search', controllers.searchController.userSearchPost)
   app.get('/search/:category', controllers.searchController.showUsersOfCategory)
   app.get('/category/:category', controllers.categoryController.showPosts)
+
   app.post('/user/:id/cancelFriendship', controllers.userController.cancelFriendship)
   app.get('/user/:id/photos', controllers.userController.userPhotosGet)
-
   app.get('/user/:id', controllers.userController.profilePageGet)  // must be below other user urls!
 
   app.post('/friendRequest/:receiverId/send', controllers.friendRequestController.sendRequest)
