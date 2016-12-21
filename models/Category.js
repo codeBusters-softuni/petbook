@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const categories = require('./../config/constants').categories
 
 let categorySchema = mongoose.Schema({
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true, unique: true }
 })
 
 const Category = mongoose.model('Category', categorySchema)
