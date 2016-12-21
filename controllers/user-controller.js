@@ -34,7 +34,7 @@ module.exports = {
     } else if (!candidateUser.password || (candidateUser.password.length < 4 || candidateUser.password.length > 20)) {
       req.session.errorMsg = 'Your password has invalid length! It should be between 4 and 20 characters.'
       toRedirect = true
-    } else if (candidateUser.password !== candidateUser.confirmedPassword) {
+    } else if (candidateUser.password.toLowerCase() !== candidateUser.confirmedPassword.toLowerCase()) {
       req.session.errorMsg = 'Your passwords do not match!'
       toRedirect = true
     }
@@ -44,7 +44,7 @@ module.exports = {
       return
     }
     User  // function in the User.js model
-      .register(candidateUser.fullName, candidateUser.email, candidateUser.ownerName, candidateUser.password, candidateUser.category)
+      .register(candidateUser.fullName, candidateUser.email, candidateUser.ownerName, candidateUser.password.toLowerCase(), candidateUser.category)
       .then(newUser => {
         req.logIn(newUser, function (err, newUser) {
           if (err) {
