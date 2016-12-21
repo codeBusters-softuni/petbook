@@ -65,6 +65,7 @@ $(document).ready(function() {
     var img = $('.profile-post-images .profile-images img'); // selects all images
     var imgArticles = $('.profile-post-images  .profile-images article'); // select all articles that contain images and buttons
     var lightBox = document.getElementById('box-profile-photos'); // select lightbox
+    var currentImg = img.eq(0); //it is needed because if user open 1 pic and then click on close, it gives error
     if(lightBox!=null){
         var boxImages = document.createElement('div') // create div that contains the image
         boxImages.className +=" box-image" // give that div class
@@ -78,7 +79,7 @@ $(document).ready(function() {
         var closeLightBox = $('.close-light-box'); // get close button
 
         // initialize images to swap
-        var currentImg = img.eq(1); //it is needed because if user open 1 pic and then click on close, it gives error
+
         var nextImg = '';
         var prevImg = '';
 
@@ -87,6 +88,7 @@ $(document).ready(function() {
 
         //open first image
         img.on('click', function() {
+            currentImg = $(this);
             indexImg = img.index($(this)); // assign var to the index of the image that user clicked on
             indexArticle = indexImg; // assign var to the index of the image that user clicked on - they are the same
 
