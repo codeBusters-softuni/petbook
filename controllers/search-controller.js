@@ -18,6 +18,24 @@ function getUsersInPage(page, allPosts, usersPerPage) {
 }
 
 module.exports = {
+  userSearchPost: (req, res) => {
+    let searchValue = req.body.searchValue
+    if (!searchValue) {
+      // ERROR - You cannot search for nothing
+      req.session.errorMsg = "Sorry, we couldn't understand this search. Please try saying this another way."
+      res.redirect('/')
+    }
+
+    User.find({ fullName: { $regex: searchValue, $options: 'i' } }).populate('category profilePic pendingFriendRequests').then(users => {
+      // attach a friendStatus object to each user, displaying thier relationship with the user doing the search
+      users = users.map(user => {
+        user.friendStatus = req.user.getFriendStatusWith(user)  // we need the req.user's viewpoint
+        return user
+      })
+      res.render('user/searchOutput', { users: users, categories: categories })
+    })
+  },
+
   showUsersOfCategory: (req, res) => {
     let page = parseInt(req.query.page || '1') - 1
     let category = req.params.category.toLowerCase().capitalize()
@@ -34,7 +52,7 @@ module.exports = {
         return
       }
       // get all the users of this category
-      User.find({ category: cat.id }).sort({friends: -1}).populate('pendingFriendRequests category profilePic').then(users => {
+      User.find({ category: cat.id }).sort({ friends: -1 }).populate('pendingFriendRequests category profilePic').then(users => {
         let [usersToShow, pages] = getUsersInPage(page, users, usersPerPage)
 
         // attach a friendStatus object to each user, displaying thier relationship with the user doing the search

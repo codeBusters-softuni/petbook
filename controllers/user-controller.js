@@ -52,7 +52,6 @@ module.exports = {
             res.redirect('/')
             return
           }
-          // TODO: Add success message that the user is registered
           return res.redirect('/')
         })
       }).catch((err) => {
@@ -136,7 +135,6 @@ module.exports = {
       let cancelFriendPromise2 = friend.removeFriend(req.user.id)
 
       Promise.all([cancelFriendPromise, cancelFriendPromise2]).then(() => {
-        // Success - Attach message
         res.redirect(returnUrl)
         return
       })
@@ -246,23 +244,5 @@ module.exports = {
         })
       })
     }
-  },
-
-  userSearchPost: (req, res) => {
-    let searchValue = req.body.searchValue
-    if (!searchValue) {
-      // ERROR - You cannot search for nothing
-      req.session.errorMsg = "Sorry, we couldn't understand this search. Please try saying this another way."
-      res.redirect('/')
-    }
-
-    User.find({ fullName: { $regex: searchValue, $options: 'i' } }).populate('category profilePic pendingFriendRequests').then(users => {
-      // attach a friendStatus object to each user, displaying thier relationship with the user doing the search
-      users = users.map(user => {
-        user.friendStatus = req.user.getFriendStatusWith(user)  // we need the req.user's viewpoint
-        return user
-      })
-      res.render('user/searchOutput', { users: users, categories: categories })
-    })
   }
 }
