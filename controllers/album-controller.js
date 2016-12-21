@@ -39,7 +39,7 @@ module.exports = {
         public: postIsPublic
       })
       if (newPost.content.length < 3) {
-        req.session.erroMsg = "Your post's content must be longer than 3 characters!"
+        req.session.errorMsg = "Your post's content must be longer than 3 characters!"
         req.session.failedPost = newPost  // attach the post content to be displayed on the redirect
         res.redirect(returnUrl)
         return

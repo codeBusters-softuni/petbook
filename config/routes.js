@@ -51,4 +51,6 @@ module.exports = (app) => {
   app.post(/photo\/(.+)\/add(.{3,7})/, controllers.photoController.addLike)
   // Dislike a photo
   app.post(/photo\/(.+)\/remove(.{3,7})/, controllers.photoController.removeLike)
+
+  app.all('*', (req, res) => { res.redirect('/') })
 }
