@@ -82,7 +82,7 @@ module.exports = {
       Promise.all(promises).then(() => {
         // Success - users are now friends, delete the FriendRequest
         friendRequest.remove()
-        // TODO: Attach success message
+        req.session.successMsg = `You have become friends with ${sender.fullName}!`
         let returnUrl = res.locals.returnUrl || '/friendRequests'
         res.redirect(returnUrl)
       })

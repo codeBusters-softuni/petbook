@@ -34,6 +34,10 @@ module.exports = (app, config) => {
       res.locals.errorMessage = req.session.errorMsg
       delete req.session.errorMsg
     }
+    if (req.session.successMsg) {
+      res.locals.successMessage = req.session.successMsg
+      delete req.session.successMsg
+    }
     if (req.session.failedPost) {
       res.locals.failedPost = req.session.failedPost
       delete req.session.failedPost

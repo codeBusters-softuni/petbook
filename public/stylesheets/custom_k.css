@@ -82,7 +82,7 @@ legend {
     margin-right: 0;
     position: relative;
     left: 6px;
-    top: 2px;
+    top: 1px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
     box-shadow: 1px 1px 1px 0px #A9A9A9;
@@ -1758,6 +1758,23 @@ li.active-section #view-tabs-in-photos > ul > li.active-tab-section .cntnr-photo
     background-color: rgba(255,76,76, 0.6);
     border: 1px solid rgba(255,76,76, 0.4);
     box-shadow: 2px 2px 1px rgba(255,76,76, 0.3);
+    border-radius: 5px;
+}
+
+/*Success style*/
+.success-custom-style{
+    padding:5px;
+}
+
+.success-custom-style>span{
+    padding: 10px;
+    display: inline-block;
+    color: #fff;;
+    font-size: 30px;
+    font-weight: 600;
+    background-color: rgba(50, 205, 50, 0.6);
+    border: 1px solid rgba(50, 205, 50, 0.4);
+    box-shadow: 2px 2px 1px rgba(50, 205, 50, 0.3);
     border-radius: 5px;
 }
 
