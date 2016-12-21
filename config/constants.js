@@ -4,7 +4,7 @@ const config = require('./config')[environment]
 const path = require('path')
 
 module.exports = {
-  categories: ['Dog', 'Cat', 'Parrot', 'Elephant'],
+  categories: ['Dog', 'Cat', 'Parrot', 'Elephant', 'Pig', 'Guinea Pig'],
   likes: ['Paw', 'Love', 'Dislike'],
   rootPath: config.rootFolder,
   photoUploadsPath: path.join(config.rootFolder, 'public', 'uploads'),
