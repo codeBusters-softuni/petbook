@@ -9,6 +9,7 @@ module.exports = {
   rootPath: config.rootFolder,
   photoUploadsPath: path.join(config.rootFolder, 'public', 'uploads'),
   postsPerPage: 20,
+  usersPerPage: 10,
   favIconPath: path.join(config.rootFolder, '/public/images/favicon.ico'),
   viewsDirPath: path.join(config.rootFolder, '/views'),
   publicDirPath: path.join(config.rootFolder, 'public'),

@@ -16,6 +16,7 @@ const postController = require('./post-controller')
 const categoryController = require('./category-controller')
 const photoController = require('./photo-controller')
 const albumController = require('./album-controller')
+const searchController = require('./search-controller')
 const friendRequestController = require('./friendrequest-controller')
 
 module.exports = {
@@ -24,6 +25,7 @@ module.exports = {
   postController,
   categoryController,
   friendRequestController,
+  searchController,
   photoController,
   albumController
 }
