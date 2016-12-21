@@ -33,12 +33,14 @@ module.exports = {
       if (!user) {
         // ERROR - User does not exist
         // Something is wrong with the logic or the user is malicious
-        // TODO!
-        res.render('home/index', { categories: categories })
+        req.session.errorMsg = 'User does not exist!'
+        res.redirect('/')
         return
       } else if (user.hasFriend(req.user.id)) {
         // ERROR - User already has the logged in user as a friend
-        throw Error(`ERROR: Inconsistency with friends, user ${req.user.email} does not have user ${user.email} as a friend, but ${user.email} does`)
+        console.log(`ERROR: Inconsistency with friends, user ${req.user.email} does not have user ${user.email} as a friend, but ${user.email} does`)
+        req.session.errorMsg = 'You are already friends.'
+        res.redirect('/')
       }
       // validate that such a request does not exist
       let potentialRequestIdx = user.pendingFriendRequests.findIndex(frReq => {
@@ -46,7 +48,8 @@ module.exports = {
       })
       if (potentialRequestIdx !== -1) {
         // ERROR, Such a request already exists!
-        res.render('home/index', { categories: categories })
+        req.session.errorMsg = 'You already have a pending request to that user.'
+        res.redirect('/')
         return
       }
 
