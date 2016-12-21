@@ -17,7 +17,7 @@ module.exports = {
     new Promise((resolve, reject) => {  // load the posts the user will see
       if (req.user.category.name === category) {
         // user is the same category
-        Post.find({ category: req.user.category.id }).populate('author comments likes photos').then(posts => {
+        Post.find({ category: req.user.category.id }).then(posts => {
           // sort by their date descending (newest first)
           posts = Post.sortPosts(posts)
           resolve(posts)
