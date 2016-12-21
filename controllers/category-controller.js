@@ -23,25 +23,15 @@ module.exports = {
           resolve(posts)
         })
       } else {  // user is another category
-        // load all the articles from the user's friends
-        req.user.getPostsByFriends().then(friendPosts => {
-          Category.findOne({ name: category }).then(cat => {
-            if (!cat) {
-              req.session.errorMsg = `Category ${category} does not exist!`
-              res.redirect('/')
-              return
-            }
-            // get all the public posts of the category
-            Post.find({ public: true, category: cat.id }).then(posts => {
-              // save the friend posts that are not already in the public posts
-              friendPosts = friendPosts.filter((item) => {
-                return posts.findIndex((post) => {
-                  return post._id.equals(item._id)
-                }) === -1
-              })
-              posts = posts.concat(friendPosts)  // add the friend posts
-              resolve(posts)
-            })
+        Category.findOne({ name: category }).then(cat => {
+          if (!cat) {
+            req.session.errorMsg = `Category ${category} does not exist!`
+            res.redirect('/')
+            return
+          }
+          // get all the public posts of the category
+          Post.find({ public: true, category: cat.id }).then(posts => {
+            resolve(posts)
           })
         })
       }
