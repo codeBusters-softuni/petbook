@@ -29,8 +29,8 @@ describe('User', function () {
 
   it('duplicate emails should not be allowed',
     function (done) {
-      registerUser('Stanislav Kozlovski', 'email@abv.bg', 'pass', dogCategoryName).then(() => {
-        registerUser('Stanislav Kozlovski', 'email@abv.bg', 'pass', dogCategoryName).catch((err) => {
+      registerUser('Stanislav Kozlovski', 'email@abv.bg', 'ownerman', 'pass', dogCategoryName).then(() => {
+        registerUser('Stanislav Kozlovski', 'email@abv.bg', 'ownerman', 'pass', dogCategoryName).catch((err) => {
           console.log(err)
           expect(err).not.to.be.undefined
           expect(err).not.to.be.null
@@ -43,7 +43,7 @@ describe('User', function () {
   it('invalid categories (animal types) should not be allowed',
     function (done) {
       let invalidCategory = 'OrangutanInvalidCategory'
-      registerUser('Stanislav Kozlovski', 'email@abv.bg', 'pass', invalidCategory).catch((err) => {
+      registerUser('Stanislav Kozlovski', 'email@abv.bg', 'ownerman', 'pass', invalidCategory).catch((err) => {
         expect(err).not.to.be.undefined
         expect(err).not.to.be.null
         expect(err.message).to.be.equal(`No category named ${invalidCategory} exists!`)
@@ -53,8 +53,8 @@ describe('User', function () {
 
   it('two users with categories Dog should have the same category',
     function (done) {
-      registerUser('first dog', 'first_dog@abv.bg', 'pass', dogCategoryName).then((firstDog) => {
-        registerUser('second dog', 'second_dog@abv.bg', 'pass', dogCategoryName).then((secondDog) => {
+      registerUser('first dog', 'first_dog@abv.bg', 'ownerman', 'pass', dogCategoryName).then((firstDog) => {
+        registerUser('second dog', 'second_dog@abv.bg', 'owner', 'pass', dogCategoryName).then((secondDog) => {
           expect(firstDog.category).not.to.be.undefined
           expect(secondDog.category).not.to.be.undefined
           expect(firstDog.category).to.be.eqls(secondDog.category)
@@ -65,8 +65,8 @@ describe('User', function () {
 
   it('two users with different categories should not have the same category',
     function (done) {
-      registerUser('dog', 'dog@abv.bg', 'dog', dogCategoryName).then(dog => {
-        registerUser('cat', 'cat@abv.bg', 'cat', 'Cat').then(cat => {
+      registerUser('dog', 'dog@abv.bg', 'owner', 'dog', dogCategoryName).then(dog => {
+        registerUser('cat', 'cat@abv.bg', 'owner', 'cat', 'Cat').then(cat => {
           expect(dog.category).not.to.be.undefined
           expect(cat.category).not.to.be.undefined
           expect(dog.category).not.to.be.eqls(cat.category)
@@ -78,7 +78,7 @@ describe('User', function () {
   it('when registering a user, the password should be encrypted',
     function (done) {
       let rawPassword = 'password'
-      registerUser('Stanislav Kozlovski', 'stanislav@abv.bg', rawPassword, dogCategoryName).then((newUser) => {
+      registerUser('Stanislav Kozlovski', 'stanislav@abv.bg', 'owner', rawPassword, dogCategoryName).then((newUser) => {
         expect(newUser.password).not.to.be.equal(rawPassword)
         done()
       })
@@ -86,18 +86,18 @@ describe('User', function () {
 
   it('when registering a user, he should not be an admin',
     function (done) {
-      registerUser('Stanislav Kozlovski', 'SOMEBODY@abv.bg', 'password', dogCategoryName).then((newUser) => {
+      registerUser('Stanislav Kozlovski', 'SOMEBODY@abv.bg', 'owner', 'password', dogCategoryName).then((newUser) => {
         newUser.isAdmin().then(isAdmin => {
           expect(isAdmin).to.be.false
           done()
-        }).catch((err) => {console.log(err)})
+        }).catch((err) => { console.log(err) })
       })
     })
 
   it('when a user is registered, we should be able to figure out his hashed password using his salt',
     function (done) {
       let rawPassword = 'password'
-      registerUser('Stanislav Kozlovski', 'stanislav@abv.bg', rawPassword, dogCategoryName).then((newUser) => {
+      registerUser('Stanislav Kozlovski', 'stanislav@abv.bg', 'owner', rawPassword, dogCategoryName).then((newUser) => {
         // see if the salt exists
         expect(newUser.salt).not.to.be.undefined
         expect(newUser.salt).not.to.be.empty
@@ -113,8 +113,8 @@ describe('User', function () {
   it("Users' unique integer userId should be automatically incremented on each new user",
     function (done) {
       // register two new users and assure that the second one's ID is bigger than the first user's
-      registerUser('First Guy', 'FirstGuy@abv.bg', 'first', dogCategoryName).then(firstUser => {
-        registerUser('Second Guy', 'SecondGuy@abv.bg', 'second', dogCategoryName).then(secondUser => {
+      registerUser('First Guy', 'FirstGuy@abv.bg', 'godlike','first', dogCategoryName).then(firstUser => {
+        registerUser('Second Guy', 'SecondGuy@abv.bg', 'owner', 'second', dogCategoryName).then(secondUser => {
           expect(firstUser.userId).not.to.be.NaN
           expect(secondUser.userId).not.to.be.NaN
           expect(firstUser.userId).not.to.be.equal(secondUser.userId)
